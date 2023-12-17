@@ -3,9 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentSaaS.Domain.Entities;
 public record Branch : IEntity
-{  
+{
+    [Column(TypeName = "nvarchar(20)")]
     public string? Code { get;   init; }
+
+    [Column(TypeName = "nvarchar(100)")]
     public string Name { get;   init; }
+
+    [Column(TypeName = "nvarchar(250)")]
     public string? LogoURL { get;   init; }
     public bool? ShowLogo { get;   init; }
 
@@ -14,8 +19,12 @@ public record Branch : IEntity
     //public virtual Address Address { get; init; }
 
      
-    public Guid? ContactId { get;   init; } 
+    public Guid? ContactId { get;   init; }
+
+    [Column(TypeName = "nvarchar(100)")]
     public string? CommercialNo { get;   init; }
+
+    [Column(TypeName = "nvarchar(250)")]
     public string? SiteURL { get;   init; } 
     public Guid? DefaultCurrencyId { get;   init; }
     //public Guid? DefaultInventoryId { get;   init; }
