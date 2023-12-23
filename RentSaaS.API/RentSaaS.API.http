@@ -1,5 +1,5 @@
-@RentSaaS.API_HostAddress = https://localhost:44327
-@Host = https://localhost:44327
+@RentSaaS.API_HostAddress = https://localhost:7164
+@Host = https://localhost:7164
 
 
 GET {{Host}}/api/user
