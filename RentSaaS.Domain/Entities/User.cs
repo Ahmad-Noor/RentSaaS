@@ -21,5 +21,6 @@ public record User : IEntity
 
     [Column(TypeName = "nvarchar(100)")]
     public required string Email { get;  init; }
+    public bool IsActive { get; set; } = true;
 
 }

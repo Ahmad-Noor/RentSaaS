@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RentSaaS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initMigration : Migration
+    public partial class InitMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -131,6 +131,7 @@ namespace RentSaaS.Infrastructure.Migrations
                     UserName = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     TenantId = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
