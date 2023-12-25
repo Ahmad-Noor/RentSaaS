@@ -12,8 +12,8 @@ using RentSaaS.Infrastructure;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    [Migration("20231223225636_InitMigration")]
-    partial class InitMigration
+    [Migration("20231224151937_initMigration")]
+    partial class initMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -287,6 +287,9 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TenantId")
                         .IsRequired()

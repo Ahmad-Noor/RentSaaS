@@ -285,6 +285,9 @@ namespace RentSaaS.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");

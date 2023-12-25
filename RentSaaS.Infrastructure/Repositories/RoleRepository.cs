@@ -2,12 +2,11 @@
 using RentSaaS.Domain.Entities;
 using RentSaaS.Domain.Interfaces;
 
-namespace RentSaaS.Infrastructure.Repositories
+namespace RentSaaS.Infrastructure.Repositories;
+
+public class RoleRepository : Repository<Role>, IRoleRepository
 {
-    public class RoleRepository : Repository<Role>, IRoleRepository
+    public RoleRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
     {
-        public RoleRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
-        {
-        }
     }
 }

@@ -13,24 +13,24 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly RentSaaSDBContext _dbContext;
     private readonly ILogger _logger;
 
-    public IBranchRepository Branchs { get;  set; }
-    public IAddressRepository Addresses { get;  set; }
-    public ICurrencyRepository Currencies { get;  set; }
-    public ICustomerRepository Customers { get;  set; }
-    public IUserRepository Users { get;  set; }
-    public IRoleRepository Roles { get;  set; }
+    public IBranchRepository BranchRepository { get;  set; }
+    public IAddressRepository AddressRepository { get;  set; }
+    public ICurrencyRepository CurrencyRepository { get;  set; }
+    public ICustomerRepository CustomerRepository { get;  set; }
+    public IUserRepository UserRepository { get;  set; }
+    public IRoleRepository RoleRepository { get;  set; }
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger("logs");
         _dbContext = dbContext;
 
-        Branchs = new BranchRepository(dbContext, _logger);
-        Addresses = new AddressRepository(dbContext, _logger);
-        Currencies = new CurrencyRepository(dbContext, _logger);
-        Customers = new CustomerRepository(dbContext, _logger);
-        Users = new UserRepository(dbContext, _logger);
-        Roles = new RoleRepository(dbContext, _logger);
+        BranchRepository = new BranchRepository(dbContext, _logger);
+        AddressRepository = new AddressRepository(dbContext, _logger);
+        CurrencyRepository = new CurrencyRepository(dbContext, _logger);
+        CustomerRepository = new CustomerRepository(dbContext, _logger);
+        UserRepository = new UserRepository(dbContext, _logger);
+        RoleRepository = new RoleRepository(dbContext, _logger);
     }
 
     public IRepository<T> AsyncRepository<T>() where T : IEntity

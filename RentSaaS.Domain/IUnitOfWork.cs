@@ -4,12 +4,12 @@ using RentSaaS.Domain.Interfaces;
 namespace RentSaaS.Domain;
 public interface IUnitOfWork : IAsyncDisposable
 {
-    IBranchRepository Branchs { get;   set; }
-    IAddressRepository Addresses { get;   set; }
-    ICurrencyRepository Currencies { get;   set; }
-    ICustomerRepository Customers { get;   set; }
-    IUserRepository Users { get;   set; }
-    IRoleRepository Roles { get;   set; }
+    IBranchRepository BranchRepository { get; set; }
+    IAddressRepository AddressRepository { get; set; }
+    ICurrencyRepository CurrencyRepository { get; set; }
+    ICustomerRepository CustomerRepository { get; set; }
+    IUserRepository UserRepository { get; set; }
+    IRoleRepository RoleRepository { get; set; }
 
 
 

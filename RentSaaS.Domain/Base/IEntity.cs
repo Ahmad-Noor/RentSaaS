@@ -10,9 +10,9 @@ public record class IEntity
 
     [Column(TypeName = "nvarchar(100)")]
     public string TenantId { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }
-    public bool IsDeleted { get; set; } = false;
+    public bool? IsDeleted { get; set; } = false;
 
     [Column(TypeName = "nvarchar(500)")]
     public string? Note { get; set; } = "";
