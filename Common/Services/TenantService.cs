@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-
 namespace RentSaaS.Common;
 
 public class TenantService : ITenantService
 {
     private readonly TenantSettings _tenantSettings;
-    private HttpContext? _httpContext;
+    private readonly HttpContext? _httpContext;
     private Tenant? _currenttenant;
     public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<TenantSettings> tenantSettings)
     {

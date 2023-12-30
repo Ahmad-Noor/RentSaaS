@@ -8,9 +8,6 @@ public interface IUnitOfWork : IAsyncDisposable
     IAddressRepository AddressRepository { get; set; }
     ICurrencyRepository CurrencyRepository { get; set; }
     ICustomerRepository CustomerRepository { get; set; }
-    IUserRepository UserRepository { get; set; }
-    IRoleRepository RoleRepository { get; set; }
-
 
 
     Task<int> CompleteAsync();

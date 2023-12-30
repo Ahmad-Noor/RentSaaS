@@ -1,6 +1,4 @@
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.RateLimiting; 
 using RentSaaS.API.ServiceExtension;
 using Serilog;
 using System.Reflection;
@@ -20,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
  
-builder.Services.AddDatabaseServices(builder.Configuration);
+builder.Services.AddRentSaaSContext(builder.Configuration);
 //-------------------------Add Rate Limiter
 //TODO: Add Rate Limiter
 

@@ -10,8 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\User_Controller.cs" />
+    <Compile Remove="DOTs\AddressResource.cs" />
+    <Compile Remove="DOTs\AuthenticateRequest.cs" />
+    <Compile Remove="DOTs\AuthenticateResponse.cs" />
+    <Compile Remove="Mapper\AddressProfile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -21,6 +30,12 @@
   <ItemGroup>
     <ProjectReference Include="..\RentSaaS.Domain\RentSaaS.Domain.csproj" />
     <ProjectReference Include="..\RentSaaS.Infrastructure\RentSaaS.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="DOTs\" />
+    <Folder Include="Mapper\" />
   </ItemGroup>
 
 </Project>

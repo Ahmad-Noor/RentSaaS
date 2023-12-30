@@ -1,16 +1,25 @@
 ﻿using RentSaaS.Common;
 using RentSaaS.Domain;
 using RentSaaS.Infrastructure;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace RentSaaS.API.ServiceExtension;
 public static class ServiceExtension
 {
-    public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRentSaaSContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
         //TODO: Save tenants in SQL lite DB
+        services.AddEntityFrameworkSqlite().AddDbContext<IdentityDbContext>();
+        //services.AddDbContext<IdentityDB>(options =>options.UseSqlite("Data Source=IdentityDB.db"));
+        string folder = Path.Combine(Environment.CurrentDirectory, "Data");
+        string dbPath = Path.Combine(folder, "IdentityDB.db");
+        services.AddDbContext<IdentityDB>(options => options.UseSqlite($"Data Source={dbPath}"));
+
+
         services.Configure<TenantSettings>(configuration.GetSection(nameof(TenantSettings)));
         //services.AddDbContext< MultiTenantSettingsDB > (db => {
         //    db.UseSqlite("Data Source=multi-tenant-settingsDB.db");

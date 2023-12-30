@@ -12,18 +12,19 @@ using Microsoft.AspNetCore.Authorization;
 using RentSaaS.Common;
 using RentSaaS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class User_Controller : ControllerBase
 {
-    private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
+    private readonly ILogger<User_Controller> _logger; // ILogger takes the type of the class as a parameter
     private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _configuration;
     private readonly ITenantService tenantService;
 
-    public UserController(IUnitOfWork unitOfWork, ILogger<UserController> logger, IConfiguration configuration, ITenantService tenantService)
+    public User_Controller(IUnitOfWork unitOfWork, ILogger<User_Controller> logger, IConfiguration configuration, ITenantService tenantService)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -44,34 +45,34 @@ public class UserController : ControllerBase
         return Ok(new AuthenticateResponse(user, token));
     }
   
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var countries = await _unitOfWork.UserRepository.GetAll();
-        if (countries == null)
-        {
-            return NotFound();
-        }
-        return Ok(countries);
-    }
+    //[Authorize]
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll()
+    //{
+    //    var countries = await _unitOfWork.UserRepository.GetAll();
+    //    if (countries == null)
+    //    {
+    //        return NotFound();
+    //    }
+    //    return Ok(countries);
+    //}
 
     [HttpGet]
     [Authorize]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var user = await _unitOfWork.UserRepository.GetById(id);
-        if (user != null)
-        {
-            return Ok(user);
-        }
+        //var user = await _unitOfWork.UserRepository.GetUser(id.ToString());
+        //if (user != null)
+        //{
+        //    return Ok(user);
+        //}
         return NotFound();
     }
 
   
     [HttpPost]
-    public async Task<IActionResult> Add(User user)
+    public async Task<IActionResult> Add(IdentityUser user)
     {
         if (user == null)
         {
@@ -85,7 +86,7 @@ public class UserController : ControllerBase
         {
             return BadRequest(new { Message = "Email Already Exist!" });
         } 
-        if (!Regex.IsMatch(user.Password, "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))
+        if (!Regex.IsMatch(user.PasswordHash, "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))
         {
             return BadRequest(new { Message = "password must contain at least eight characters, at least one number and both lower and uppercase letters and least one special character" });
         }
@@ -93,8 +94,8 @@ public class UserController : ControllerBase
         try
         {
             _logger.LogInformation("Create new user, user name #{UserName}", user.UserName);
-            user.Password = PasswordHasher.HashPassword(user.Password);
-            await _unitOfWork.UserRepository.Add(user);
+            user.PasswordHash = PasswordHasher.HashPassword(user.PasswordHash);
+              _unitOfWork.UserRepository.AddUser(user);
             await _unitOfWork.CompleteAsync();
 
             return Ok(user);

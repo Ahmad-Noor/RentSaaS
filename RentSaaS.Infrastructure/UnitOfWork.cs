@@ -3,7 +3,6 @@ using RentSaaS.Domain.Base;
 using Microsoft.Extensions.Logging;
 using RentSaaS.Infrastructure.Repositories;
 using RentSaaS.Domain.Interfaces;
-using RentSaaS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace RentSaaS.Infrastructure;
@@ -17,8 +16,6 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IAddressRepository AddressRepository { get;  set; }
     public ICurrencyRepository CurrencyRepository { get;  set; }
     public ICustomerRepository CustomerRepository { get;  set; }
-    public IUserRepository UserRepository { get;  set; }
-    public IRoleRepository RoleRepository { get;  set; }
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
@@ -29,8 +26,6 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         AddressRepository = new AddressRepository(dbContext, _logger);
         CurrencyRepository = new CurrencyRepository(dbContext, _logger);
         CustomerRepository = new CustomerRepository(dbContext, _logger);
-        UserRepository = new UserRepository(dbContext, _logger);
-        RoleRepository = new RoleRepository(dbContext, _logger);
     }
 
     public IRepository<T> AsyncRepository<T>() where T : IEntity
