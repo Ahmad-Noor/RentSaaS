@@ -11,7 +11,7 @@ using RentSaaS.Common;
 namespace Common.Migrations
 {
     [DbContext(typeof(IdentityDB))]
-    [Migration("20231230043750_IndentityDBInit")]
+    [Migration("20231230060932_IndentityDBInit")]
     partial class IndentityDBInit
     {
         /// <inheritdoc />
@@ -19,6 +19,67 @@ namespace Common.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+
+            modelBuilder.Entity("Common.Services.Tenant", b =>
+                {
+                    b.Property<string>("TenantId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DBProvider")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("IsDefault")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TenantId");
+
+                    b.ToTable("Tenants");
+
+                    b.HasData(
+                        new
+                        {
+                            TenantId = "RentSaas",
+                            ConnectionString = "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
+                            DBProvider = "MSSQL",
+                            IsDefault = true,
+                            Name = "RentSaas"
+                        },
+                        new
+                        {
+                            TenantId = "SkyRealty1",
+                            ConnectionString = "Data Source=localhost;Initial Catalog=SkyRealty1;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
+                            DBProvider = "MSSQL",
+                            IsDefault = false,
+                            Name = "Sky Realty1"
+                        },
+                        new
+                        {
+                            TenantId = "SkyRealty2",
+                            ConnectionString = "Data Source=localhost;Initial Catalog=SkyRealty2;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
+                            DBProvider = "MSSQL",
+                            IsDefault = false,
+                            Name = "Sky Realty2"
+                        },
+                        new
+                        {
+                            TenantId = "SkyRealty 3",
+                            IsDefault = false,
+                            Name = "Sky Realty 3"
+                        },
+                        new
+                        {
+                            TenantId = "SkyRealty 4",
+                            IsDefault = false,
+                            Name = "Sky Realty 4"
+                        });
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -210,67 +271,6 @@ namespace Common.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("Identity.UserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("RentSaaS.Common.Tenant", b =>
-                {
-                    b.Property<string>("TenantId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConnectionString")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DBProvider")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool?>("IsDefault")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("TenantId");
-
-                    b.ToTable("Tenants");
-
-                    b.HasData(
-                        new
-                        {
-                            TenantId = "RentSaas",
-                            ConnectionString = "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
-                            DBProvider = "MSSQL",
-                            IsDefault = true,
-                            Name = "RentSaas"
-                        },
-                        new
-                        {
-                            TenantId = "SkyRealty1",
-                            ConnectionString = "Data Source=localhost;Initial Catalog=SkyRealty1;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
-                            DBProvider = "MSSQL",
-                            IsDefault = false,
-                            Name = "Sky Realty1"
-                        },
-                        new
-                        {
-                            TenantId = "SkyRealty2",
-                            ConnectionString = "Data Source=localhost;Initial Catalog=SkyRealty2;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
-                            DBProvider = "MSSQL",
-                            IsDefault = false,
-                            Name = "Sky Realty2"
-                        },
-                        new
-                        {
-                            TenantId = "SkyRealty 3",
-                            IsDefault = false,
-                            Name = "Sky Realty 3"
-                        },
-                        new
-                        {
-                            TenantId = "SkyRealty 4",
-                            IsDefault = false,
-                            Name = "Sky Realty 4"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

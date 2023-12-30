@@ -24,7 +24,7 @@ builder.Services.AddRentSaaSContext(builder.Configuration);
 
 //------------------------- enable Cors
 //TODO: add Cors
-builder.Services.AddCors();
+//builder.Services.AddCors();
 
 //-------------------------Logger
 string LogPath = builder.Configuration.GetSection("Logging:LogPath").Value;

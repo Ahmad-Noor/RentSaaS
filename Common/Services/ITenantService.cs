@@ -1,4 +1,5 @@
-﻿namespace RentSaaS.Common;
+﻿using Common.Services;
+namespace RentSaaS.Common;
 
 public interface ITenantService
 {

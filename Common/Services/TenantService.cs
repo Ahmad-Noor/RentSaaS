@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Common.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 namespace RentSaaS.Common;
 
 public class TenantService : ITenantService
 {
-    private readonly TenantSettings _tenantSettings;
+    private readonly IdentityDB _identityDB;
     private readonly HttpContext? _httpContext;
     private Tenant? _currenttenant;
-    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<TenantSettings> tenantSettings)
+    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<IdentityDB>  identityDB)
     {
         _httpContext = httpContextAccessor.HttpContext;
-        _tenantSettings = tenantSettings.Value;
+        _identityDB = identityDB.Value;
         if (_httpContext is not null)
         {
             if (_httpContext!.Request.Headers.TryGetValue("tenant", out var tenantId))
@@ -28,20 +29,20 @@ public class TenantService : ITenantService
 
     private void SetCurrentTenant(string tenantId)
     {
-        _currenttenant = _tenantSettings.Tenants.FirstOrDefault(c => c.TenantId == tenantId);
+        _currenttenant = _identityDB.Tenants.FirstOrDefault(c => c.TenantId == tenantId);
         if (_currenttenant is null)
         {
             throw new UnauthorizedAccessException("Invalid tenant Id!");
         }
         if (string.IsNullOrEmpty(_currenttenant.ConnectionString))
         {
-            _currenttenant.ConnectionString = _tenantSettings!.Defaults!.ConnectionString;
+            _currenttenant.ConnectionString = GetDefualtConnectionString();
         }
     }
-
+     
     public string? GetConnectionString()
     {
-        var connectionString = _currenttenant is null ? _tenantSettings!.Defaults!.ConnectionString : _currenttenant.ConnectionString;
+        var connectionString = _currenttenant is null ? GetDefualtConnectionString() : _currenttenant.ConnectionString;
         return connectionString;
     }
 
@@ -49,9 +50,13 @@ public class TenantService : ITenantService
     {
         return _currenttenant;
     }
+    private string? GetDefualtConnectionString()
+    {
+        return _identityDB.Tenants.FirstOrDefault(c => c.IsDefault == true).ConnectionString;
+    }
 
     public string? GetDatabaseProvider()
     {
-        return _tenantSettings!.Defaults!.DBProvider;
+        return _identityDB.Tenants.FirstOrDefault(c => c.IsDefault == true).DBProvider;
     }
 }

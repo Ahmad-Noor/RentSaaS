@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Common.Services;
 
 namespace RentSaaS.Common;
 public class IdentityDB : IdentityDbContext<IdentityUser>
 {
     //protected readonly IConfiguration Configuration; 
 
-    public IdentityDB(DbContextOptions<IdentityDB> options) : base(options)
-    {
-        //Configuration = configuration;
-    }
+    //public IdentityDB(DbContextOptions<IdentityDB> options) : base(options)
+    //{
+    //    //Configuration = configuration;
+    //}
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {

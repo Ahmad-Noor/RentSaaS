@@ -1,9 +1,9 @@
 ﻿using RentSaaS.Domain;
 using RentSaaS.Domain.Base;
-using Microsoft.Extensions.Logging;
-using RentSaaS.Infrastructure.Repositories;
 using RentSaaS.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using RentSaaS.Infrastructure.Repositories;
 
 namespace RentSaaS.Infrastructure;
 
@@ -51,8 +51,5 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     }
 
     public async ValueTask DisposeAsync() => await _dbContext.DisposeAsync();
-
-    //ValueTask IAsyncDisposable.DisposeAsync() { dbContext.DisposeAsync(); GC.SuppressFinalize(this); }
-
 
 }

@@ -40,7 +40,7 @@ public class RentSaaSDBContext : DbContext
                                                                 errorNumbersToAdd: null);
                                                         });
             }
-            //else if (string.Equals(dbProvider, "MySQL", StringComparison.OrdinalIgnoreCase))
+            //TODO: else if (string.Equals(dbProvider, "MySQL", StringComparison.OrdinalIgnoreCase))
         }
     }
 
@@ -48,7 +48,6 @@ public class RentSaaSDBContext : DbContext
     {
         //todo: https://www.youtube.com/watch?v=tsWXmKfqHE4&list=PL62tSREI9C-dugbPn185_D6fSzIBC0LK3&index=7&ab_channel=DevCreed
         //modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
-        //modelBuilder.Entity<User>().HasQueryFilter(w => w.TenantId == TenantId);
         base.OnModelCreating(builder);
 
         builder.ApplyGlobalFilters<IEntity>(e => e.TenantId == TenantId);
