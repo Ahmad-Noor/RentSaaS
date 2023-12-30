@@ -4,7 +4,6 @@ using RentSaaS.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using RentSaaS.Infrastructure.Repositories;
-
 namespace RentSaaS.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork, IAsyncDisposable
