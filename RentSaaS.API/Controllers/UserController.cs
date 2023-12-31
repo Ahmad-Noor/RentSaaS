@@ -1,11 +1,11 @@
 ﻿using Common;
-using System.Text; 
+using System.Text;
 using Common.Services;
-using RentSaaS.Common; 
+using RentSaaS.Common;
 using RentSaaS.API.DOTs;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc; 
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,12 +18,12 @@ public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
     private readonly IdentityDBContext _identityDBContext;
-    private readonly IConfiguration _configuration; 
+    private readonly IConfiguration _configuration;
 
     public UserController(ILogger<UserController> logger, IConfiguration configuration, IdentityDBContext identityDB)
     {
         _logger = logger;
-        _configuration = configuration; 
+        _configuration = configuration;
         _identityDBContext = identityDB;
     }
     [HttpPost("authenticate")]
@@ -31,13 +31,13 @@ public class UserController : ControllerBase
     {
         if (model == null) { return BadRequest(); }
 
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower()== model.Email.ToLower());
-        if (user == null || !Password.VerifyHashedPassword(user.PasswordHash, model.Password))
+        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == model.Email.ToLower());
+        if (user != null && Password.VerifyHashedPassword(user.PasswordHash, model.Password))
         {
-            return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
+            var token = CreateJwtToken(user);
+            return Ok(new AuthenticateResponse(user, token));
         }
-        var token = CreateJwtToken(user);
-        return Ok(new AuthenticateResponse(user, token));
+        return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
     }
 
     //[Authorize]
@@ -112,7 +112,7 @@ public class UserController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}")
         });
-          
+
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -161,7 +161,7 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(w => w.Id == id );
+        var user = await _identityDBContext.Users.FirstOrDefaultAsync(w => w.Id == id);
         if (user != null)
         {
             user.IsActive = false;
