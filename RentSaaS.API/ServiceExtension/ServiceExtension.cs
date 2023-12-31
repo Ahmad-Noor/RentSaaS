@@ -17,10 +17,10 @@ public static class ServiceExtension
         List<Tenant> tenants;
 
         services.AddEntityFrameworkSqlite().AddDbContext<IdentityDbContext>();
-        services.AddDbContext<IdentityDB>();
+        services.AddDbContext<IdentityDBContext>();
         using (var scope = services.BuildServiceProvider().CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDB>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDBContext>();
             if (dbContext.Database.GetPendingMigrations().Any()) { dbContext.Database.Migrate(); }
             tenants = [.. dbContext.Tenants];
 

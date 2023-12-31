@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Common.Migrations
 {
     /// <inheritdoc />
-    public partial class IndentityDBInit : Migration
+    public partial class IdentityDBInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace Common.Migrations
                 name: "Identity.Roles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -31,7 +31,18 @@ namespace Common.Migrations
                 name: "Identity.Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    ShowFullName = table.Column<bool>(type: "INTEGER", nullable: true),
+                    ProfilePicture = table.Column<string>(type: "TEXT", nullable: true),
+                    ProfilePictureUpdated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastLoggedIn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    PasswordLastChanged = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: true),
+                    RefreshToken = table.Column<string>(type: "TEXT", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -73,7 +84,7 @@ namespace Common.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -94,7 +105,7 @@ namespace Common.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -116,7 +127,7 @@ namespace Common.Migrations
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,8 +144,8 @@ namespace Common.Migrations
                 name: "Identity.UserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,7 +168,7 @@ namespace Common.Migrations
                 name: "Identity.UserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)

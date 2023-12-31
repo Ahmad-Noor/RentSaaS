@@ -1,11 +1,13 @@
-﻿using RentSaaS.Domain.Entities;
+﻿using Common.Services;
+using Microsoft.AspNetCore.Identity;
+using RentSaaS.Domain.Entities;
 namespace RentSaaS.API.DOTs;
 public class AuthenticateResponse
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string Username { get; set; }
+    public string Email { get; set; }
     public string Token { get; set; }
      
     public AuthenticateResponse(User user, string token)
@@ -13,7 +15,7 @@ public class AuthenticateResponse
         Id = user.Id;
         FirstName = user.FirstName;
         LastName = user.LastName;
-        Username = user.UserName;
+        LastName = user.Email; 
         Token = token;
     }
 }

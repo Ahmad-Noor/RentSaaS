@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 namespace RentSaaS.Common;
-
 public class TenantService : ITenantService
 {
-    private readonly IdentityDB _identityDB;
+    private readonly IdentityDBContext _identityDB;
     private readonly HttpContext? _httpContext;
     private Tenant? _currenttenant;
-    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<IdentityDB>  identityDB)
+    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<IdentityDBContext>  identityDB)
     {
         _httpContext = httpContextAccessor.HttpContext;
         _identityDB = identityDB.Value;

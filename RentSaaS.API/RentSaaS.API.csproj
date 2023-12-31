@@ -10,10 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\User_Controller.cs" />
     <Compile Remove="DOTs\AddressResource.cs" />
-    <Compile Remove="DOTs\AuthenticateRequest.cs" />
-    <Compile Remove="DOTs\AuthenticateResponse.cs" />
     <Compile Remove="Mapper\AddressProfile.cs" />
   </ItemGroup>
 
@@ -33,8 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="DOTs\" />
     <Folder Include="Mapper\" />
   </ItemGroup>
 

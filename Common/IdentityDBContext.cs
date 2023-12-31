@@ -4,15 +4,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Common.Services;
 
 namespace RentSaaS.Common;
-public class IdentityDB : IdentityDbContext<IdentityUser>
+public class IdentityDBContext : IdentityDbContext<User, IdentityRole<Guid>,Guid>
 {
-    //protected readonly IConfiguration Configuration; 
-
-    //public IdentityDB(DbContextOptions<IdentityDB> options) : base(options)
-    //{
-    //    //Configuration = configuration;
-    //}
-
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         //builder.UseSqlite(Configuration.GetConnectionString("IdentityDBConnectionStrings"));
@@ -31,14 +24,14 @@ public class IdentityDB : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<IdentityUser>(entity => { entity.ToTable(name: "Identity.Users"); });
-        builder.Entity<IdentityRole>(entity => { entity.ToTable(name: "Identity.Roles"); });
-        builder.Entity<IdentityUserRole<string>>(entity => { entity.ToTable("Identity.UserRoles"); });
-        builder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable("Identity.UserClaims"); });
-        builder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable("Identity.UserLogins"); });
-        builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("Identity.RoleClaims"); });
-        builder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable("Identity.UserTokens"); });
+        builder.Entity<User>(entity => { entity.ToTable(name: "Identity.Users"); });
+        builder.Entity<IdentityRole<Guid>>(entity => { entity.ToTable("Identity.Roles"); });
+        builder.Entity<IdentityUserLogin<Guid>>(entity => { entity.ToTable("Identity.UserLogin"); });
+        builder.Entity<IdentityUserRole<Guid>>(entity =>  { entity.ToTable("Identity.UserRoles"); });
+        builder.Entity<IdentityUserClaim<Guid>>(entity => { entity.ToTable("Identity.UserClaims"); });
+        builder.Entity<IdentityUserLogin<Guid>>(entity => { entity.ToTable("Identity.UserLogins"); });
+        builder.Entity<IdentityRoleClaim<Guid>>(entity => { entity.ToTable("Identity.RoleClaims"); });
+        builder.Entity<IdentityUserToken<Guid>>(entity => { entity.ToTable("Identity.UserTokens"); });
 
         builder.Entity<Tenant>().HasData(
         new Tenant
@@ -76,4 +69,5 @@ public class IdentityDB : IdentityDbContext<IdentityUser>
 
     }
     public DbSet<Tenant> Tenants { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 }

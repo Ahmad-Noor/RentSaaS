@@ -13,30 +13,29 @@ using RentSaaS.Common;
 using RentSaaS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Common.Services;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class User_Controller : ControllerBase
+public class UserController : ControllerBase
 {
-    private readonly ILogger<User_Controller> _logger; // ILogger takes the type of the class as a parameter
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IConfiguration _configuration;
-    private readonly ITenantService tenantService;
+    private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
+    private readonly IdentityDBContext _identityDBContext;
+    private readonly IConfiguration _configuration; 
 
-    public User_Controller(IUnitOfWork unitOfWork, ILogger<User_Controller> logger, IConfiguration configuration, ITenantService tenantService)
+    public UserController(ILogger<UserController> logger, IConfiguration configuration, IdentityDBContext identityDB)
     {
-        _unitOfWork = unitOfWork;
         _logger = logger;
-        _configuration = configuration;
-        this.tenantService = tenantService;
+        _configuration = configuration; 
+        _identityDBContext = identityDB;
     }
     [HttpPost("authenticate")]
     public async Task<IActionResult> Authenticate(AuthenticateRequest model)
     {
         if (model == null) { return BadRequest(); }
 
-        var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(x => x.UserName.ToLower() == model.UserName.ToLower());
+        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => string.Equals(x.Email, model.Email, StringComparison.OrdinalIgnoreCase));
         if (user == null && !PasswordHasher.VerifyPassword(model.Password, model.Password))
         {
             return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
@@ -44,7 +43,7 @@ public class User_Controller : ControllerBase
         var token = CreateJwtToken(user);
         return Ok(new AuthenticateResponse(user, token));
     }
-  
+
     //[Authorize]
     //[HttpGet]
     //public async Task<IActionResult> GetAll()
@@ -70,9 +69,9 @@ public class User_Controller : ControllerBase
         return NotFound();
     }
 
-  
+
     [HttpPost]
-    public async Task<IActionResult> Add(IdentityUser user)
+    public async Task<IActionResult> Add(User user)
     {
         if (user == null)
         {
@@ -85,7 +84,7 @@ public class User_Controller : ControllerBase
         if (await CheckUserNameEmailAsync(user.Email))
         {
             return BadRequest(new { Message = "Email Already Exist!" });
-        } 
+        }
         if (!Regex.IsMatch(user.PasswordHash, "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))
         {
             return BadRequest(new { Message = "password must contain at least eight characters, at least one number and both lower and uppercase letters and least one special character" });
@@ -95,8 +94,8 @@ public class User_Controller : ControllerBase
         {
             _logger.LogInformation("Create new user, user name #{UserName}", user.UserName);
             user.PasswordHash = PasswordHasher.HashPassword(user.PasswordHash);
-              _unitOfWork.UserRepository.AddUser(user);
-            await _unitOfWork.CompleteAsync();
+            _identityDBContext.Users.Add(user);
+            await _identityDBContext.SaveChangesAsync();
 
             return Ok(user);
         }
@@ -104,7 +103,7 @@ public class User_Controller : ControllerBase
         {
             _logger.LogError(ex, "error on creating new user #{UserName}", user.UserName);
             return new JsonResult($"error on creating new user {user.UserName}") { StatusCode = 500 };
-        }  
+        }
     }
 
     private string CreateJwtToken(User user)
@@ -113,13 +112,11 @@ public class User_Controller : ControllerBase
         var jwrTokenHandler = new JwtSecurityTokenHandler();
         var identity = new ClaimsIdentity(new Claim[]
         {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
-                new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}")
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}")
         });
-
+          
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -134,22 +131,22 @@ public class User_Controller : ControllerBase
     }
 
     private async Task<bool> CheckUserNameExistAsync(string userName)
-    { 
+    {
         //var options = new DbContextOptions<RentSaaSDBContext>();
         //options.UseSqlServer(tenantService.GetConnectionString());
 
         //var dbContext = new RentSaaSDBContext(options, tenantService);
         //var query = dbContext.Users.Where(u => u.UserName == userName);
-        var user = await _unitOfWork.UserRepository.SingleOrDefaultAsync(w => w.UserName == userName);
+        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.UserName == userName);
         return user != null;
     }
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
-        var user = await _unitOfWork.UserRepository.SingleOrDefaultAsync(w => w.Email == email);
+        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
         return user != null;
     }
 
- 
+
 
     [Authorize]
     [HttpPut("{id}")]
@@ -159,9 +156,8 @@ public class User_Controller : ControllerBase
         {
             return BadRequest();
         }
-        await _unitOfWork.UserRepository.Upsert(user);
-        await _unitOfWork.CompleteAsync();
 
+        _identityDBContext.SaveChangesAsync();
         return NoContent();
     }
 
@@ -169,11 +165,12 @@ public class User_Controller : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        User? user = await _unitOfWork.UserRepository.GetById(id);
+        var user = await _identityDBContext.Users.FirstOrDefaultAsync(w => w.Id == id );
         if (user != null)
         {
-            await _unitOfWork.UserRepository.Delete(id);
-            await _unitOfWork.CompleteAsync();
+            user.IsActive = false;
+            user.IsDeleted = true;
+            await _identityDBContext.SaveChangesAsync();
             return NoContent();
         }
         return NotFound(id);
