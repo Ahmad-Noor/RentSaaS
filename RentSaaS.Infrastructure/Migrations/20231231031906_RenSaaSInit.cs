@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RentSaaS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class RentSaaSInit : Migration
+    public partial class RenSaaSInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

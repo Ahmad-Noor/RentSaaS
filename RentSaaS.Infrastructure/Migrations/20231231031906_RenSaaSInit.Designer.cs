@@ -12,8 +12,8 @@ using RentSaaS.Infrastructure;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    [Migration("20231230060533_RentSaaSInit")]
-    partial class RentSaaSInit
+    [Migration("20231231031906_RenSaaSInit")]
+    partial class RenSaaSInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

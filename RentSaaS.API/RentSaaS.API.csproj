@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Compile Remove="DOTs\AddressResource.cs" />
+    <Compile Remove="Helpers\PasswordHasher.cs" />
     <Compile Remove="Mapper\AddressProfile.cs" />
   </ItemGroup>
 
@@ -30,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="Mapper\" />
   </ItemGroup>
 

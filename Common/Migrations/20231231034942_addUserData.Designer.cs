@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Common;
 
@@ -10,9 +11,11 @@ using RentSaaS.Common;
 namespace Common.Migrations
 {
     [DbContext(typeof(IdentityDBContext))]
-    partial class IdentityDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231231034942_addUserData")]
+    partial class addUserData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -182,15 +185,15 @@ namespace Common.Migrations
                         {
                             Id = new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d9d8a55-69f6-4a02-ab49-54656c349567",
+                            ConcurrencyStamp = "3fef0cc0-1f80-4ab0-82f6-88b7835908c2",
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
-                            IsActive = true,
+                            IsActive = false,
                             IsDeleted = false,
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            PasswordHash = "AGybG/hC4bgQUTn+kdm933MrNXQOPuGcdmTkTzWqd3U6qasEAj+FmydAypGNy8zkZg==",
+                            PasswordHash = "APQf8sNULv0H9EnKBvH8a3bVjHjdxVpR+lMjEfgN6VEBQSA2U8c9hna8o8TiJwsfLA==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

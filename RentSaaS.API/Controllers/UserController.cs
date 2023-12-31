@@ -1,19 +1,15 @@
-﻿using System.Text;
-using RentSaaS.Domain;
+﻿using Common;
+using System.Text; 
+using Common.Services;
+using RentSaaS.Common; 
 using RentSaaS.API.DOTs;
-using RentSaaS.API.Helpers;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using RentSaaS.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc; 
+using Microsoft.EntityFrameworkCore; 
 using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using RentSaaS.Common;
-using RentSaaS.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Common.Services;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
@@ -35,8 +31,8 @@ public class UserController : ControllerBase
     {
         if (model == null) { return BadRequest(); }
 
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => string.Equals(x.Email, model.Email, StringComparison.OrdinalIgnoreCase));
-        if (user == null && !PasswordHasher.VerifyPassword(model.Password, model.Password))
+        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower()== model.Email.ToLower());
+        if (user == null || !Password.VerifyHashedPassword(user.PasswordHash, model.Password))
         {
             return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
         }
@@ -93,7 +89,7 @@ public class UserController : ControllerBase
         try
         {
             _logger.LogInformation("Create new user, user name #{UserName}", user.UserName);
-            user.PasswordHash = PasswordHasher.HashPassword(user.PasswordHash);
+            user.PasswordHash = Password.HashPassword(user.PasswordHash);
             _identityDBContext.Users.Add(user);
             await _identityDBContext.SaveChangesAsync();
 
