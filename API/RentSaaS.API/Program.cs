@@ -1,9 +1,12 @@
 using FluentValidation.AspNetCore;
+using RentSaaS.API.Configurations;
 using RentSaaS.API.ServiceExtension;
 using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+//---------------- JWT Config
+builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwrConfig"));
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
  

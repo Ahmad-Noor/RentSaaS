@@ -1,25 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common;
+using Common.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Common.Services;
-using Common;
-
 namespace RentSaaS.Common;
-public class IdentityDBContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+public class ConfigurationDBContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder builder)
+    public ConfigurationDBContext() { }
+    public ConfigurationDBContext(DbContextOptions options) : base(options) { }
+    //public ConfigurationDBContext(DbContextOptions<ConfigurationDBContext> options) : base(options) { }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        //builder.UseSqlite(Configuration.GetConnectionString("IdentityDBConnectionStrings"));
-
-        string folder = Path.Combine(Environment.CurrentDirectory, "Data");
-        string dbPath = Path.Combine(folder, "IdentityDB.db");
-
-        if (!Directory.Exists(folder))
+        if (!options.IsConfigured)
         {
-            Directory.CreateDirectory(folder);
-        }
+            string folder = Path.Combine(Environment.CurrentDirectory, "Data");
+            string dbPath = Path.Combine(folder, "ConfigurationDB.db");
+            if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
 
-        builder.UseSqlite($"Data Source={dbPath}");
+            options.UseSqlite($"Data Source={dbPath}");
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -43,7 +43,7 @@ public class IdentityDBContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
                 UserName = "admin",
                 IsActive = true,
                 Email = "admin@rentsaas.com",
-                PasswordHash = Password.HashPassword("admin") 
+                PasswordHash = Password.HashPassword("admin")
             });
         builder.Entity<Tenant>().HasData(
              new Tenant

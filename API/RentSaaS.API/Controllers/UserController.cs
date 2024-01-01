@@ -17,10 +17,10 @@ namespace RentSaaS.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
-    private readonly IdentityDBContext _identityDBContext;
+    private readonly ConfigurationDBContext _identityDBContext;
     private readonly IConfiguration _configuration; 
 
-    public UserController(ILogger<UserController> logger, IConfiguration configuration, IdentityDBContext identityDB)
+    public UserController(ILogger<UserController> logger, IConfiguration configuration, ConfigurationDBContext identityDB)
     {
         _logger = logger;
         _configuration = configuration; 

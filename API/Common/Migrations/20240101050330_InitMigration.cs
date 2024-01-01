@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Common.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityDBInit : Migration
+    public partial class InitMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -183,6 +183,11 @@ namespace Common.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Identity.Users",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsActive", "IsDeleted", "LastLoggedIn", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordLastChanged", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicture", "ProfilePictureUpdated", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "ShowFullName", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"), 0, "a7186083-ceae-47cc-aa2c-1d066c9afa8b", "admin@rentsaas.com", false, "Admin", true, false, null, "Admin", false, null, null, null, "AFX3jh7eTp0rf+y5alm5rycdNq48gK8yLGHZTeFsxjQigxngiFNuygzV4wYItPZOgA==", null, null, false, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Tenants",

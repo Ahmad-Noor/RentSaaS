@@ -3,7 +3,7 @@ namespace Common.Services;
 public class User: IdentityUser<Guid>
 { 
     public required string FirstName { get; set; }
-    public required string LastName{ get; set; }  
+    public required string LastName { get; set; } = string.Empty; 
     public bool? ShowFullName { get; set; }
     public string? ProfilePicture { get; set; }
     public DateTime? ProfilePictureUpdated { get; set; }

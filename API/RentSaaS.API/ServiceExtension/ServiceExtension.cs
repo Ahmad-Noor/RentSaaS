@@ -3,8 +3,8 @@ using Common.Services;
 using RentSaaS.Domain;
 using RentSaaS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace RentSaaS.API.ServiceExtension;
 public static class ServiceExtension
 {
@@ -16,11 +16,27 @@ public static class ServiceExtension
         //---------------------- Multitenancy Setting & SQL lite DB
         List<Tenant> tenants;
 
-        services.AddEntityFrameworkSqlite().AddDbContext<IdentityDbContext>();
-        services.AddDbContext<IdentityDBContext>();
+
+        string folder = Path.Combine(Environment.CurrentDirectory, "Data");
+        string dbPath = Path.Combine(folder, "ConfigurationDB.db");
+        if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+
+        //services.AddIdentity<User, IdentityRole>()
+        //        .AddEntityFrameworkStores<ConfigurationDBContext>()
+        //        .AddDefaultUI() 
+        //        .AddDefaultTokenProviders();
+
+
+        services.AddEntityFrameworkSqlite()
+                .AddDbContext<ConfigurationDBContext>(options => options.UseSqlite($"Data Source={dbPath};Cache=Shared"));
+        // services.AddDbContext<ConfigurationDBContext>(options => options.UseSqlite($"Data Source={dbPath};Cache=Shared"));
+
+
+
+
         using (var scope = services.BuildServiceProvider().CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDBContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ConfigurationDBContext>();
             if (dbContext.Database.GetPendingMigrations().Any()) { dbContext.Database.Migrate(); }
             tenants = [.. dbContext.Tenants];
 

@@ -10,9 +10,9 @@ using RentSaaS.Common;
 
 namespace Common.Migrations
 {
-    [DbContext(typeof(IdentityDBContext))]
-    [Migration("20231231030237_IdentityDBInit")]
-    partial class IdentityDBInit
+    [DbContext(typeof(ConfigurationDBContext))]
+    [Migration("20240101050330_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,6 +179,26 @@ namespace Common.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("Identity.Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a7186083-ceae-47cc-aa2c-1d066c9afa8b",
+                            Email = "admin@rentsaas.com",
+                            EmailConfirmed = false,
+                            FirstName = "Admin",
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastName = "Admin",
+                            LockoutEnabled = false,
+                            PasswordHash = "AFX3jh7eTp0rf+y5alm5rycdNq48gK8yLGHZTeFsxjQigxngiFNuygzV4wYItPZOgA==",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

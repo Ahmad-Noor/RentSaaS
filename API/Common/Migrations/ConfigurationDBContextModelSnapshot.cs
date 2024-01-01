@@ -9,8 +9,8 @@ using RentSaaS.Common;
 
 namespace Common.Migrations
 {
-    [DbContext(typeof(IdentityDBContext))]
-    partial class IdentityDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ConfigurationDBContext))]
+    partial class ConfigurationDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -182,7 +182,7 @@ namespace Common.Migrations
                         {
                             Id = new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d9d8a55-69f6-4a02-ab49-54656c349567",
+                            ConcurrencyStamp = "a7186083-ceae-47cc-aa2c-1d066c9afa8b",
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
@@ -190,7 +190,7 @@ namespace Common.Migrations
                             IsDeleted = false,
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            PasswordHash = "AGybG/hC4bgQUTn+kdm933MrNXQOPuGcdmTkTzWqd3U6qasEAj+FmydAypGNy8zkZg==",
+                            PasswordHash = "AFX3jh7eTp0rf+y5alm5rycdNq48gK8yLGHZTeFsxjQigxngiFNuygzV4wYItPZOgA==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

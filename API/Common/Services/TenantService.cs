@@ -4,13 +4,13 @@ using Microsoft.Extensions.Options;
 namespace RentSaaS.Common;
 public class TenantService : ITenantService
 {
-    private readonly IdentityDBContext _identityDB;
+    private readonly ConfigurationDBContext _configurationDB;
     private readonly HttpContext? _httpContext;
     private Tenant? _currenttenant;
-    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<IdentityDBContext>  identityDB)
+    public TenantService(IHttpContextAccessor httpContextAccessor, IOptions<ConfigurationDBContext>  identityDB)
     {
         _httpContext = httpContextAccessor.HttpContext;
-        _identityDB = identityDB.Value;
+        _configurationDB = identityDB.Value;
         if (_httpContext is not null)
         {
             if (_httpContext!.Request.Headers.TryGetValue("tenant", out var tenantId))
@@ -28,7 +28,7 @@ public class TenantService : ITenantService
 
     private void SetCurrentTenant(string tenantId)
     {
-        _currenttenant = _identityDB.Tenants.FirstOrDefault(c => c.TenantId == tenantId);
+        _currenttenant = _configurationDB.Tenants.FirstOrDefault(c => c.TenantId == tenantId);
         if (_currenttenant is null)
         {
             throw new UnauthorizedAccessException("Invalid tenant Id!");
@@ -51,11 +51,11 @@ public class TenantService : ITenantService
     }
     private string? GetDefualtConnectionString()
     {
-        return _identityDB.Tenants.FirstOrDefault(c => c.IsDefault == true).ConnectionString;
+        return _configurationDB.Tenants.FirstOrDefault(c => c.IsDefault == true).ConnectionString;
     }
 
     public string? GetDatabaseProvider()
     {
-        return _identityDB.Tenants.FirstOrDefault(c => c.IsDefault == true).DBProvider;
+        return _configurationDB.Tenants.FirstOrDefault(c => c.IsDefault == true).DBProvider;
     }
 }
