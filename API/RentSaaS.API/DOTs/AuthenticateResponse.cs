@@ -1,6 +1,4 @@
-﻿using Common.Services;
-using Microsoft.AspNetCore.Identity;
-using RentSaaS.Domain.Entities;
+﻿using Common.Services; 
 namespace RentSaaS.API.DOTs;
 public class AuthenticateResponse
 {

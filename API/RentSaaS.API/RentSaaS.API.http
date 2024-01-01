@@ -1,6 +1,4 @@
-@RentSaaS.API_HostAddress = https://localhost:7164
 @Host = https://localhost:7164
-
 
 GET {{Host}}/api/user
 tenant:SkyRealty1
@@ -30,7 +28,6 @@ Content-Type: application/json
 POST {{Host}}/api/User/authenticate
 tenant: SkyRealty3
 Content-Type: application/json
-{
-  "userName": "AhmadNoor",
-  "password": "123456"
-}
+
+  "email": "admin@rentsaas.com",
+  "password": "admin"

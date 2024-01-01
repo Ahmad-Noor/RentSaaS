@@ -27,7 +27,7 @@ public class UserController : ControllerBase
         _identityDBContext = identityDB;
     }
     [HttpPost("authenticate")]
-    public async Task<IActionResult> Authenticate(AuthenticateRequest model)
+    public async Task<IActionResult> Authenticate(UserLoginReuestDto model)
     {
         if (model == null) { return BadRequest(); }
 
@@ -104,7 +104,7 @@ public class UserController : ControllerBase
 
     private string CreateJwtToken(User user)
     {
-        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>(key: "SecretKey"));
+        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>(key: "JwtConfig:SecretKey"));
         var jwrTokenHandler = new JwtSecurityTokenHandler();
         var identity = new ClaimsIdentity(new Claim[]
         {

@@ -9,7 +9,7 @@ public class User: IdentityUser<Guid>
     public DateTime? ProfilePictureUpdated { get; set; }
     public DateTime? LastLoggedIn { get; set; }
     public DateTime? PasswordLastChanged { get; set; } 
-    public bool? IsActive { get; set; } = false;
+    public bool? IsActive { get; set; } = true;
     public bool? IsDeleted { get; set; } = false;
     public string? RefreshToken { get; set; }
     public DateTime RefreshTokenExpiryTime { get; set; }

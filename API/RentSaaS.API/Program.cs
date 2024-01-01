@@ -1,27 +1,34 @@
+using Common.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using RentSaaS.API.Configurations;
 using RentSaaS.API.ServiceExtension;
+using RentSaaS.Common;
 using Serilog;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 //---------------- JWT Config
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwrConfig"));
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ConfigurationDBContext>();
+
+
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
  
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFluentValidation(config => config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-
-// Add services to the container.
  
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
  
 builder.Services.AddRentSaaSContext(builder.Configuration);
+
+
 //-------------------------Add Rate Limiter
 //TODO: Add Rate Limiter
 
@@ -39,6 +46,29 @@ var _logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(_logger);
 //------------------------------------
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var SecurectKey =Encoding.ASCII.GetBytes( builder.Configuration.GetSection("JwtConfig:SecretKey").Value);
+    //options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(SecurectKey),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = false,
+        RequireExpirationTime = false,
+        //ClockSkew = TimeSpan.Zero
+    };
+}); 
 
 var app = builder.Build();
 

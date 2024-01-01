@@ -2,13 +2,13 @@
 using Common.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Design; 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace RentSaaS.Common;
 public class ConfigurationDBContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
-    public ConfigurationDBContext() { }
-    public ConfigurationDBContext(DbContextOptions options) : base(options) { }
-    //public ConfigurationDBContext(DbContextOptions<ConfigurationDBContext> options) : base(options) { }
+    public ConfigurationDBContext() { } 
+    public ConfigurationDBContext(DbContextOptions<ConfigurationDBContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -48,12 +48,18 @@ public class ConfigurationDBContext : IdentityDbContext<User, IdentityRole<Guid>
         builder.Entity<Tenant>().HasData(
              new Tenant
              {
-                 TenantId = "RentSaas",
-                 Name = "RentSaas",
+                 TenantId = "RentSaaS",
+                 Name = "RentSaaS is a Default & Shared Database ",
                  DBProvider = "MSSQL",
                  IsDefault = true,
                  ConnectionString = "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true"
-             }, new Tenant
+             },
+             new Tenant
+             {
+                 TenantId = "SkyRealty",
+                 Name = "Sky Realty",
+             }, 
+             new Tenant
              {
                  TenantId = "SkyRealty1",
                  Name = "Sky Realty1",
@@ -71,15 +77,25 @@ public class ConfigurationDBContext : IdentityDbContext<User, IdentityRole<Guid>
              {
                  TenantId = "SkyRealty 3",
                  Name = "Sky Realty 3",
-             },
-             new Tenant
-             {
-                 TenantId = "SkyRealty 4",
-                 Name = "Sky Realty 4",
              }
              );
 
     }
     public DbSet<Tenant> Tenants { get; set; }
     public virtual DbSet<User> Users { get; set; }
+}
+public class YourDbContextFactory : IDesignTimeDbContextFactory<ConfigurationDBContext>
+{
+    public ConfigurationDBContext CreateDbContext(string[] args)
+    {
+        string folder = Path.Combine(Environment.CurrentDirectory, "Data");
+        string dbPath = Path.Combine(folder, "ConfigurationDB.db");
+        if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+
+
+        var optionsBuilder = new DbContextOptionsBuilder<ConfigurationDBContext>();
+        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+
+        return new ConfigurationDBContext(optionsBuilder.Options);
+    }
 }

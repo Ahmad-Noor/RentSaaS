@@ -187,16 +187,16 @@ namespace Common.Migrations
             migrationBuilder.InsertData(
                 table: "Identity.Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsActive", "IsDeleted", "LastLoggedIn", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordLastChanged", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicture", "ProfilePictureUpdated", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "ShowFullName", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"), 0, "a7186083-ceae-47cc-aa2c-1d066c9afa8b", "admin@rentsaas.com", false, "Admin", true, false, null, "Admin", false, null, null, null, "AFX3jh7eTp0rf+y5alm5rycdNq48gK8yLGHZTeFsxjQigxngiFNuygzV4wYItPZOgA==", null, null, false, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, false, "admin" });
+                values: new object[] { new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"), 0, "9114e2e8-e617-4ff3-b2ef-4f792ecfe05e", "admin@rentsaas.com", false, "Admin", true, false, null, "Admin", false, null, null, null, "AOMnghLlRymBHoUEd9t+5I5+/TRHtqKioYpm7PMLmSWsPl9qyekZThR4j3cWq0801A==", null, null, false, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Tenants",
                 columns: new[] { "TenantId", "ConnectionString", "DBProvider", "IsDefault", "Name" },
                 values: new object[,]
                 {
-                    { "RentSaas", "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true", "MSSQL", true, "RentSaas" },
+                    { "RentSaaS", "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true", "MSSQL", true, "RentSaaS is a Default & Shared Database " },
+                    { "SkyRealty", null, null, false, "Sky Realty" },
                     { "SkyRealty 3", null, null, false, "Sky Realty 3" },
-                    { "SkyRealty 4", null, null, false, "Sky Realty 4" },
                     { "SkyRealty1", "Data Source=localhost;Initial Catalog=SkyRealty1;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true", "MSSQL", false, "Sky Realty1" },
                     { "SkyRealty2", "Data Source=localhost;Initial Catalog=SkyRealty2;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true", "MSSQL", false, "Sky Realty2" }
                 });

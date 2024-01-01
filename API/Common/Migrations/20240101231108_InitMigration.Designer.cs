@@ -11,7 +11,7 @@ using RentSaaS.Common;
 namespace Common.Migrations
 {
     [DbContext(typeof(ConfigurationDBContext))]
-    [Migration("20240101050330_InitMigration")]
+    [Migration("20240101231108_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -45,11 +45,17 @@ namespace Common.Migrations
                     b.HasData(
                         new
                         {
-                            TenantId = "RentSaas",
+                            TenantId = "RentSaaS",
                             ConnectionString = "Data Source=localhost;Initial Catalog=RentSaaS;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true",
                             DBProvider = "MSSQL",
                             IsDefault = true,
-                            Name = "RentSaas"
+                            Name = "RentSaaS is a Default & Shared Database "
+                        },
+                        new
+                        {
+                            TenantId = "SkyRealty",
+                            IsDefault = false,
+                            Name = "Sky Realty"
                         },
                         new
                         {
@@ -72,12 +78,6 @@ namespace Common.Migrations
                             TenantId = "SkyRealty 3",
                             IsDefault = false,
                             Name = "Sky Realty 3"
-                        },
-                        new
-                        {
-                            TenantId = "SkyRealty 4",
-                            IsDefault = false,
-                            Name = "Sky Realty 4"
                         });
                 });
 
@@ -185,7 +185,7 @@ namespace Common.Migrations
                         {
                             Id = new Guid("9a22aacf-0a27-4584-a1d8-9f31a3fa5676"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7186083-ceae-47cc-aa2c-1d066c9afa8b",
+                            ConcurrencyStamp = "9114e2e8-e617-4ff3-b2ef-4f792ecfe05e",
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
@@ -193,7 +193,7 @@ namespace Common.Migrations
                             IsDeleted = false,
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            PasswordHash = "AFX3jh7eTp0rf+y5alm5rycdNq48gK8yLGHZTeFsxjQigxngiFNuygzV4wYItPZOgA==",
+                            PasswordHash = "AOMnghLlRymBHoUEd9t+5I5+/TRHtqKioYpm7PMLmSWsPl9qyekZThR4j3cWq0801A==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,
