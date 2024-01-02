@@ -1,0 +1,33 @@
+@Host = https://localhost:7164
+
+GET {{Host}}/api/user
+tenant:SkyRealty1
+###
+
+POST {{Host}}/api/User/
+tenant: SkyRealty3
+Content-Type: application/json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "tenantId": "string",
+  "createdAt": "2023-12-24T15:56:13.177Z",
+  "updatedAt": "2023-12-24T15:56:13.177Z",
+  "isDeleted": true,
+  "note": "string",
+  "code": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "userName": "string",
+  "password": "string",
+  "email": "string",
+  "isActive": true,
+  "roleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+###
+
+POST {{Host}}/api/User/authenticate
+tenant: SkyRealty3
+Content-Type: application/json
+
+  "email": "admin@rentsaas.com",
+  "password": "admin"
