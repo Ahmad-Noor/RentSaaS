@@ -8,32 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using RentSaaS.API.Configurations;
-using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt; 
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthManagementController : ControllerBase
 {
-    private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
+    private readonly ILogger<UserController> _logger;  
     private readonly ConfigurationDBContext _identityDBContext;
     private readonly IConfiguration _configuration;
-     
-    private readonly JwtConfig _jwtConfig;
-
+       
     public AuthManagementController(ILogger<UserController> logger,
                                     IConfiguration configuration,
-                                    ConfigurationDBContext identityDB, 
-                                    IOptionsMonitor<JwtConfig> jwtConfig)
+                                    ConfigurationDBContext identityDB )
     {
         _logger = logger;
         _configuration = configuration;
-        _identityDBContext = identityDB; 
-        _jwtConfig = jwtConfig.CurrentValue;
+        _identityDBContext = identityDB;  
     }
 
     [HttpPost]
@@ -62,6 +54,7 @@ public class AuthManagementController : ControllerBase
                 LastName = Request.LastName,
                 ShowFullName = true,
                 Email = Request.Email,
+                TenantId = Request.TenantId,
                 PasswordHash = Password.HashPassword(Request.Password),
                 IsActive = true, 
             };
@@ -92,22 +85,7 @@ public class AuthManagementController : ControllerBase
         var token = CreateJwtToken(user);
         return Ok(new AuthenticateResponse(user, token));
     }
-
-
-    [HttpGet]
-    [Authorize]
-    [Route("{id:Guid}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
-    {
-        //var user = await _unitOfWork.UserRepository.GetUser(id.ToString());
-        //if (user != null)
-        //{
-        //    return Ok(user);
-        //}
-        return NotFound();
-    }
-
-
+ 
     private string CreateJwtToken(User user)
     {
         var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>(key: "JwtConfig:SecretKey"));
@@ -130,50 +108,11 @@ public class AuthManagementController : ControllerBase
         var token = jwrTokenHandler.CreateToken(tokenDescriptor);
         return jwrTokenHandler.WriteToken(token);
     }
-
-    private async Task<bool> CheckUserNameExistAsync(string userName)
-    {
-        //var options = new DbContextOptions<RentSaaSDBContext>();
-        //options.UseSqlServer(tenantService.GetConnectionString());
-
-        //var dbContext = new RentSaaSDBContext(options, tenantService);
-        //var query = dbContext.Users.Where(u => u.UserName == userName);
-        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.UserName == userName);
-        return user != null;
-    }
+ 
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
         var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
         return user != null;
     }
-
-
-
-    [Authorize]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, User user)
-    {
-        if (id != user.Id)
-        {
-            return BadRequest();
-        }
-
-        _identityDBContext.SaveChangesAsync();
-        return NoContent();
-    }
-
-    [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
-    {
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(w => w.Id == id);
-        if (user != null)
-        {
-            user.IsActive = false;
-            user.IsDeleted = true;
-            await _identityDBContext.SaveChangesAsync();
-            return NoContent();
-        }
-        return NotFound(id);
-    }
+ 
 }

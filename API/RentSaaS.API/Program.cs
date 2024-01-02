@@ -2,7 +2,6 @@ using Common.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using RentSaaS.API.Configurations;
 using RentSaaS.API.ServiceExtension;
 using RentSaaS.Common;
 using Serilog;
@@ -10,8 +9,7 @@ using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-//---------------- JWT Config
-builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwrConfig"));
+//---------------- JWT Config 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ConfigurationDBContext>();
 
 

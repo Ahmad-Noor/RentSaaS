@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Common;
 
@@ -10,9 +11,11 @@ using RentSaaS.Common;
 namespace Common.Migrations
 {
     [DbContext(typeof(ConfigurationDBContext))]
-    partial class ConfigurationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240102012053_AddTenantIdToUsers")]
+    partial class AddTenantIdToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");

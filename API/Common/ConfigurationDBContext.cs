@@ -43,7 +43,8 @@ public class ConfigurationDBContext : IdentityDbContext<User, IdentityRole<Guid>
                 UserName = "admin",
                 IsActive = true,
                 Email = "admin@rentsaas.com",
-                PasswordHash = Password.HashPassword("admin")
+                PasswordHash = Password.HashPassword("admin"),
+                TenantId= "RentSaaS"
             });
         builder.Entity<Tenant>().HasData(
              new Tenant
