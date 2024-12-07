@@ -39,18 +39,17 @@ public class UserController : ControllerBase
         var token = CreateJwtToken(user);
         return Ok(new AuthenticateResponse(user, token));
     }
-
-    //[Authorize]
-    //[HttpGet]
-    //public async Task<IActionResult> GetAll()
-    //{
-    //    var countries = await _unitOfWork.UserRepository.GetAll();
-    //    if (countries == null)
-    //    {
-    //        return NotFound();
-    //    }
-    //    return Ok(countries);
-    //}
+     
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var users = await _identityDBContext.Users.ToListAsync();
+        if (users == null)
+        {
+            return NotFound();
+        }
+        return Ok(users);
+    }
 
     [HttpGet]
     [Authorize]

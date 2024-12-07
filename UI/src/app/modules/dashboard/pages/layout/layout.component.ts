@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject  } from '@angular/core';  
-import {  DOCUMENT  } from '@angular/common';
-import { MasterService } from '../../../../core/services/master/master.service';
+import {  DOCUMENT  } from '@angular/common'; 
+import { MasterService } from '../../../core/services/master/master.service';
 
 @Component({
   selector: 'app-layout',

@@ -4,17 +4,18 @@ import { ProjectsComponent } from './pages/projects/projects.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { UsersComponent } from './pages/users/users.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { TestComponent } from './pages/test/test.component';
 
 const routes: Routes = [ 
   
   {
-    path: 'dashboard',
+    path: 'dashboad',
     component: LayoutComponent,
     children: [
+      { path: 'test', component: TestComponent },
       { path: 'projects', component: ProjectsComponent },
       { path: 'users', component: UsersComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'projects', component: ProjectsComponent }
+      { path: 'dashboard', component: DashboardComponent }, 
     ],
   },
   

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';  
-import { MasterService } from '../../../../core/services/master/master.service';
+import { Component } from '@angular/core';   
+import { MasterService } from '../../../core/services/master/master.service';
 
 @Component({
   selector: 'app-dashboard',
