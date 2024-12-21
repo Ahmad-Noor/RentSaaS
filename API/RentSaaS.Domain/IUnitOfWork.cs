@@ -1,6 +1,4 @@
-﻿using RentSaaS.Domain.Entities;
-using RentSaaS.Domain.Base;
-using RentSaaS.Domain.Interfaces;
+﻿using RentSaaS.Domain.Interfaces;
 namespace RentSaaS.Domain;
 public interface IUnitOfWork : IAsyncDisposable
 {
@@ -12,5 +10,5 @@ public interface IUnitOfWork : IAsyncDisposable
 
     Task<int> CompleteAsync();
     void Rollback();
-    IRepository<T> AsyncRepository<T>() where T : IEntity;
+    //IRepository<T> AsyncRepository<T>() where T : IEntity;
 }

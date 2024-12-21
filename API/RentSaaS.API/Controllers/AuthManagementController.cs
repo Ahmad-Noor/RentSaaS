@@ -1,14 +1,14 @@
 ﻿using Common;
-using System.Text;
-using Common.Services;
-using RentSaaS.Common;
+using System.Text; 
 using RentSaaS.API.DOTs;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt; 
+using System.IdentityModel.Tokens.Jwt;
+using RentSaaS.Infrastructure;
+using RentSaaS.Domain.Entities;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
@@ -16,16 +16,16 @@ namespace RentSaaS.API.Controllers;
 public class AuthManagementController : ControllerBase
 {
     private readonly ILogger<UserController> _logger;  
-    private readonly ConfigurationDBContext _identityDBContext;
+    private readonly RentSaaSDBContext _rentSaaSDBContext;
     private readonly IConfiguration _configuration;
        
     public AuthManagementController(ILogger<UserController> logger,
                                     IConfiguration configuration,
-                                    ConfigurationDBContext identityDB )
+                                    RentSaaSDBContext db )
     {
         _logger = logger;
         _configuration = configuration;
-        _identityDBContext = identityDB;  
+        _rentSaaSDBContext = db;  
     }
 
     [HttpPost]
@@ -54,12 +54,12 @@ public class AuthManagementController : ControllerBase
                 LastName = Request.LastName,
                 ShowFullName = true,
                 Email = Request.Email,
-                TenantId = Request.TenantId,
+                OrganizationId = Request.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
                 IsActive = true, 
             };
-            _identityDBContext.Users.Add(user);
-            await _identityDBContext.SaveChangesAsync();
+            _rentSaaSDBContext.Users.Add(user);
+            await _rentSaaSDBContext.SaveChangesAsync();
 
             var token = CreateJwtToken(user);
             return Ok(new AuthenticateResponse(user, token));
@@ -77,7 +77,7 @@ public class AuthManagementController : ControllerBase
     {
         if (!ModelState.IsValid) { return BadRequest("Enter Email & Password."); }
 
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
+        var user = await _rentSaaSDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
         if (user == null || !Password.VerifyHashedPassword(user.PasswordHash, Request.Password))
         {
             return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
@@ -111,7 +111,7 @@ public class AuthManagementController : ControllerBase
  
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
-        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
+        var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
         return user != null;
     }
  

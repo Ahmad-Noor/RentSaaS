@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace RentSaaS.Infrastructure.Repositories;
 
-public class Repository<T> : IRepository<T> where T : IEntity
+public class Repository<T> : IRepository<T> where T : class, IEntity
 { 
     protected RentSaaSDBContext context;
     internal DbSet<T> dbSet;
@@ -31,7 +31,7 @@ public class Repository<T> : IRepository<T> where T : IEntity
     }
      
 
-    public virtual async Task<T> GetById(Guid id)
+    public virtual async Task<T> GetById(long id)
     { 
 
         //try
@@ -61,7 +61,7 @@ public class Repository<T> : IRepository<T> where T : IEntity
         //} 
     }
 
-    public async Task<bool> Delete(Guid id)
+    public async Task<bool> Delete(long id)
     {
         //try
         //{

@@ -1,29 +1,32 @@
-﻿using RentSaaS.Domain.Base;
+﻿using Microsoft.AspNetCore.Identity;
+using RentSaaS.Domain.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace RentSaaS.Domain.Entities;
-public record User : IEntity
+public class User : IdentityUser<long>
 {
-    [Column(TypeName ="nvarchar(20)")]
-    public string? Code { get; set; }
+    [Key]
+    public long Id { get; set; }
 
     [Column(TypeName = "nvarchar(100)")]
-    public required string FirstName { get; set; }
+    public long OrganizationId { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public bool? IsDeleted { get; set; }
 
-    [Column(TypeName = "nvarchar(100)")]
-    public required string LastName { get; set; }
+    [Column(TypeName = "nvarchar(500)")]
+    public string? Note { get; set; }
 
-    [Column(TypeName = "nvarchar(100)")]
-    public required string UserName { get; set; }
+    public  string FirstName { get; set; }
+    public  string LastName { get; set; } 
+    public bool? ShowFullName { get; set; }  
+    public string? ProfilePicture { get; set; }
+    public DateTime? ProfilePictureUpdated { get; set; }
+    public DateTime? LastLoggedIn { get; set; }
+    public DateTime? PasswordLastChanged { get; set; } 
+    public bool? IsActive { get; set; } = true;  
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
      
-    [Column(TypeName = "nvarchar(100)")]
-    public required string Password { get;  set; }
-
-    [Column(TypeName = "nvarchar(100)")]
-    public required string Email { get; set; }
-    public bool IsActive { get; set; } = true;
-
-    public Guid? RoleId { get; set; }
-
 }

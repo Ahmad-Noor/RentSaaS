@@ -1,7 +1,5 @@
 ﻿using Common;
-using System.Text; 
-using Common.Services;
-using RentSaaS.Common; 
+using System.Text;  
 using RentSaaS.API.DOTs;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc; 
@@ -10,6 +8,8 @@ using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using RentSaaS.Infrastructure;
+using RentSaaS.Domain.Entities;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
@@ -17,21 +17,21 @@ namespace RentSaaS.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
-    private readonly ConfigurationDBContext _identityDBContext;
+    private readonly RentSaaSDBContext _rentSaaSDBContext;
     private readonly IConfiguration _configuration; 
 
-    public UserController(ILogger<UserController> logger, IConfiguration configuration, ConfigurationDBContext identityDB)
+    public UserController(ILogger<UserController> logger, IConfiguration configuration, RentSaaSDBContext rentSaaSDBContext)
     {
         _logger = logger;
         _configuration = configuration; 
-        _identityDBContext = identityDB;
+        _rentSaaSDBContext = rentSaaSDBContext;
     }
     [HttpPost("authenticate")]
     public async Task<IActionResult> Authenticate(UserLoginReuestDto model)
     {
         if (model == null) { return BadRequest(); }
 
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower()== model.Email.ToLower());
+        var user = await _rentSaaSDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower()== model.Email.ToLower());
         if (user == null || !Password.VerifyHashedPassword(user.PasswordHash, model.Password))
         {
             return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
@@ -43,7 +43,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var users = await _identityDBContext.Users.ToListAsync();
+        var users = await _rentSaaSDBContext.Users.ToListAsync();
         if (users == null)
         {
             return NotFound();
@@ -53,8 +53,8 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("{id:Guid}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    [Route("{id:long}")]
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
         //var user = await _unitOfWork.UserRepository.GetUser(id.ToString());
         //if (user != null)
@@ -89,8 +89,8 @@ public class UserController : ControllerBase
         {
             _logger.LogInformation("Create new user, user name #{UserName}", user.UserName);
             user.PasswordHash = Password.HashPassword(user.PasswordHash);
-            _identityDBContext.Users.Add(user);
-            await _identityDBContext.SaveChangesAsync();
+            _rentSaaSDBContext.Users.Add(user);
+            await _rentSaaSDBContext.SaveChangesAsync();
 
             return Ok(user);
         }
@@ -128,16 +128,16 @@ public class UserController : ControllerBase
     private async Task<bool> CheckUserNameExistAsync(string userName)
     {
         //var options = new DbContextOptions<RentSaaSDBContext>();
-        //options.UseSqlServer(tenantService.GetConnectionString());
+        //options.UseSqlServer(OrganizationService.GetConnectionString());
 
-        //var dbContext = new RentSaaSDBContext(options, tenantService);
+        //var dbContext = new RentSaaSDBContext(options, OrganizationService);
         //var query = dbContext.Users.Where(u => u.UserName == userName);
-        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.UserName == userName);
+        var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.UserName == userName);
         return user != null;
     }
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
-        var user = await _identityDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
+        var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
         return user != null;
     }
 
@@ -145,27 +145,27 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, User user)
+    public async Task<IActionResult> Update(long id, User user)
     {
         if (id != user.Id)
         {
             return BadRequest();
         }
 
-        _identityDBContext.SaveChangesAsync();
+        _rentSaaSDBContext.SaveChangesAsync();
         return NoContent();
     }
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(long id)
     {
-        var user = await _identityDBContext.Users.FirstOrDefaultAsync(w => w.Id == id );
+        var user = await _rentSaaSDBContext.Users.FirstOrDefaultAsync(w => w.Id == id );
         if (user != null)
         {
             user.IsActive = false;
             user.IsDeleted = true;
-            await _identityDBContext.SaveChangesAsync();
+            await _rentSaaSDBContext.SaveChangesAsync();
             return NoContent();
         }
         return NotFound(id);

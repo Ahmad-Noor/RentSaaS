@@ -1,46 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="EntitiesConfig\**" />
-    <EmbeddedResource Remove="EntitiesConfig\**" />
-    <None Remove="EntitiesConfig\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="EntitiesConfig\**" />
+		<EmbeddedResource Remove="EntitiesConfig\**" />
+		<None Remove="EntitiesConfig\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="DatabaseConnectionString.cs" />
-    <Compile Remove="IDatabaseConnectionString.cs" />
-    <Compile Remove="RentSaaSDBContextFactory.cs" />
-  </ItemGroup>
-	
+	<ItemGroup>
+		<Compile Remove="DatabaseConnectionString.cs" />
+		<Compile Remove="IDatabaseConnectionString.cs" />
+	</ItemGroup>
+
 	<!--<PropertyGroup>
 		<GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
 	</PropertyGroup>-->
-	
-  <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-      <!--<PrivateAssets>all</PrivateAssets>-->
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\RentSaaS.Domain\RentSaaS.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RentSaaS.Domain\RentSaaS.Domain.csproj" />
+	</ItemGroup>
 
 </Project>

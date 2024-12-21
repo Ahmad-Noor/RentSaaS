@@ -27,10 +27,10 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         CustomerRepository = new CustomerRepository(dbContext, _logger);
     }
 
-    public IRepository<T> AsyncRepository<T>() where T : IEntity
-    {
-        return new Repository<T>(_dbContext, _logger);
-    }
+    //public IRepository<T> AsyncRepository<T>() where T : IEntity
+    //{
+    //    return new Repository<T>(_dbContext, _logger);
+    //}
 
     public async Task<int> CompleteAsync()
     {

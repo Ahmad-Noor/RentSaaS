@@ -1,9 +1,8 @@
 ﻿using RentSaaS.Domain.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace RentSaaS.Domain.Entities;
-public class Currency : IEntity
+public class Property : IEntity
 {
     [Key]
     public long Id { get; set; }
@@ -16,15 +15,8 @@ public class Currency : IEntity
 
     [Column(TypeName = "nvarchar(500)")]
     public string? Note { get; set; }
-
-    [Column(TypeName = "nvarchar(20)")]
-    public string? Code { get; init; }
-
-    [Column(TypeName = "nvarchar(100)")]
-    public string Name { get; init; }
-    public float? Rate { get; init; }
-
-    [Column(TypeName = "nvarchar(5)")]
-    public string? Symbol { get; init; }
+    public long PropertyId { get; set; }  
+    public string? Address { get; set; }   
+    public ICollection<Lease>? Leases { get; set; }  
 
 }

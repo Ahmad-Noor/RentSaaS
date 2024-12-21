@@ -2,8 +2,8 @@
 
 public class AddressResource
 {
-    public required Guid Id { get; set; }
-    public string TenantId { get; set; } = null!;
+    public required long Id { get; set; }
+    public string OrganizationId { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }
     public bool IsDeleted { get; set; } = false;

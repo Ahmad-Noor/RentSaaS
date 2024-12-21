@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentSaaS.Domain.Entities;
-public class Branch : IEntity
+public class Company : IEntity
 {
     [Key]
     public long Id { get; set; }
@@ -17,8 +17,7 @@ public class Branch : IEntity
     [Column(TypeName = "nvarchar(500)")]
     public string? Note { get; set; }
 
-    [Column(TypeName = "nvarchar(20)")]
-    public string? Code { get;   init; }
+    public long CompanyId { get; set; } 
 
     [Column(TypeName = "nvarchar(100)")]
     public string Name { get;   init; }

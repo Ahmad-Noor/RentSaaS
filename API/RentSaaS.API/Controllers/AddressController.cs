@@ -33,8 +33,8 @@ public class AddressController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("{id:Guid}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    [Route("{id:long}")]
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
         var address = await _unitOfWork.AddressRepository.GetById(id);
         if (address != null)
@@ -69,7 +69,7 @@ public class AddressController : ControllerBase
        
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, Address address)
+    public async Task<IActionResult> Update(long id, Address address)
     {
         if (id != address.Id)
         {
@@ -82,7 +82,7 @@ public class AddressController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(long id)
     {
         var address = await _unitOfWork.AddressRepository.FirstOrDefaultAsync(w => w.Id == id );
         if (address != null)
