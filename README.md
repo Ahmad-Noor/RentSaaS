@@ -114,3 +114,18 @@ RentSaaS.sln
 │
 └── docker/
     └── docker-compose.yml
+
+
+**Future Plan**
+Core Domains (Microservices):
+├── Identity.API (User management, auth)
+├── Properties.API (Property listings, management)
+├── Payments.API (Rent, deposits, fees)
+├── Maintenance.API (Requests, scheduling)
+└── Communications.API (Notifications, messages)
+
+Shared Infrastructure:
+├── API Gateway
+├── Message Bus (Azure Service Bus)
+└── Shared Libraries
+
