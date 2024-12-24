@@ -10,6 +10,7 @@ namespace RentSaaS.API.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class AddressController : ControllerBase
 {
+    // add comment for github
     private readonly ILogger<AddressController> _logger;   
     private readonly IUnitOfWork _unitOfWork;
 
