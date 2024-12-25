@@ -3,19 +3,9 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "RentSaaS-UI": {
+    "RentSaaSUI": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "standalone": false
-        },
-        "@schematics/angular:directive": {
-          "standalone": false
-        },
-        "@schematics/angular:pipe": {
-          "standalone": false
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -23,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/rent-saa-s-ui",
+            "outputPath": "dist/rent-saa-sui",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -31,19 +21,46 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+               
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-            "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.css"
+              "src/assets/css/style.css",
+              "src/assets/css/animate.css",
+              "src/assets/css/bootstrap.css",
+              "src/assets/css/flexslider.css",
+              "src/assets/css/icomoon.css"
+               
             ],
-            "scripts": [ "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
+            "scripts": [
+              
+              "src/assets/js/modernizr-2.6.2.min.js",
+          
+              "src/assets/js/jquery.min.js",
+            
+              "src/assets/js/jquery.easing.1.3.js",
+            
+              "src/assets/js/bootstrap.min.js",
+            
+              "src/assets/js/jquery.waypoints.min.js",
+              
+              "src/assets/js/jquery.flexslider-min.js",
+              
+              "src/assets/js/main.js"
+          
+          
+          
+          
+          
+          ],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "outputMode": "server",
             "ssr": {
-              "entry": "server.ts"
+              "entry": "src/server.ts"
             }
           },
           "configurations": {
@@ -51,13 +68,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -65,13 +82,7 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -80,19 +91,16 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "RentSaaS-UI:build:production"
+              "buildTarget": "RentSaaSUI:build:production"
             },
             "development": {
-              "buildTarget": "RentSaaS-UI:build:development"
+              "buildTarget": "RentSaaSUI:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "RentSaaS-UI:build"
-          }
+          "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -103,8 +111,10 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
               "src/styles.css"
@@ -116,6 +126,6 @@
     }
   },
   "cli": {
-    "analytics": "6cfbf4bf-7b2a-427b-889d-ff218c4aeb65"
+    "analytics": "d9651f7b-6ebe-4c3a-ab0c-45f162780508"
   }
 }
