@@ -1,16 +1,14 @@
 ﻿using Common;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using RentSaaS.Domain.Entities;
-using RentSaaS.Infrastructure.Data;
-using RentSaaS.Application.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using RentSaaS.Application.DTOs.UserDtos;
+using RentSaaS.Domain;
+using RentSaaS.Domain.Entities;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.RegularExpressions;
 namespace RentSaaS.API.Controllers;
 
 [ApiController]
@@ -18,21 +16,22 @@ namespace RentSaaS.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger; // ILogger takes the type of the class as a parameter
-    private readonly RentSaaSDBContext _rentSaaSDBContext;
-    private readonly IConfiguration _configuration; 
-
-    public UserController(ILogger<UserController> logger, IConfiguration configuration, RentSaaSDBContext rentSaaSDBContext)
+    //private readonly RentSaaSDBContext _rentSaaSDBContext;
+    private readonly IConfiguration _configuration;
+    private readonly IUnitOfWork _unitOfWork;
+    public UserController(ILogger<UserController> logger, IConfiguration configuration/*, RentSaaSDBContext rentSaaSDBContext*/, IUnitOfWork unitOfWork)
     {
         _logger = logger;
-        _configuration = configuration; 
-        _rentSaaSDBContext = rentSaaSDBContext;
+        _configuration = configuration;
+        //_rentSaaSDBContext = rentSaaSDBContext;
+        _unitOfWork = unitOfWork;
     }
     [HttpPost("authenticate")]
     public async Task<IActionResult> Authenticate(UserLoginReuestDto model)
     {
         if (model == null) { return BadRequest(); }
 
-        var user = await _rentSaaSDBContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower()== model.Email.ToLower());
+        var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(x => x.Email.ToLower() == model.Email.ToLower());
         if (user == null || !Password.VerifyHashedPassword(user.PasswordHash, model.Password))
         {
             return BadRequest(new { message = "Username or Password is Incorrect, Please try again." });
@@ -40,11 +39,11 @@ public class UserController : ControllerBase
         var token = CreateJwtToken(user);
         return Ok(new AuthenticateResponse(user, token));
     }
-     
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var users = await _rentSaaSDBContext.Users.ToListAsync();
+        var users = await _unitOfWork.UserRepository.GetAll();
         if (users == null)
         {
             return NotFound();
@@ -57,11 +56,11 @@ public class UserController : ControllerBase
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        //var user = await _unitOfWork.UserRepository.GetUser(id.ToString());
-        //if (user != null)
-        //{
-        //    return Ok(user);
-        //}
+        var user = await _unitOfWork.UserRepository.GetById(id);
+        if (user != null)
+        {
+            return Ok(user);
+        }
         return NotFound();
     }
 
@@ -90,8 +89,8 @@ public class UserController : ControllerBase
         {
             _logger.LogInformation("Create new user, user name #{UserName}", user.UserName);
             user.PasswordHash = Password.HashPassword(user.PasswordHash);
-            _rentSaaSDBContext.Users.Add(user);
-            await _rentSaaSDBContext.SaveChangesAsync();
+            _unitOfWork.UserRepository.Add(user);
+            await _unitOfWork.SaveChangesAsync();
 
             return Ok(user);
         }
@@ -112,7 +111,7 @@ public class UserController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}")
         });
-          
+
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -133,12 +132,12 @@ public class UserController : ControllerBase
 
         //var dbContext = new RentSaaSDBContext(options, OrganizationService);
         //var query = dbContext.Users.Where(u => u.UserName == userName);
-        var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.UserName == userName);
+        var user = await _unitOfWork.UserRepository.SingleOrDefaultAsync(w => w.UserName == userName);
         return user != null;
     }
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
-        var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
+        var user = await _unitOfWork.UserRepository.SingleOrDefaultAsync(w => w.Email == email);
         return user != null;
     }
 
@@ -153,7 +152,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        await _rentSaaSDBContext.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return NoContent();
     }
 
@@ -161,12 +160,12 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var user = await _rentSaaSDBContext.Users.FirstOrDefaultAsync(w => w.Id == id );
+        var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(w => w.Id == id);
         if (user != null)
         {
             user.IsActive = false;
             user.IsDeleted = true;
-            await _rentSaaSDBContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
         return NotFound(id);
