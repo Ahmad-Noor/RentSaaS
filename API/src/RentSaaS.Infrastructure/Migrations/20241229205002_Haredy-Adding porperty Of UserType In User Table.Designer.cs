@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241229205002_Haredy-Adding porperty Of UserType In User Table")]
+    partial class HaredyAddingporpertyOfUserTypeInUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,10 +372,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2281f1e8-2eca-4178-b2c1-58dfe8dde03e"),
+                            Id = new Guid("f5245dc8-7ff8-4a78-9b1f-94156ac58164"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3c09e01c-5baf-43af-bd21-2bc1c1437cfe",
-                            CreatedAt = new DateTime(2024, 12, 29, 21, 42, 47, 170, DateTimeKind.Utc).AddTicks(7440),
+                            ConcurrencyStamp = "15d0d055-2e66-4b55-8db4-33bd38fce844",
+                            CreatedAt = new DateTime(2024, 12, 29, 20, 50, 1, 114, DateTimeKind.Utc).AddTicks(293),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -382,7 +385,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "AM6UxQYNaz3Gg0oq/CAiNwzyZkRAUMRHiOBmdTkiclyfXhh/QI1ayBO/rEJxESf+UQ==",
+                            PasswordHash = "APr9cS19pvSUDxQvfA8nm4CcS2605HDfL+25Z3xVwvMs4pIwzD4DIYrtWR7FuoCyWA==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ILogger _logger;
      
     public IAddressRepository AddressRepository { get; set; } 
+    public IUserRepository UserRepository { get; set; } 
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
@@ -18,6 +19,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _dbContext = dbContext;
          
         AddressRepository = new AddressRepository(dbContext, _logger); 
+        UserRepository = new UserRepository(dbContext, _logger); 
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity
