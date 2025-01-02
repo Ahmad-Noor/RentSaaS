@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using RentSaaS.Domain.Base;
 
 namespace RentSaaS.Domain.Entities;
-public class User : IdentityUser<Guid>
+public class User : IdentityUser<Guid>, IEntity
 {
     [Key]
     public Guid Id { get; set; }
@@ -16,6 +17,7 @@ public class User : IdentityUser<Guid>
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
     public Guid? DeletedBy { get; set; }
+    public String UserType { get; set; } = string.Empty; 
 
     [Column(TypeName = "nvarchar(500)")]
     public string? Note { get; set; }

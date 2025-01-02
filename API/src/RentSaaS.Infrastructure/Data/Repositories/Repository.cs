@@ -96,7 +96,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         return await dbSet.Where(predicate).ToListAsync();
     }
 
-    public virtual Task<bool> Upsert(T entity)
+    public virtual Task<bool> Update(T entity)
     {
         throw new NotImplementedException();
     }
