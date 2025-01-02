@@ -7,4 +7,5 @@ public class UserRegistrationRequestDto
     public required string Password { get; set; } = string.Empty;
     public required Guid OrganizationId { get; set; }
 
+
 }
