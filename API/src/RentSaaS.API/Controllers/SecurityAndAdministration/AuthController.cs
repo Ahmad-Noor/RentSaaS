@@ -58,6 +58,8 @@ public class AuthController : ControllerBase
                 OrganizationId = Request.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
                 IsActive = true,
+                UserType=Request.UserType
+                
             };
             _rentSaaSDBContext.Users.Add(user);
             await _rentSaaSDBContext.SaveChangesAsync();
