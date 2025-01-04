@@ -78,6 +78,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("MyPolicey", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+}
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
