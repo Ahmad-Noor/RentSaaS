@@ -9,9 +9,10 @@ import { Company } from '../../types/company.types';
 import { ConfirmDialogService } from '../../../../../../shared/services/confirm-dialog/confirm-dialog.service';
 
 @Component({
-    selector: 'app-companies-list-page',
-    imports: [CommonModule, RouterLink, DataTableComponent, ActionBarComponent],
-    template: `
+  selector: 'app-companies-list-page',
+  standalone: true,
+  imports: [CommonModule, RouterLink, DataTableComponent, ActionBarComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Companies</h1>

@@ -4,9 +4,10 @@ import { DataTableComponent, TableColumn } from '../../../../../../shared/compon
 import { ActionBarComponent } from '../../../../../../shared/components/action-bar/action-bar.component';
 
 @Component({
-    selector: 'app-team-list-page',
-    imports: [CommonModule, DataTableComponent, ActionBarComponent],
-    template: `
+  selector: 'app-team-list-page',
+  standalone: true,
+  imports: [CommonModule, DataTableComponent, ActionBarComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Team Management</h1>

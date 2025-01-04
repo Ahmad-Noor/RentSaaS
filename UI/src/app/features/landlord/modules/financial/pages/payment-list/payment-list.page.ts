@@ -7,9 +7,10 @@ import { PaymentService } from '../../services/payment.service';
 import { Payment } from '../../types/payment.types';
 
 @Component({
-    selector: 'app-payment-list-page',
-    imports: [CommonModule, RouterLink, PaymentTableComponent, ActionBarComponent],
-    template: `
+  selector: 'app-payment-list-page',
+  standalone: true,
+  imports: [CommonModule, RouterLink, PaymentTableComponent, ActionBarComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <div>

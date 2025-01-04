@@ -5,9 +5,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CompanyService } from '../../services/company.service';
 
 @Component({
-    selector: 'app-company-form-page',
-    imports: [CommonModule, RouterLink, ReactiveFormsModule],
-    template: `
+  selector: 'app-company-form-page',
+  standalone: true,
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">{{ isEditMode ? 'Edit' : 'Add New' }} Company</h1>

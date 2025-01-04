@@ -4,9 +4,10 @@ import { Property } from '../../types/property.types';
 import { PropertyActionsComponent } from '../property-actions/property-actions.component';
 
 @Component({
-    selector: 'app-property-table',
-    imports: [CommonModule, PropertyActionsComponent],
-    template: `
+  selector: 'app-property-table',
+  standalone: true,
+  imports: [CommonModule, PropertyActionsComponent],
+  template: `
     <table class="w-full">
       <thead>
         <tr class="border-b">

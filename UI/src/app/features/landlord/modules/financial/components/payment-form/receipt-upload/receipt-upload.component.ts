@@ -6,9 +6,10 @@ import { validateFile } from '../../../utils/file-validation.utils';
 import { ReceiptItemComponent } from './receipt-item.component';
 
 @Component({
-    selector: 'app-receipt-upload',
-    imports: [CommonModule, ReactiveFormsModule, ReceiptItemComponent],
-    template: `
+  selector: 'app-receipt-upload',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ReceiptItemComponent],
+  template: `
     <div [formGroup]="formGroup" class="space-y-4">
       <div class="flex items-center gap-2">
         <button

@@ -5,14 +5,15 @@ import { PerformanceChartsComponent } from '../../components/dashboard/performan
 import { MetricsGridComponent } from '../../components/dashboard/metrics-grid/metrics-grid.component';
 
 @Component({
-    selector: 'app-dashboard-page',
-    imports: [
-        CommonModule,
-        ResourceOverviewComponent,
-        PerformanceChartsComponent,
-        MetricsGridComponent
-    ],
-    template: `
+  selector: 'app-dashboard-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ResourceOverviewComponent,
+    PerformanceChartsComponent,
+    MetricsGridComponent
+  ],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold">Dashboard</h1>

@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Receipt } from '../../../types/receipt.types';
-import { validateFile } from '../../../utils/file-validation.utils';
 import { ReceiptItemComponent } from './receipt-item.component';
+import { Receipt } from '../../../types/receipt.types';
+import { validateReceipt } from '../../../utils/receipt.utils';
 
 @Component({
   selector: 'app-receipt-upload',
@@ -20,7 +20,7 @@ import { ReceiptItemComponent } from './receipt-item.component';
           <span class="material-icons">upload_file</span>
           Upload Receipts
         </button>
-        <span class="text-sm text-gray-500">Upload up to 5 receipts</span>
+        <span class="text-sm text-gray-500">Upload up to 5 receipts (PDF or images)</span>
       </div>
       
       <input
@@ -41,7 +41,7 @@ import { ReceiptItemComponent } from './receipt-item.component';
           @for (receipt of receipts; track receipt.id) {
             <app-receipt-item
               [receipt]="receipt"
-              (onRemove)="removeReceipt($event)"
+              (remove)="removeReceipt($event)"
             />
           }
         </div>
@@ -63,7 +63,7 @@ export class ReceiptUploadComponent {
     }
 
     files.forEach(file => {
-      const validation = validateFile(file);
+      const validation = validateReceipt(file);
       if (!validation.isValid) {
         this.error = validation.error || 'Invalid file';
         return;

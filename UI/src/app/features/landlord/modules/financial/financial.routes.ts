@@ -24,5 +24,13 @@ export default [
   {
     path: 'payments/record',
     loadComponent: () => import('./pages/record-payment/record-payment.page').then(m => m.RecordPaymentPage)
+  },
+  {
+    path: 'reports',
+    loadComponent: () => import('./pages/reports/reports.page').then(m => m.ReportsPage)
+  },
+  {
+    path: 'taxes',
+    loadComponent: () => import('./pages/taxes/taxes.page').then(m => m.TaxesPage)
   }
 ] as Routes;

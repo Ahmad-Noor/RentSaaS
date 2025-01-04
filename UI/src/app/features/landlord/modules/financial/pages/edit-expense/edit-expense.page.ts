@@ -3,12 +3,13 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseService } from '../../services/expense.service';
 import { ExpenseFormData } from '../../components/expense-form/models/expense-form.model';
-import { Expense } from '../../types/expense.types';
+import { CreateExpenseDTO, Expense } from '../../types/expense.types';
 
 @Component({
-    selector: 'app-edit-expense-page',
-    imports: [RouterLink, ExpenseFormComponent],
-    template: `
+  selector: 'app-edit-expense-page',
+  standalone: true,
+  imports: [RouterLink, ExpenseFormComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Edit Expense</h1>
@@ -26,7 +27,7 @@ import { Expense } from '../../types/expense.types';
           @if (expense) {
             <app-expense-form 
               [expense]="expense"
-              (onSave)="handleSave($event)"
+              (save)="handleSave($event)"
             />
           }
         </div>
@@ -52,16 +53,17 @@ export class EditExpensePage implements OnInit {
 
   handleSave(data: ExpenseFormData) {
     if (this.expense) {
-      this.expenseService.updateExpense(this.expense.id, {
+      const updateData: Partial<CreateExpenseDTO> = {
         description: data.details,
         amount: data.amount,
         category: data.category,
         dueDate: data.dueDate,
         propertyId: data.type === 'property' ? Number(data.propertyId) : undefined,
         recurring: data.expenseType === 'recurring',
-        status: data.isPaid ? 'paid' : 'pending',
-        vendor: data.vendor
-      });
+        type: data.type
+      };
+
+      this.expenseService.updateExpense(this.expense.id, updateData);
       this.router.navigate(['../../'], { relativeTo: this.route });
     }
   }

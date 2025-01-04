@@ -39,13 +39,12 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
         label: 'Payments',
         route: '/landlord/financial/payments',
         children: [
-          { icon: 'attach_money', label: 'Record Payment', route: '/landlord/financial/payments/record' }
+          { icon: 'attach_money', label: 'Record Payment', route: '/landlord/financial/payments/record' },
+          { icon: 'history', label: 'Payment History', route: '/landlord/financial/payments/history' }
         ]
       },
       { icon: 'account_balance_wallet', label: 'Expenses', route: '/landlord/financial/expenses' },
       { icon: 'calculate', label: 'Taxes', route: '/landlord/financial/taxes' },
-      { icon: 'receipt', label: 'Transactions', route: '/landlord/financial/transactions' },
-      { icon: 'history', label: 'Payment History', route: '/landlord/financial/history' },
       { icon: 'assessment', label: 'Reports', route: '/landlord/financial/reports' }
     ]
   },
@@ -60,7 +59,7 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
           { icon: 'list_alt', label: 'Requests List', route: '/landlord/maintenance/requests' }
         ]
       },
-      { icon: 'message', label: 'Messages', route: '/landlord/messages' },
+      { icon: 'mail', label: 'Mailbox', route: '/landlord/messages' },
       { icon: 'description', label: 'Forms & Notices', route: '/landlord/forms' }
     ]
   },

@@ -4,9 +4,10 @@ import { SidebarComponent } from '../../components/navigation/sidebar/sidebar.co
 import { NavbarComponent } from '../../components/navigation/navbar/navbar.component';
 
 @Component({
-    selector: 'app-landlord-portal',
-    imports: [RouterOutlet, SidebarComponent, NavbarComponent],
-    template: `
+  selector: 'app-landlord-portal',
+  standalone: true,
+  imports: [RouterOutlet, SidebarComponent, NavbarComponent],
+  template: `
     <div class="min-h-screen bg-[#F0F2F5]">
       <app-sidebar 
         [isCollapsed]="sidebarCollapsed"

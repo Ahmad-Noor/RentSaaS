@@ -4,9 +4,10 @@ import { Receipt } from '../../../types/receipt.types';
 import { formatFileSize } from '../../../utils/file-size.utils';
 
 @Component({
-    selector: 'app-receipt-item',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-receipt-item',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="flex items-center justify-between p-2 border rounded">
       <div class="flex items-center gap-2">
         <span class="material-icons text-gray-400">

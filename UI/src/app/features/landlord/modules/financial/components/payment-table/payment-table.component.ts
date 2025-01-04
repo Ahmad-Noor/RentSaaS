@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Payment } from '../../types/payment.types';
 
 @Component({
-    selector: 'app-payment-table',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-payment-table',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <table class="w-full">
       <thead>
         <tr class="border-b">

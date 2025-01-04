@@ -3,11 +3,13 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseService } from '../../services/expense.service';
 import { ExpenseFormData } from '../../components/expense-form/models/expense-form.model';
+import { mapFormDataToDTO } from '../../utils/expense-form.utils';
 
 @Component({
-    selector: 'app-add-expense-page',
-    imports: [RouterLink, ExpenseFormComponent],
-    template: `
+  selector: 'app-add-expense-page',
+  standalone: true,
+  imports: [RouterLink, ExpenseFormComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Add New Expense</h1>
@@ -22,7 +24,7 @@ import { ExpenseFormData } from '../../components/expense-form/models/expense-fo
 
       <div class="bg-white rounded-lg shadow">
         <div class="p-6">
-          <app-expense-form (onSave)="handleSave($event)" />
+          <app-expense-form (save)="handleSave($event)" />
         </div>
       </div>
     </div>
@@ -36,18 +38,8 @@ export class AddExpensePage {
   ) {}
 
   handleSave(data: ExpenseFormData): void {
-    this.expenseService.addExpense({
-      description: data.details || '',
-      amount: data.amount,
-      category: data.category,
-      date: new Date().toISOString(),
-      dueDate: data.dueDate,
-      propertyId: data.type === 'property' ? Number(data.propertyId) : undefined,
-      recurring: data.expenseType === 'recurring',
-      vendor: data.vendor,
-      type: data.type
-    });
-    
+    const expenseData = mapFormDataToDTO(data);
+    this.expenseService.addExpense(expenseData);
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 }

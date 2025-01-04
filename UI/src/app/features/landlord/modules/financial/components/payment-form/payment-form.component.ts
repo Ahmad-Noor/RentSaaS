@@ -1,32 +1,58 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../../../../shared/components/form-field/form-field.component';
-import { PropertySelectorComponent } from './property-selector/property-selector.component';
-import { PaymentTypeComponent } from './payment-type/payment-type.component';
-import { TenantSelectorComponent } from './tenant-selector/tenant-selector.component';
+import { PropertySelectorComponent } from './property-selector/property-selector.component'; 
 import { ReceiptUploadComponent } from './receipt-upload/receipt-upload.component';
 import { CreatePaymentDTO } from '../../types/payment.types';
 
 @Component({
-    selector: 'app-payment-form',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        FormFieldComponent,
-        PropertySelectorComponent,
-        PaymentTypeComponent,
-        TenantSelectorComponent,
-        ReceiptUploadComponent
-    ],
-    template: `
-    <form [formGroup]="paymentForm" (ngSubmit)="handleSubmit()" class="space-y-6">
-      <app-property-selector [formGroup]="paymentForm" />
-      <app-payment-type [formGroup]="paymentForm" />
-      <app-tenant-selector [formGroup]="paymentForm" />
+  selector: 'app-payment-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    FormFieldComponent,
+    PropertySelectorComponent,  
+    ReceiptUploadComponent
+  ],
+  template: `
+<form [formGroup]="paymentForm" (ngSubmit)="handleSubmit()" class="space-y-6">
+  <app-property-selector [formGroup]="paymentForm"></app-property-selector> 
+ <app-form-field label="Payment Type" id="type">
+      <select
+        id="type"
+        formControlName="type"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">Select type</option>
+        <option value="rent">Rent</option>
+        <option value="deposit">Security Deposit</option>
+        <option value="fee">Fee</option>
+        <option value="other">Other</option>
+      </select>
+    </app-form-field>
 
+
+  <!-- <app-tenant-selector [formGroup]="paymentForm"></app-tenant-selector>   -->
+
+  <app-form-field label="Tenant" id="tenant"> 
+      <select
+        id="tenant"
+        formControlName="tenant"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">Select tenant</option> 
+        <option *ngFor="let tenant of tenants" [value]="tenant.id">
+          {{ tenant.name }}
+        </option>
+      </select>
+    </app-form-field>
+
+
+      
       <div class="grid grid-cols-2 gap-4">
         <app-form-field label="Amount" id="amount">
           <div class="relative">
@@ -89,15 +115,22 @@ export class PaymentFormComponent {
   paymentForm: FormGroup;
   loading = false;
 
+  tenants = [
+    { id: '1', name: 'John Doe' },
+    { id: '2', name: 'Jane Smith' },
+    { id: '3', name: 'Bob Johnson' }
+  ];
+
   constructor(private fb: FormBuilder) {
-    this.paymentForm = this.fb.group({
-      property: ['', Validators.required],
-      type: ['', Validators.required],
-      tenant: [''],
-      amount: ['', [Validators.required, Validators.min(0)]],
-      reference: [''],
-      description: ['', Validators.required],
-      receipts: [[]]
+    this.paymentForm = this.fb.group({  
+     property: ['', Validators.required],
+    type: ['', Validators.required],
+    tenant: ['', Validators.required],
+    amount: ['', [Validators.required, Validators.min(0)]],
+    reference: [''],
+    description: ['', Validators.required],
+    receipts: [[]]
+
     });
   }
 

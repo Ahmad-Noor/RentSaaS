@@ -4,9 +4,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavItem } from '../../../../../shared/constants/navigation';
 
 @Component({
-    selector: 'app-sidebar-item',
-    imports: [CommonModule, RouterLink, RouterLinkActive],
-    template: `
+  selector: 'app-sidebar-item',
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
+  template: `
     <div>
       <a 
         [routerLink]="route"

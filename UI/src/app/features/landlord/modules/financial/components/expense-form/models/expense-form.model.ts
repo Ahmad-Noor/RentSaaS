@@ -1,9 +1,8 @@
-import { ExpenseCategory } from '../../../types/expense.types';
+import { ExpenseCategory, ExpenseType } from '../../../types/expense.types';
 
 export interface ExpenseFormData {
-  type: 'property' | 'general';
+  type: ExpenseType;
   propertyId?: string;
-  vendor?: string;
   category: ExpenseCategory;
   expenseType: 'recurring' | 'onetime' | 'scheduled';
   dueDate: string;

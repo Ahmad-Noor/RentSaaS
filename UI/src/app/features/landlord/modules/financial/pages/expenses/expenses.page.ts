@@ -8,9 +8,10 @@ import { Expense } from '../../types/expense.types';
 import { ConfirmDialogService } from '../../../../../../shared/services/confirm-dialog/confirm-dialog.service';
 
 @Component({
-    selector: 'app-expenses-page',
-    imports: [CommonModule, RouterLink, ExpenseTableComponent, ActionBarComponent],
-    template: `
+  selector: 'app-expenses-page',
+  standalone: true,
+  imports: [CommonModule, RouterLink, ExpenseTableComponent, ActionBarComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <div>

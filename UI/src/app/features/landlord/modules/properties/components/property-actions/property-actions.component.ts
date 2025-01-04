@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Property } from '../../types/property.types';
 
 @Component({
-    selector: 'app-property-actions',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-property-actions',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="relative">
       <button 
         (click)="toggleMenu()"

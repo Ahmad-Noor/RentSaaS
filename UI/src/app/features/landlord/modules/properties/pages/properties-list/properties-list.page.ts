@@ -11,16 +11,17 @@ import { ConfirmDialogService } from '../../../../../../shared/services/confirm-
 import { PropertyService } from '../../services/property.service';
 
 @Component({
-    selector: 'app-properties-list-page',
-    imports: [
-        CommonModule,
-        RouterLink,
-        PropertyTableComponent,
-        ActionBarComponent,
-        ViewToggleComponent,
-        PropertyCardComponent
-    ],
-    template: `
+  selector: 'app-properties-list-page',
+  standalone: true,
+  imports: [
+    CommonModule, 
+    RouterLink,
+    PropertyTableComponent, 
+    ActionBarComponent,
+    ViewToggleComponent,
+    PropertyCardComponent
+  ],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Properties</h1>

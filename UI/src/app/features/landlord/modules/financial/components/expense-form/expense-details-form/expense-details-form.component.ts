@@ -2,17 +2,17 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormFieldComponent } from '../../../../../../../shared/components/form-field/form-field.component';
-import { getFieldError } from '../utils/form-validation.utils';
 
 @Component({
-    selector: 'app-expense-details-form',
-    imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
-    template: `
-    <div [formGroup]="formGroup" class="space-y-6">
+  selector: 'app-expense-details-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
+  template: `
+    <div [formGroup]="formGroup" class="space-y-4">
       <app-form-field 
         label="Category" 
         id="category"
-        [error]="getError('category')"
+        [error]="getFieldError('category')"
       >
         <select
           id="category"
@@ -29,40 +29,11 @@ import { getFieldError } from '../utils/form-validation.utils';
         </select>
       </app-form-field>
 
-      <app-form-field 
-        label="Expense Type" 
-        id="expenseType"
-        [error]="getError('expenseType')"
-      >
-        <select
-          id="expenseType"
-          formControlName="expenseType"
-          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="onetime">One-time</option>
-          <option value="recurring">Recurring</option>
-          <option value="scheduled">Scheduled</option>
-        </select>
-      </app-form-field>
-
       <div class="grid grid-cols-2 gap-4">
-        <app-form-field 
-          label="Due Date" 
-          id="dueDate"
-          [error]="getError('dueDate')"
-        >
-          <input
-            type="date"
-            id="dueDate"
-            formControlName="dueDate"
-            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          >
-        </app-form-field>
-
         <app-form-field 
           label="Amount" 
           id="amount"
-          [error]="getError('amount')"
+          [error]="getFieldError('amount')"
         >
           <input
             type="number"
@@ -73,12 +44,25 @@ import { getFieldError } from '../utils/form-validation.utils';
             step="0.01"
           >
         </app-form-field>
+
+        <app-form-field 
+          label="Due Date" 
+          id="dueDate"
+          [error]="getFieldError('dueDate')"
+        >
+          <input
+            type="date"
+            id="dueDate"
+            formControlName="dueDate"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+          >
+        </app-form-field>
       </div>
 
       <app-form-field 
         label="Details" 
         id="details"
-        [error]="getError('details')"
+        [error]="getFieldError('details')"
       >
         <textarea
           id="details"
@@ -106,7 +90,16 @@ import { getFieldError } from '../utils/form-validation.utils';
 export class ExpenseDetailsFormComponent {
   @Input() formGroup!: FormGroup;
 
-  getError(fieldName: string): string {
-    return getFieldError(this.formGroup.get(fieldName), fieldName);
+  getFieldError(field: string): string {
+    const control = this.formGroup.get(field);
+    if (control?.touched && control.errors) {
+      if (control.errors['required']) {
+        return `${field} is required`;
+      }
+      if (control.errors['min']) {
+        return `${field} must be greater than ${control.errors['min'].min}`;
+      }
+    }
+    return '';
   }
 }

@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-financial-page',
-    imports: [RouterLink],
-    template: `
+  selector: 'app-financial-page',
+  standalone: true,
+  imports: [RouterLink],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <div>

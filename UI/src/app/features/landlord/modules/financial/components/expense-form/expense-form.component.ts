@@ -1,36 +1,38 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ExpenseDetailsFormComponent } from './expense-details-form/expense-details-form.component';
 import { ExpenseTypeSelectorComponent } from './expense-type-selector/expense-type-selector.component';
 import { PropertySelectorComponent } from './property-selector/property-selector.component';
-import { VendorSelectorComponent } from './vendor-selector/vendor-selector.component';
-import { ExpenseFormData } from './models/expense-form.model';
+import { ReceiptUploadComponent } from './receipt-upload/receipt-upload.component';
 import { Expense } from '../../types/expense.types';
-import { RouterLink } from '@angular/router';
+import { ExpenseFormData } from './models/expense-form.model';
+import { initializeExpenseForm } from './utils/form-utils';
 
 @Component({
-    selector: 'app-expense-form',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        ExpenseDetailsFormComponent,
-        ExpenseTypeSelectorComponent,
-        PropertySelectorComponent,
-        VendorSelectorComponent
-    ],
-    template: `
-    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="space-y-6">
+  selector: 'app-expense-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    ExpenseDetailsFormComponent,
+    ExpenseTypeSelectorComponent,
+    PropertySelectorComponent,
+    ReceiptUploadComponent
+  ],
+  template: `
+    <form [formGroup]="expenseForm" (ngSubmit)="handleSubmit()" class="space-y-6">
       <app-expense-type-selector [formGroup]="expenseForm" />
       
       @if (expenseForm.get('type')?.value === 'property') {
         <app-property-selector [formGroup]="expenseForm" />
       }
 
-      <app-vendor-selector [formGroup]="expenseForm" />
-      
       <app-expense-details-form [formGroup]="expenseForm" />
+      
+      <app-receipt-upload [formGroup]="expenseForm" />
 
       <div class="flex justify-end gap-4">
         <a 
@@ -52,60 +54,45 @@ import { RouterLink } from '@angular/router';
 })
 export class ExpenseFormComponent implements OnInit {
   @Input() expense?: Expense;
-  @Output() onSave = new EventEmitter<ExpenseFormData>();
+  @Output() save = new EventEmitter<ExpenseFormData>();
   
-  loading = false;
   expenseForm: FormGroup;
+  loading = false;
 
   constructor(private fb: FormBuilder) {
-    this.expenseForm = this.fb.group({
-      type: ['property', Validators.required],
-      propertyId: [''],
-      vendor: [''],
-      category: ['', Validators.required],
-      expenseType: ['onetime', Validators.required],
-      dueDate: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.min(0)]],
-      details: [''],
-      receipts: [[]],
-      isPaid: [false]
-    });
-
-    this.setupPropertyValidation();
+    this.expenseForm = initializeExpenseForm(fb);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.expense) {
       this.expenseForm.patchValue({
         type: this.expense.type || 'property',
         propertyId: this.expense.propertyId,
-        vendor: this.expense.vendor,
         category: this.expense.category,
         expenseType: this.expense.recurring ? 'recurring' : 'onetime',
-        dueDate: this.expense.dueDate,
         amount: this.expense.amount,
+        dueDate: this.expense.dueDate,
         details: this.expense.description,
         isPaid: this.expense.status === 'paid'
       });
     }
   }
 
-  private setupPropertyValidation(): void {
-    this.expenseForm.get('type')?.valueChanges.subscribe(type => {
-      const propertyId = this.expenseForm.get('propertyId');
-      if (type === 'property') {
-        propertyId?.setValidators(Validators.required);
-      } else {
-        propertyId?.clearValidators();
-      }
-      propertyId?.updateValueAndValidity();
-    });
-  }
-
-  onSubmit(): void {
+  handleSubmit(): void {
     if (this.expenseForm.valid) {
       this.loading = true;
-      this.onSave.emit(this.expenseForm.value);
+      const formData: ExpenseFormData = {
+        type: this.expenseForm.value.type,
+        propertyId: this.expenseForm.value.propertyId,
+        category: this.expenseForm.value.category,
+        expenseType: this.expenseForm.value.expenseType,
+        amount: this.expenseForm.value.amount,
+        dueDate: this.expenseForm.value.dueDate,
+        details: this.expenseForm.value.details,
+        receipts: this.expenseForm.value.receipts || [],
+        isPaid: this.expenseForm.value.isPaid
+      };
+      this.save.emit(formData);
     }
   }
 }

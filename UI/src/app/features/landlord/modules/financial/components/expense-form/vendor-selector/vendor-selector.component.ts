@@ -4,9 +4,10 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormFieldComponent } from '../../../../../../../shared/components/form-field/form-field.component';
 
 @Component({
-    selector: 'app-vendor-selector',
-    imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
-    template: `
+  selector: 'app-vendor-selector',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
+  template: `
     <app-form-field 
       label="Vendor" 
       id="vendor"

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Receipt } from '../../../types/receipt.types';
-import { formatFileSize } from '../../../utils/file-size.utils';
+import { formatFileSize } from '../../../utils/file.utils';
 
 @Component({
   selector: 'app-receipt-item',
@@ -21,7 +21,7 @@ import { formatFileSize } from '../../../utils/file-size.utils';
       
       <button
         type="button"
-        (click)="onRemove.emit(receipt)"
+        (click)="remove.emit(receipt)"
         class="text-gray-400 hover:text-red-500"
       >
         <span class="material-icons">close</span>
@@ -31,7 +31,7 @@ import { formatFileSize } from '../../../utils/file-size.utils';
 })
 export class ReceiptItemComponent {
   @Input() receipt!: Receipt;
-  @Output() onRemove = new EventEmitter<Receipt>();
+  @Output() remove = new EventEmitter<Receipt>();
   
   protected formatFileSize = formatFileSize;
 }

@@ -4,9 +4,10 @@ import { Property } from '../../types/property.types';
 import { PropertyActionsComponent } from '../property-actions/property-actions.component';
 
 @Component({
-    selector: 'app-property-card',
-    imports: [CommonModule, PropertyActionsComponent],
-    template: `
+  selector: 'app-property-card',
+  standalone: true,
+  imports: [CommonModule, PropertyActionsComponent],
+  template: `
     <div class="bg-white rounded-lg shadow overflow-hidden">
       <div class="relative h-48 bg-gray-200">
         <img 

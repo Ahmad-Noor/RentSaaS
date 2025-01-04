@@ -5,9 +5,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormFieldComponent } from '../../../../../../shared/components/form-field/form-field.component';
 
 @Component({
-    selector: 'app-property-form',
-    imports: [CommonModule, ReactiveFormsModule, RouterLink, FormFieldComponent],
-    template: `
+  selector: 'app-property-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FormFieldComponent],
+  template: `
     <form [formGroup]="propertyForm" (ngSubmit)="handleSubmit()" class="space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <app-form-field 

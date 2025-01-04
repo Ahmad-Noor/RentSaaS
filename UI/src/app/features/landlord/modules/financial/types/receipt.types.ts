@@ -4,8 +4,6 @@ export interface Receipt {
   name: string;
   size: number;
   type: string;
-  progress?: number;
-  error?: string;
 }
 
 export interface ReceiptValidation {

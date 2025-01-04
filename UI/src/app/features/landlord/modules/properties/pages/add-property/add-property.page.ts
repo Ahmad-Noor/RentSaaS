@@ -5,9 +5,10 @@ import { RouterLink } from '@angular/router';
 import { PropertyFormComponent } from '../../components/property-form/property-form.component';
 
 @Component({
-    selector: 'app-add-property-page',
-    imports: [CommonModule, RouterLink, PropertyFormComponent],
-    template: `
+  selector: 'app-add-property-page',
+  standalone: true,
+  imports: [CommonModule, RouterLink, PropertyFormComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <div>

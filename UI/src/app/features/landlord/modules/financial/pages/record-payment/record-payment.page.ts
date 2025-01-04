@@ -5,9 +5,10 @@ import { PaymentService } from '../../services/payment.service';
 import { CreatePaymentDTO } from '../../types/payment.types';
 
 @Component({
-    selector: 'app-record-payment-page',
-    imports: [RouterLink, PaymentFormComponent],
-    template: `
+  selector: 'app-record-payment-page',
+  standalone: true,
+  imports: [RouterLink, PaymentFormComponent],
+  template: `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
         <div>

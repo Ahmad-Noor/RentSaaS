@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MaintenanceService } from '../../services/maintenance.service';
+import { MaintenanceRequest } from '../../types/maintenance.types';
 
 @Component({
   selector: 'app-request-list',
   standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="bg-white rounded-lg shadow">
       <div class="p-6">
@@ -37,30 +41,64 @@ import { Component } from '@angular/core';
             </tr>
           </thead>
           <tbody>
-            <tr class="border-b">
-              <td class="py-3 px-4">#1234</td>
-              <td class="py-3 px-4">Sunset Apartments</td>
-              <td class="py-3 px-4">Plumbing issue</td>
-              <td class="py-3 px-4">
-                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">
-                  In Progress
-                </span>
-              </td>
-              <td class="py-3 px-4">
-                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">
-                  High
-                </span>
-              </td>
-              <td class="py-3 px-4">
-                <button class="text-gray-600 hover:text-gray-900">
-                  <span class="material-icons">more_vert</span>
-                </button>
-              </td>
-            </tr>
+            @for (request of requests; track request.id) {
+              <tr class="border-b">
+                <td class="py-3 px-4">#{{ request.id }}</td>
+                <td class="py-3 px-4">{{ request.propertyId }}</td>
+                <td class="py-3 px-4">{{ request.issueType }}</td>
+                <td class="py-3 px-4">
+                  <span [class]="getStatusClass(request.status)">
+                    {{ request.status }}
+                  </span>
+                </td>
+                <td class="py-3 px-4">
+                  <span [class]="getPriorityClass(request.priority)">
+                    {{ request.priority }}
+                  </span>
+                </td>
+                <td class="py-3 px-4">
+                  <button class="text-gray-600 hover:text-gray-900">
+                    <span class="material-icons">more_vert</span>
+                  </button>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
   `
 })
-export class RequestListComponent {}
+export class RequestListComponent {
+  requests: MaintenanceRequest[] = [];
+
+  constructor(private maintenanceService: MaintenanceService) {
+    this.maintenanceService.getRequests().subscribe(requests => {
+      this.requests = requests;
+    });
+  }
+
+  getStatusClass(status?: string): string {
+    const baseClasses = 'px-2 py-1 rounded-full text-sm';
+    const statusClasses: Record<string, string> = {
+      'pending': 'bg-yellow-100 text-yellow-800',
+      'in_progress': 'bg-blue-100 text-blue-800',
+      'completed': 'bg-green-100 text-green-800',
+      'cancelled': 'bg-gray-100 text-gray-800'
+    };
+
+    return `${baseClasses} ${statusClasses[status || 'pending']}`;
+  }
+
+  getPriorityClass(priority?: string): string {
+    const baseClasses = 'px-2 py-1 rounded-full text-sm';
+    const priorityClasses: Record<string, string> = {
+      'low': 'bg-gray-100 text-gray-800',
+      'medium': 'bg-yellow-100 text-yellow-800',
+      'high': 'bg-orange-100 text-orange-800',
+      'emergency': 'bg-red-100 text-red-800'
+    };
+
+    return `${baseClasses} ${priorityClasses[priority || 'low']}`;
+  }
+}

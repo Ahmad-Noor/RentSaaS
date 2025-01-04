@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Expense } from '../../types/expense.types';
 
 @Component({
-    selector: 'app-expense-table',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-expense-table',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <table class="w-full">
       <thead>
         <tr class="border-b">
