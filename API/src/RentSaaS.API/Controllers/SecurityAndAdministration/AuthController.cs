@@ -46,8 +46,7 @@ public class AuthController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Create new user, Email #{Email}", Request.Email);
-            Request.Password = Password.HashPassword(Request.Password);
+            _logger.LogInformation("Create new user, Email #{Email}", Request.Email); 
 
             var user = new User
             {
