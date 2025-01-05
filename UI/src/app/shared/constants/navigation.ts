@@ -67,7 +67,9 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
     label: 'Administration',
     items: [
       { icon: 'groups', label: 'Team Management', route: '/landlord/team' },
-      { icon: 'manage_accounts', label: 'Users', route: '/landlord/users' }
+      { icon: 'manage_accounts', label: 'Users', route: '/landlord/users' },
+      { icon: 'build', label: 'Website Studio', route: '/landlord/websitestudio' },
+      { icon: 'build', label: 'Project Management', route: '/landlord/projectmanagement' }
     ]
   }
 ];
