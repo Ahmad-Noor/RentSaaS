@@ -1,23 +1,26 @@
-﻿using RentSaaS.Domain;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace RentSaaS.API.Controllers.CoreControllers;
 
+ 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class AddressController : ControllerBase
+
+public class ExpenseController : Controller
 {
     // add comment for github
-    private readonly ILogger<AddressController> _logger;   
+    private readonly ILogger<ExpenseController> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork)
+    public ExpenseController(ILogger<ExpenseController> logger, IUnitOfWork unitOfWork)
     {
-        _logger = logger;  
+        _logger = logger;
         _unitOfWork = unitOfWork;
     }
 
@@ -25,12 +28,12 @@ public class AddressController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var countries = await _unitOfWork.AddressRepository.GetAll();
-        if (countries == null)
+        var expenses = await _unitOfWork.ExpenseRepository.GetAll();
+        if (expenses == null)
         {
             return NotFound();
         }
-        return Ok(countries);
+        return Ok(expenses);
     }
 
     [HttpGet]
@@ -38,16 +41,16 @@ public class AddressController : ControllerBase
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var address = await _unitOfWork.AddressRepository.GetById(id);
-        if (address != null)
+        var expense = await _unitOfWork.ExpenseRepository.GetById(id);
+        if (expense != null)
         {
-            return Ok(address);
+            return Ok(expense);
         }
         return NotFound();
     }
-     
+
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] Address address)
+    public async Task<IActionResult> Add([FromBody] Expense expense)
     {
         if (!ModelState.IsValid)
         {
@@ -56,24 +59,24 @@ public class AddressController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Create new address, address street #{AddresStreet}", address.Street);
-            await _unitOfWork.AddressRepository.Add(address); 
+            _logger.LogInformation("Create new expense", expense.Id);
+            await _unitOfWork.ExpenseRepository.Add(expense);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(address);
+            return Ok(expense);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new address, address street #{AddresStreet}", address.Street);
-            return new JsonResult($"error on creating new address {address.Street}") { StatusCode = 500 };
+            _logger.LogError(ex, "error on creating new expense, expense street #{AddresId}", expense.Id);
+            return new JsonResult($"error on creating new expense {expense.Id}") { StatusCode = 500 };
         }
     }
-       
+
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, Address address)
+    public async Task<IActionResult> Update(Guid id, Expense expense)
     {
-        if (id != address.Id)
+        if (id != expense.Id)
         {
             return BadRequest();
         }
@@ -86,10 +89,10 @@ public class AddressController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var address = await _unitOfWork.AddressRepository.FirstOrDefaultAsync(w => w.Id == id );
-        if (address != null)
+        var expense = await _unitOfWork.ExpenseRepository.FirstOrDefaultAsync(w => w.Id == id);
+        if (expense != null)
         {
-            address.IsDeleted = true;
+            expense.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
