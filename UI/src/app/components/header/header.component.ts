@@ -6,7 +6,7 @@ import { MobileMenuComponent } from '../../shared/components/mobile-menu/mobile-
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, NavLinkComponent, ButtonComponent, MobileMenuComponent],
+    imports: [RouterLink, NavLinkComponent, MobileMenuComponent],
     standalone :  true,
     templateUrl: './header.component.html',
     styleUrl:   './header.componen.css'
