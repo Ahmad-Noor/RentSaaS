@@ -11,13 +11,15 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ILogger _logger;
      
     public IAddressRepository AddressRepository { get; set; } 
+    public IPropertyRepository PropertyRepository { get; set; } 
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger("logs");
         _dbContext = dbContext;
          
-        AddressRepository = new AddressRepository(dbContext, _logger); 
+        AddressRepository = new AddressRepository(dbContext, _logger);
+        PropertyRepository = new PropertyRepository(dbContext, _logger); 
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity
