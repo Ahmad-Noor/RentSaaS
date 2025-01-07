@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
      
     public IAddressRepository AddressRepository { get; set; } 
     public IPropertyRepository PropertyRepository { get; set; } 
+    public IExpenseRepository ExpenseRepository { get; set; } 
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
@@ -19,7 +20,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _dbContext = dbContext;
          
         AddressRepository = new AddressRepository(dbContext, _logger);
-        PropertyRepository = new PropertyRepository(dbContext, _logger); 
+        PropertyRepository = new PropertyRepository(dbContext, _logger);
+        ExpenseRepository = new ExpenseRepository(dbContext, _logger); 
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity
