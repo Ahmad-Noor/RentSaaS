@@ -7,7 +7,7 @@ import { LANDLORD_NAVIGATION } from '../../../../../shared/constants/navigation'
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, SidebarItemComponent, SidebarGroupComponent],
+  imports: [SidebarItemComponent, SidebarGroupComponent],
   template: `
     <aside 
       class="bg-[#213D5B] text-white h-screen fixed left-0 top-0 overflow-y-auto transition-all duration-300"
