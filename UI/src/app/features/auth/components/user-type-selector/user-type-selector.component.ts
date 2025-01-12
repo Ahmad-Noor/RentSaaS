@@ -5,32 +5,11 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 @Component({
     selector: 'app-user-type-selector',
     imports: [CommonModule, ReactiveFormsModule],
-    template: `
-    <div [formGroup]="formGroup" class="space-y-4">
-      <label class="block text-sm font-medium text-gray-700">I am a:</label>
-      <div class="flex gap-4">
-        <label class="flex items-center">
-          <input
-            type="radio"
-            formControlName="userType"
-            value="landlord"
-            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-          >
-          <span class="ml-2">Landlord/Manager</span>
-        </label>
-        <label class="flex items-center">
-          <input
-            type="radio"
-            formControlName="userType"
-            value="tenant"
-            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-          >
-          <span class="ml-2">Tenant</span>
-        </label>
-      </div>
-    </div>
-  `
+templateUrl:'./user-type-selector.component.html',
+styleUrl:'./user-type-selector.component.css'
 })
 export class UserTypeSelectorComponent {
   @Input() formGroup!: FormGroup;
 }
+
+
