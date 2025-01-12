@@ -70,6 +70,7 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
       { icon: 'manage_accounts', label: 'Users', route: '/landlord/users' },
       { icon: 'build', label: 'Website Studio', route: '/landlord/websitestudio' },
       { icon: 'build', label: 'AI Agent for real estate opportunity ', route: '/landlord/websitestudio'  },
+      { icon: 'build', label: 'AI Real Estate Voice Agent(https://www.youtube.com/watch?v=Miaob3BQpdk)', route: '/landlord/websitestudio'  },
       { icon: 'build', label: 'Project Management', route: '/landlord/projectmanagement' }
     ]
   }
