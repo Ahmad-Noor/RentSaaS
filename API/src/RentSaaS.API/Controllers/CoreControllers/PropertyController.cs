@@ -7,7 +7,7 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 
 public class PropertyController : ControllerBase
@@ -22,7 +22,7 @@ public class PropertyController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
-    [Authorize]
+   
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {

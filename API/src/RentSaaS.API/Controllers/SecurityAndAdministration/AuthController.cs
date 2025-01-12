@@ -54,11 +54,13 @@ public class AuthController : ControllerBase
                 LastName = Request.LastName,
                 ShowFullName = true,
                 Email = Request.Email,
-                OrganizationId = Request.OrganizationId,
+       
+                //OrganizationId = Request.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
+               
                 IsActive = true,
-                UserType=Request.UserType
-                
+                UserType=Request.UserType // role of the user
+
             };
             _rentSaaSDBContext.Users.Add(user);
             await _rentSaaSDBContext.SaveChangesAsync();

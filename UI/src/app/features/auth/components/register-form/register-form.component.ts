@@ -28,16 +28,16 @@ import { AuthService } from "../../services/auth.service";
   styleUrls: ["./register-form.component.css"],
 })
 export class RegisterFormComponent {
+
   registerForm = new FormGroup({
-    firstName: new FormControl("", [Validators.required]),
-    lastName: new FormControl("", [Validators.required]),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", [
+    firstName: new FormControl(null, [Validators.required]),
+    lastName: new FormControl(null, [Validators.required]),
+    email: new FormControl(null, [Validators.required, Validators.email]),
+    password: new FormControl(null, [
       Validators.required,
       Validators.minLength(8),
     ]),
-    organizationId: new FormControl("", [Validators.required]),
-    terms: new FormControl(false, [Validators.requiredTrue]),
+    userType:new FormControl(null,[Validators.required]),
   });
 
   constructor(private router: Router, private _AuthService: AuthService) {}
@@ -51,14 +51,19 @@ export class RegisterFormComponent {
   }
 
   onSubmit(registerForm: FormGroup): void {
-    if (this.registerForm.valid) {
+    console.log(registerForm.value);
+    console.log(registerForm);
+    // if (this.registerForm.valid) {
       this._AuthService.Register(registerForm.value).subscribe({
         next: (response) => {
+          console.log(response)
           this.router.navigate(["/login"]);
         },
-        error: (error) => {},
+        error: (error) => {
+          console.log(error)
+        },
         complete: () => {},
       });
-    }
+    // }
   }
 }

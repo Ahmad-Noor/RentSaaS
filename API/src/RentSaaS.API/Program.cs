@@ -103,7 +103,7 @@ app.UseStaticFiles();
 // app.UseCors();
 // app.UseCookiePolicy();
 app.UseRouting();
-app.UseCors("MyPolicy");
+app.UseCors("MyPolicey");
 // app.UseRateLimiter();
 // app.UseRequestLocalization();
 // app.UseCors();
