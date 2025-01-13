@@ -112,6 +112,7 @@ public class RentSaaSDBContext : DbContext
         return base.SaveChangesAsync(cancellationToken);
     }
     public DbSet<Address> Addresses { get; set; } 
+    public DbSet<Lease> leases { get; set; } 
     public DbSet<Property> Properties { get; set; } 
     public DbSet<Expense> Expenses { get; set; } 
     public DbSet<Organization> Organizations { get; set; }

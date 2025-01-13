@@ -5,6 +5,6 @@ public class Property : BaseEntity
 {   
     
     public string? Address { get; set; }   
-    //public ICollection<Lease>? Leases { get; set; }  
+    public ICollection<Lease>? Leases { get; set; }  
 
 }
