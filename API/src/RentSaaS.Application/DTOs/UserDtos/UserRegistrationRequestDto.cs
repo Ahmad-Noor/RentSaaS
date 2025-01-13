@@ -16,7 +16,7 @@ public class UserRegistrationRequestDto
 
     public required string Password { get; set; } = string.Empty;
     [Required(ErrorMessage = "Must Choose User Type")]
-    [JsonConverter(typeof(UserTypeJsonConverter))]
+
 
     public required UserType UserType { get; set; } = UserType.Landlord; // Convert to Enum (Landlord -tenant - landlord&&tenant) Enum 
 
