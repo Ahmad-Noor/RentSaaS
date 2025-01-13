@@ -1,15 +1,14 @@
-﻿using Common;
-using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
+using System.Text.RegularExpressions;
+using Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using RentSaaS.Application.DTOs.UserDtos;
 using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data;
-using RentSaaS.Application.DTOs;
-using RentSaaS.Application.DTOs.UserDtos;
 namespace RentSaaS.API.Controllers.SecurityAndAdministration;
 
 [ApiController]
@@ -46,7 +45,7 @@ public class AuthController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Create new user, Email #{Email}", Request.Email); 
+            _logger.LogInformation("Create new user, Email #{Email}", Request.Email);
 
             var user = new User
             {
@@ -54,12 +53,12 @@ public class AuthController : ControllerBase
                 LastName = Request.LastName,
                 ShowFullName = true,
                 Email = Request.Email,
-       
+
                 //OrganizationId = Request.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
-               
+
                 IsActive = true,
-                UserType=Request.UserType // role of the user
+                UserType = Request.UserType.ToString() // role of the user
 
             };
             _rentSaaSDBContext.Users.Add(user);

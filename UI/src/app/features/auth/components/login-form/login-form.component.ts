@@ -20,7 +20,7 @@ export class LoginFormComponent {
   loginForm=new  FormGroup({
     email: new FormControl  ('',[Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, passwordValidator]),
-    rememberMe:new FormControl (false)
+    rememberMe:new FormControl (true)
 
   });
 
@@ -60,7 +60,7 @@ export class LoginFormComponent {
   onSubmit(loginForm:FormGroup): void {
 
 
-    console.log(loginForm.value);
+    console.log(loginForm);
     if (loginForm.valid) {
       this.loading = true;
       this.error = '';
@@ -70,6 +70,7 @@ export class LoginFormComponent {
         next: (response) => {
           if (response.success) {
             // TODO: Navigate to dashboard
+            
             console.log('Login successful');
           } else {
             this.error = response.error || 'Login failed';

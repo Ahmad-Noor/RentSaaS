@@ -12,6 +12,7 @@ import { FormFieldComponent } from "../../../../shared/components/form-field/for
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { getFieldErrorMessage } from "../../utils/form-errors.utils";
 import { AuthService } from "../../services/auth.service";
+import { TypeUser } from "../../../../shared/enums/type-user";
 
 @Component({
   selector: "app-register-form",
@@ -21,7 +22,6 @@ import { AuthService } from "../../services/auth.service";
     UserTypeSelectorComponent,
     FormFieldComponent,
     ButtonComponent,
-    
   ],
   standalone: true,
   templateUrl: "./register-form.component.html",
@@ -37,7 +37,7 @@ export class RegisterFormComponent {
       Validators.required,
       Validators.minLength(8),
     ]),
-    userType:new FormControl(null,[Validators.required]),
+    userType: new FormControl(TypeUser.Tenant, [Validators.required]),
   });
 
   constructor(private router: Router, private _AuthService: AuthService) {}
@@ -51,19 +51,21 @@ export class RegisterFormComponent {
   }
 
   onSubmit(registerForm: FormGroup): void {
-    console.log(registerForm.value);
-    console.log(registerForm);
-    // if (this.registerForm.valid) {
-      this._AuthService.Register(registerForm.value).subscribe({
+    const formData = {
+      ...registerForm.value,
+      userType: Number(registerForm.get("userType")?.value),
+    };
+    if (this.registerForm.valid) {
+      this._AuthService.Register(formData).subscribe({
         next: (response) => {
-          console.log(response)
+          console.log(response);
           this.router.navigate(["/login"]);
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
         },
         complete: () => {},
       });
-    // }
+    }
   }
 }
