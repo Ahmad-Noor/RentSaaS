@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using RentSaaS.Application.DTOs.Property;
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
@@ -35,7 +36,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    //[Authorize]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
@@ -46,33 +47,68 @@ public class PropertyController : ControllerBase
         }
         return NotFound();
     }
+
+
+
     [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> Add([FromBody] Property property)
+    [HttpPost("Add")]
+    public async Task<IActionResult> Add([FromBody] PropertyCreateDto property)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest();
         }
 
+
+        var Property = new Property
+        {
+            OrganizationId = property.OrganizationId,
+            CreatedAt = property.CreatedAt,
+            CreatedBy = property.CreatedBy,
+            LastModifiedAt = property.LastModifiedAt,
+            LastModifiedBy = property.LastModifiedBy,
+            IsDeleted = property.IsDeleted,
+            DeletedAt = property.DeletedAt,
+            DeletedBy = property.DeletedBy,
+            Note = property.Note,
+
+            // Mapping property fields
+            Address = property.Address,
+            Unite = property.Unite
+        };
+
+
+
+
         try
         {
-            _logger.LogInformation("Create new property, property name #{Id}", property.Id);
-            await _unitOfWork.PropertyRepository.Add(property);
+            //_logger.LogInformation("Create new property, property name #{Id}", Property.Id);
+            await _unitOfWork.PropertyRepository.Add(Property);
             await _unitOfWork.SaveChangesAsync();
 
             return Ok(property);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new property, property name #{Id}", property.Id);
-            return new JsonResult($"error on creating new property {property.Id}") { StatusCode = 500 };
+            //_logger.LogError(ex, "error on creating new property, property name #{Id}", property.Id);
+            return new JsonResult($"error on creating new property {Property.Id}") { StatusCode = 500 };
         }
     }
 
-    [Authorize]
+
+
+
+
+
+
+
+
+
+
+
+    //[Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, Property property)
+    public async Task<IActionResult> Update(Guid id, PropertyUpdateDto property)
     {
         if (id != property.Id)
         {
