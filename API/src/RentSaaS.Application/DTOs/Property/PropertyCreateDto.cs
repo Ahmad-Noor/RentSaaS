@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RentSaaS.Application.DTOs.Property
 {
-    public class PropertyCreateDto: BaseEntityDto
+    public class PropertyCreateDto : BaseEntityDto
     {
 
         public string Address { get; set; }

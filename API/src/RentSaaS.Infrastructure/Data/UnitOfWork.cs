@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ILogger _logger;
      
     public IAddressRepository AddressRepository { get; set; } 
+    public ICompanyRepository CompanyRepository { get; set; } 
     public IPropertyRepository PropertyRepository { get; set; } 
     public IExpenseRepository ExpenseRepository { get; set; } 
     public ILeaseRepository LeaseRepository { get; set; } 
@@ -21,6 +22,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _dbContext = dbContext;
          
         AddressRepository = new AddressRepository(dbContext, _logger);
+        CompanyRepository = new CompanyRepository(dbContext, _logger);
         PropertyRepository = new PropertyRepository(dbContext, _logger);
         ExpenseRepository = new ExpenseRepository(dbContext, _logger); 
         LeaseRepository = new LeaseRepository(dbContext, _logger); 
