@@ -6,7 +6,7 @@
 
 
 
-  <app-form-field label="Password" id="password" [error]="getFieldError('password')">
+  <app-form-field label="Password" id="password" [error]="getFieldError('password')" class="my-5">
     <div class="relative">
       <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm pr-10">
@@ -36,7 +36,7 @@
     </a>
   </div>
 
-  <app-button type="submit" [loading]="loading" [disabled]="loginForm.invalid || loading">
+  <app-button type="submit" [loading]="loading" [disabled]="loginForm.invalid || loading" class="my-2">
     Log in
   </app-button>
 

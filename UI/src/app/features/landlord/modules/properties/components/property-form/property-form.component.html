@@ -1,21 +1,24 @@
 <form [formGroup]="propertyForm" (ngSubmit)="handleSubmit()" class="space-y-6">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <app-form-field label="note" id="note" [error]="getFieldError('note')">
-      <input type="text" id="note" formControlName="note"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Enter note for new  property">
-
-    </app-form-field>
-
-
-
-
-
-
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
 
 
     <app-form-field label="address" id="address" [error]="getFieldError('address')">
       <input type="text" id="address" formControlName="address"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Enter address for Property">
+    </app-form-field>
+
+
+    <app-form-field label="unite" id="unite" [error]="getFieldError('unite')">
+      <input type="text" id="unite" formControlName="unite"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Enter unite for new  property">
+
+    </app-form-field>
+
+
+    <app-form-field label="note" id="note" [error]="getFieldError('note')">
+      <input type="text" id="note" formControlName="note"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Enter note for new  property">
+
     </app-form-field>
 
 
@@ -36,7 +39,7 @@
           <option value="condo">Condo / Apartment Unit</option>
           <option value="townhouse">Townhouse</option>
           <option value="community">Entire Apartment Community</option>
-        </select>
+        </select>propertyForm
       </app-form-field>
 
       <app-form-field label="Unit number" id="unitNumber" [error]="getFieldError('unitNumber')">
