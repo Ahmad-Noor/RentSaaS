@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../../../../shared/components/form-field/form-field.component';
+import { PropertyService } from '../../services/property.service';
 
 @Component({
   selector: "app-property-form",
@@ -16,13 +17,19 @@ export class PropertyFormComponent {
 
   propertyForm = new FormGroup({
     unite: new FormControl("", [Validators.required, Validators.minLength(10)]),
-    address: new FormControl(null, [Validators.required,Validators.minLength(10)]),
+    address: new FormControl(null, [Validators.required,Validators.minLength(10),Validators.pattern("^\d+\s[A-z0-9\s]+,?\s[A-z\s]+,\s[A-Z]{2}\s\d{5}(-\d{4})?$")]),
     note: new FormControl("", [Validators.minLength(10)]),
   });
 
   loading = false;
 
-  constructor() {}
+  constructor(private _propertyServices:PropertyService) {}
+
+
+
+
+
+
 
   getFieldError(field: string): string {
     const control = this.propertyForm.get(field);
@@ -36,6 +43,7 @@ export class PropertyFormComponent {
 
   handleSubmit(): void {
     if (this.propertyForm.valid) {
+      console.log(this.propertyForm.value)
       this.loading = true;
       this.onSubmit.emit(this.propertyForm.value);
     }

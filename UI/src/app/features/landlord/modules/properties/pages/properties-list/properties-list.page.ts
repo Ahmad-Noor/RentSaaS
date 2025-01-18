@@ -9,6 +9,7 @@ import { PropertyCardComponent } from '../../components/property-card/property-c
 import { Property } from '../../types/property.types';
 import { ConfirmDialogService } from '../../../../../../shared/services/confirm-dialog/confirm-dialog.service';
 import { PropertyService } from '../../services/property.service';
+import { PropertyActionsComponent } from '../../components/property-actions/property-actions.component';
 
 @Component({
   selector: 'app-properties-list-page',
@@ -19,22 +20,28 @@ import { PropertyService } from '../../services/property.service';
     PropertyTableComponent, 
     ActionBarComponent,
     ViewToggleComponent,
-    PropertyCardComponent
+    PropertyCardComponent,
+    PropertyActionsComponent
   ],
   templateUrl: './properties-list.page.html',
   styleUrls: ['./properties-list.page.css']
 })
 export class PropertiesListPage {
+getStatusClass(arg0: boolean) {
+throw new Error('Method not implemented.');
+}
   view: 'list' | 'grid' = 'list';
-  properties: Property[] = [];
+  properties!: Property[] ;
+onAction: any;
 
   constructor(
     private router: Router,
     private confirmDialog: ConfirmDialogService,
     private propertyService: PropertyService
   ) {
-    this.propertyService.getProperties().subscribe(properties => {
-      this.properties = properties;
+    this.propertyService.getAllProperties().subscribe(responce => {
+    console.log("propertylist",responce);
+    this.properties = responce;
     });
   }
 
@@ -58,7 +65,7 @@ export class PropertiesListPage {
       case 'delete':
         const confirmed = await this.confirmDialog.show({
           title: 'Delete Property',
-          message: `Are you sure you want to delete ${action.property.name}?`,
+          message: `Are you sure you want to delete ${action.property.address}?`,
           confirmText: 'Delete',
           cancelText: 'Cancel',
           type: 'danger'
@@ -71,4 +78,14 @@ export class PropertiesListPage {
         break;
     }
   }
+
+
+
+
+
+
+
+
+
+  
 }
