@@ -38,9 +38,7 @@ getAllProperties():Observable<any> {
 
     
     console.log("Final PropertyDataAll:", Property);
-    
-
-
+  
 
     console.log(JSON.stringify(Property));  // Log the payload
     return this._httpClient.post(
