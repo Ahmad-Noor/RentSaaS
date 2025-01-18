@@ -73,6 +73,13 @@ onAction: any;
         
         if (confirmed) {
           // TODO: Implement property deletion
+
+          this.propertyService.Delete(action.property.id as `${string}-${string}-${string}-${string}-${string}`).subscribe({
+            next:()=>{
+              this.router.navigate(['/landlord/properties'])
+              console.log("Delete Succes Now")
+            }
+          });
           console.log('Deleting property:', action.property);
         }
         break;
