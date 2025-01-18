@@ -74,7 +74,7 @@ public class PropertyController : ControllerBase
 
             // Mapping property fields
             Address = property.Address,
-            Unite = property.Unite
+            //Unite = property.Unite
         };
 
 
