@@ -28,6 +28,10 @@ import { AuthService } from "../../services/auth.service";
   styleUrls: ["./register-form.component.css"],
 })
 export class RegisterFormComponent {
+  showPassword = false;
+  loading = false;
+  error = '';
+
 
   registerForm = new FormGroup({
     firstName: new FormControl(null, [Validators.required]),
@@ -53,17 +57,21 @@ export class RegisterFormComponent {
   onSubmit(registerForm: FormGroup): void {
     console.log(registerForm.value);
     console.log(registerForm);
-    // if (this.registerForm.valid) {
+    if (this.registerForm.valid) {
+      this.loading=true;
       this._AuthService.Register(registerForm.value).subscribe({
         next: (response) => {
           console.log(response)
           this.router.navigate(["/login"]);
         },
         error: (error) => {
+          this.error = error.error.message;
           console.log(error)
         },
-        complete: () => {},
+        complete: () => {
+          this.loading=false;
+        },
       });
-    // }
+    }
   }
 }

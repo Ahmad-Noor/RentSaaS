@@ -29,6 +29,12 @@ export class PropertyService {
     return this.getPropertyById(newProperty.id);
   }
 
+
+
+
+
+
+
   getPropertyById(id: number): Observable<Property> {
     return this.properties.pipe(
       map(properties => {
@@ -39,11 +45,20 @@ export class PropertyService {
     );
   }
 
+
   deleteProperty(id: number): void {
     const currentProperties = this.properties.getValue();
     this.properties.next(currentProperties.filter(p => p.id !== id));
   }
 
+
+
+
+
+
+
+
+  
   private getPropertyTypeLabel(type: string): string {
     const labels: Record<string, string> = {
       house: 'Single Family',

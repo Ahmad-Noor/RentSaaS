@@ -1,0 +1,34 @@
+
+<table class="w-full">
+  <thead>
+    <tr class="border-b">
+      <th class="text-left py-3 px-4">Property Name</th>
+      <th class="text-left py-3 px-4">Type</th>
+      <th class="text-left py-3 px-4">Units</th>
+      <th class="text-left py-3 px-4">Occupancy</th>
+      <th class="text-left py-3 px-4">Status</th>
+      <th class="text-left py-3 px-4">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (property of properties; track property.id) {
+      <tr class="border-b hover:bg-gray-50">
+        <td class="py-3 px-4">{{ property.name }}</td>
+        <td class="py-3 px-4">{{ property.type }}</td>
+        <td class="py-3 px-4">{{ property.units }}</td>
+        <td class="py-3 px-4">{{ property.occupancy }}</td>
+        <td class="py-3 px-4">
+          <span [class]="getStatusClass(property.status)">
+            {{ property.status }}
+          </span>
+        </td>
+        <td class="py-3 px-4">
+          <app-property-actions 
+            [property]="property"
+            (onAction)="onAction.emit($event)"
+          />
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
