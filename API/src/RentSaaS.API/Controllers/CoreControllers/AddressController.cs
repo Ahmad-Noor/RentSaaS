@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-namespace RentSaaS.API.Controllers;
+
+namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]

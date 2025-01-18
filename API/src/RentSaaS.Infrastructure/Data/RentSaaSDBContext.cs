@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using RentSaaS.Application.Services.Interfaces;
 using RentSaaS.Domain.Base;
 using RentSaaS.Domain.Entities;
+using RentSaaS.Infrastructure.Data.Repositories;
 using System.Reflection.Emit;
 
 namespace RentSaaS.Infrastructure.Data;
@@ -111,6 +112,10 @@ public class RentSaaSDBContext : DbContext
         return base.SaveChangesAsync(cancellationToken);
     }
     public DbSet<Address> Addresses { get; set; } 
+    public DbSet<Company> Companies { get; set; } 
+    public DbSet<Lease> leases { get; set; } 
+    public DbSet<Property> Properties { get; set; } 
+    public DbSet<Expense> Expenses { get; set; } 
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<User> Users { get; set; } 
 

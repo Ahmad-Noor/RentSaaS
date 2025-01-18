@@ -1,0 +1,1 @@
+export const REFERENCE_NUMBER_PATTERN = /^[A-Z0-9-]{0,20}$/;

@@ -9,13 +9,16 @@ public class AuthenticateResponse
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Token { get; set; }
-
+    public string UserType { get; set; }
+    public Guid OrgnaizationId { get; set; }
     public AuthenticateResponse(User user, string token)
     {
         Id = user.Id;
         FirstName = user.FirstName;
         LastName = user.LastName;
         Email = user.Email;
+        UserType = user.UserType;
         Token = token;
+        OrgnaizationId = user.OrganizationId;
     }
 }

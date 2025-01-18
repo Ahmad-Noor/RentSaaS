@@ -1,20 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-// import { HomeComponent } from './Pages/home/home.component';
-import { NavbarComponent } from './Shaerd/navbar/navbar.component';
-import { FooterComponent } from './Shaerd/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
+
 @Component({
-  selector: 'app-root',
-  imports: [
- RouterModule,
-    // HomeComponent,
-    NavbarComponent,
-    FooterComponent,
- 
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [RouterOutlet],
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'RentSaaSUI';
-}
+export class AppComponent {}

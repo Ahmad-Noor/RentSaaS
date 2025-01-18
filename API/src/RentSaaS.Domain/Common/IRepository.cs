@@ -8,7 +8,7 @@ public interface IRepository<T> where T : IEntity
     Task<T> GetById(Guid id);
     Task<bool> Add(T entity);
     Task<bool> Delete(Guid id);
-    Task<bool> Upsert(T entity);
+    Task<bool> Update(T entity);
     Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
     Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
     Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);

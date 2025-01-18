@@ -9,7 +9,7 @@ public class Tenant : BaseEntity
     public string? Address { get; set; }  
     public Guid? ContactId { get; init; } 
     public Guid? AddressId { get; init; }     
-    public ICollection<Lease>? Leases { get; set; }
+    //public ICollection<Lease>? Leases { get; set; }
 
 
 }

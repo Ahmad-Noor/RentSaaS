@@ -15,20 +15,23 @@ public class OrganizationService : IOrganizationService
 
         if (_httpContext is not null)
         {
-            if (_httpContext!.Request.Headers.TryGetValue("X-OrganizationId", out StringValues organizationIdHeader))
+            if (!httpContextAccessor.HttpContext.Request.Path.ToString().Contains("/api/Auth/"))
             {
-                if (Guid.TryParse(organizationIdHeader.ToString(), out Guid organizationId))
+                if (_httpContext!.Request.Headers.TryGetValue("X-OrganizationId", out StringValues organizationIdHeader))
                 {
-                    SetCurrentOrganization(organizationId);
+                    if (Guid.TryParse(organizationIdHeader.ToString(), out Guid organizationId))
+                    {
+                        SetCurrentOrganization(organizationId);
+                    }
+                    else
+                    {
+                        throw new UnauthorizedAccessException("Invalid Organization Id format!");
+                    }
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Invalid Organization Id format!");
+                    throw new UnauthorizedAccessException("No Organization provided!");
                 }
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("No Organization provided!");
             }
         }
 

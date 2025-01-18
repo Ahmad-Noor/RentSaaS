@@ -8,7 +8,9 @@ public class Lease : BaseEntity
 {
 
     [Required]
+    //[ForeignKey("Property")]
     public Guid PropertyId { get; set; }
+   
 
     [Required]
     public DateTime StartDate { get; set; }
@@ -20,9 +22,19 @@ public class Lease : BaseEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal RentAmount { get; set; }
 
-    public string? LeaseTerms { get; set; }
+    //public string? LeaseTerms { get; set; }
+
+    public string? TenantName  { get; set; }
+    public string? LeaseType  { get; set; }
+
+    public Guid? OrganizationId { get; set; }
 
     // Navigation properties
-    public Organization Organization { get; set; }
-    public Property Property { get; set; }
+    public Organization? Organization { get; set; }
+    public Property? Property { get; set; }
+
+
+
 }
+
+

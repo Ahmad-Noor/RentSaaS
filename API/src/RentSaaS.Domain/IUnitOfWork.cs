@@ -2,7 +2,11 @@
 namespace RentSaaS.Domain;
 public interface IUnitOfWork : IAsyncDisposable
 { 
-    IAddressRepository AddressRepository { get; set; } 
+    IAddressRepository AddressRepository { get; set; }
+    ICompanyRepository CompanyRepository { get; set; }
+    IPropertyRepository PropertyRepository { get; set; } 
+    IExpenseRepository ExpenseRepository { get; set; }
+    ILeaseRepository LeaseRepository { get; set; } 
      
     Task<int> SaveChangesAsync();
     void Rollback(); 

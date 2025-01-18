@@ -1,5 +1,6 @@
 {
-  "name": "rent-saa-sui",
+  "name": "property-manager",
+  "private": true,
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,10 +8,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:RentSaaSUI": "node dist/rent-saa-sui/server/server.mjs"
+    "serve:ssr:ui": "node ui/app23/server/server.mjs"
   },
-  "private": true,
-  "dependencies": {
+
+"dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
@@ -21,10 +22,7 @@
     "@angular/platform-server": "^19.0.0",
     "@angular/router": "^19.0.0",
     "@angular/ssr": "^19.0.6",
-    "bootstrap": "^5.3.3",
     "express": "^4.18.2",
-    "jquery": "^3.7.1",
-    "popper.js": "^1.16.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -42,6 +40,10 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tslib": "^2.8.1"
   }
 }
+
