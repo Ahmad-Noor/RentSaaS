@@ -17,7 +17,7 @@ export class PropertyCardComponent {
 
   getStatusClass(): string {
     const baseClasses = 'px-2 py-1 rounded-full text-sm';
-    return this.property.status === 'Active'
+    return this.property.isDeleted === false
       ? `${baseClasses} bg-green-100 text-green-800`
       : `${baseClasses} bg-gray-100 text-gray-800`;
   }

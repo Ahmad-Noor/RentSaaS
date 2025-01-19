@@ -4,8 +4,13 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { passwordValidator } from '../../utils/form-validators';
+// import { passwordValidator } from '../../utils/form-validators';
 import { getFieldErrorMessage } from '../../utils/error-messages';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
+
+
+
 
 @Component({
     selector: 'app-login-form',
@@ -19,7 +24,7 @@ export class LoginFormComponent {
 
   loginForm=new  FormGroup({
     email: new FormControl  ('',[Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, passwordValidator]),
+    password: new FormControl('', [Validators.required]),
     rememberMe:new FormControl (false)
 
   });
@@ -32,7 +37,7 @@ export class LoginFormComponent {
 
   
 
-  constructor(private authService: AuthService) 
+  constructor(private authService: AuthService ,private _router:Router) 
   
   {
 
@@ -57,32 +62,43 @@ export class LoginFormComponent {
 
 
   
-  onSubmit(loginForm:FormGroup): void {
-
-
-    console.log(loginForm.value);
+  onSubmit(loginForm: FormGroup): void {
+    console.log('Form Value:', loginForm.value);
+    console.log('Form Valid:', loginForm.valid);
+  
     if (loginForm.valid) {
       this.loading = true;
       this.error = '';
-      
+  
       this.authService.login(loginForm.value)
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            // TODO: Navigate to dashboard
-            console.log('Login successful');
-          } else {
-            this.error = response.error || 'Login failed';
+        .subscribe({
+          next: (response) => {
+            console.log('Login Response:', response);
+      
+              console.log('Login Successful:', response);
+              const jwtToken = jwtDecode(response.token);
+              console.log('Decoded JWT Token:', jwtToken);
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('orgnaizationId', response.orgnaizationId);
+              // this.authService.SaveData();
+  
+              if (response.userType === 'tenant') {
+                this._router.navigate(['/tenant']);
+              } else if (response.userType === 'landlord') {
+                this._router.navigate(['/landlord']);
+              }
+          },
+          error: (err) => {
+            this.error = err.error.message;
+            console.error('Login Error:', err);
+            this.loading = false;
+          },
+          complete: () => {
+
+            this.loading = false;
           }
-        },
-        error: (err) => {
-          this.error = 'An unexpected error occurred. Please try again.';
-          console.error('Login error:', err);
-        },
-        complete: () => {
-          this.loading = false;
-        }
-      });
+        });
     }
   }
 }
+

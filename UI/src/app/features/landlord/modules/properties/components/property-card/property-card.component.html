@@ -1,9 +1,9 @@
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
+<div class="bg-white rounded-lg shadow overflow-hidden bg-red-500">
   <div class="relative h-48 bg-gray-200">
     <img 
-      [src]="property.imageUrl || 'assets/placeholder-property.jpg'"
-      [alt]="property.name"
+      [src]="property.address || 'assets/placeholder-property.jpg'"
+      [alt]="property.address"
       class="w-full h-full object-cover"
     >
     <button 
@@ -16,13 +16,13 @@
   
   <div class="p-4">
     <div class="flex justify-between items-start mb-2">
-      <h3 class="text-lg font-semibold">{{ property.name }}</h3>
-      <span [class]="getStatusClass()">{{ property.status }}</span>
+      <h3 class="text-lg font-semibold">{{ property.address }}</h3>
+      <span [class]="getStatusClass()">{{ property.unite }}</span>
     </div>
     
     <div class="text-sm text-gray-600 mb-4">
-      <p>{{ property.type }}</p>
-      <p>{{ property.units }} Units | {{ property.occupancy }} Occupied</p>
+      <p>{{ property.address }}</p>
+      <p>{{ property.address }} Units | {{ property.address }} Occupied</p>
     </div>
     
     <div class="flex justify-between items-center">
