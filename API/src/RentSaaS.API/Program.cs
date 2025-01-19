@@ -1,4 +1,3 @@
-using Serilog;
 using System.Text;
 using System.Reflection;
 using RentSaaS.Domain.Entities;
@@ -6,7 +5,7 @@ using FluentValidation.AspNetCore;
 using RentSaaS.API.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using RentSaaS.Infrastructure.Data;
+using RentSaaS.Infrastructure.Data; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<RentSaaSDBContext>();
 
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+//builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFluentValidation(config => config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-builder.Services.AddControllers();
-
+ 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,21 +35,21 @@ builder.Services.AddCors(o =>
 //TODO: Add Rate Limiter
 
 //------------------------- Logger
-string logPath = builder.Configuration.GetSection("Logging:LogPath").Value;
-if (!string.IsNullOrWhiteSpace(logPath))
-{
-    var _logger = new LoggerConfiguration()
-        .MinimumLevel.Information()
-        .MinimumLevel.Override("microsoft", Serilog.Events.LogEventLevel.Warning)
-        .Enrich.FromLogContext()
-        .WriteTo.File(logPath)
-        .CreateLogger();
-    builder.Logging.AddSerilog(_logger);
-}
-else
-{
-    throw new InvalidOperationException("Log path is not configured.");
-}
+//string logPath = builder.Configuration.GetSection("Logging:LogPath").Value;
+//if (!string.IsNullOrWhiteSpace(logPath))
+//{
+//    var _logger = new LoggerConfiguration()
+//        .MinimumLevel.Information()
+//        .MinimumLevel.Override("microsoft", Serilog.Events.LogEventLevel.Warning)
+//        .Enrich.FromLogContext()
+//        .WriteTo.File(logPath)
+//        .CreateLogger();
+//    builder.Logging.AddSerilog(_logger);
+//}
+//else
+//{
+//    throw new InvalidOperationException("Log path is not configured.");
+//}
 
 //------------------------- Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -61,7 +59,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var SecurectKey =Encoding.ASCII.GetBytes( builder.Configuration.GetSection("Jwt:Key").Value);
+    var SecurectKey = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value);
     //options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -80,21 +78,22 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = false,
         RequireExpirationTime = false,
-        //ClockSkew = TimeSpan.Zero
+        ClockSkew = TimeSpan.Zero
 
     };
 });
 
+
+builder.Services.AddControllers(); 
+ 
 var app = builder.Build();
-
-
-
+ 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
