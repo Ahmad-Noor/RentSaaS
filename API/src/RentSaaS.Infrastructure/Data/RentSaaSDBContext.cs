@@ -29,7 +29,7 @@ public class RentSaaSDBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string connectionString = "Data Source=SQL8010.site4now.net;Initial Catalog=db_a96e41_rentsaas;User Id=db_a96e41_rentsaas_admin;Password=RentSaaS1900";
+        string connectionString = "Data Source=localhost;Initial Catalog=RentSaaS_Dev;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
 
         optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory).UseSqlServer(connectionString,
             sqlServerOptionsAction: sqlOptions =>
