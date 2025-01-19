@@ -18,7 +18,7 @@ public class AuthenticateResponse
         LastName = user.LastName;
         Email = user.Email;
         UserType = user.UserType;
-        Token = token;
         OrgnaizationId = user.OrganizationId;
+        Token = token;
     }
 }

@@ -29,7 +29,7 @@ public class RentSaaSDBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string connectionString = "Data Source=localhost;Initial Catalog=RentSaaS_Dev;Persist Security Info=True;User ID=sa;Password=sa;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true";
+        string connectionString = "Data Source=SQL8010.site4now.net;Initial Catalog=db_a96e41_rentsaas;User Id=db_a96e41_rentsaas_admin;Password=RentSaaS1900";
 
         optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory).UseSqlServer(connectionString,
             sqlServerOptionsAction: sqlOptions =>
@@ -88,7 +88,8 @@ public class RentSaaSDBContext : DbContext
                 IsActive = true,
                 Email = "admin@rentsaas.com",
                 PasswordHash = Password.HashPassword("admin"),
-                OrganizationId = organizationId
+                OrganizationId = organizationId,
+                UserType = "Landlord",
             });
             //ExpenseCategory.Create("Maintenance", "Property maintenance expenses", "#FF5733", "wrench", null, true, 1),
             //ExpenseCategory.Create("Utilities", "Utility bills and services", "#33FF57", "bolt", null, true, 2),
