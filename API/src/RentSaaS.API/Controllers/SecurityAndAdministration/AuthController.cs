@@ -92,27 +92,33 @@ public class AuthController : ControllerBase
 
     private string CreateJwtToken(User user)
     {
-        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>(key: "Jwt:Key"));
-        var jwrTokenHandler = new JwtSecurityTokenHandler();
+        var keyString = _configuration.GetValue<string>("Jwt:Key");
+        if (string.IsNullOrEmpty(keyString))
+        {
+            throw new InvalidOperationException("JWT Key is not configured.");
+        }
+
+        var key = Encoding.ASCII.GetBytes(keyString);
+        var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
-                        {
-                            new Claim("Id", user.Id.ToString()),
-                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                            new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
-                            new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                        }),
-            //NotBefore = DateTime.Now.AddMinutes(-5),
-            Expires = DateTime.UtcNow.AddSeconds(10),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512)
+            {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        }),
+            Expires = DateTime.UtcNow.AddHours(24),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature)
         };
 
-        var token = jwrTokenHandler.CreateToken(tokenDescriptor);
-        return jwrTokenHandler.WriteToken(token);
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
-
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
         var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);

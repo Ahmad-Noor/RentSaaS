@@ -1,11 +1,12 @@
 using System.Text;
 using System.Reflection;
+using RentSaaS.API.Extensions;
 using RentSaaS.Domain.Entities;
 using FluentValidation.AspNetCore;
-using RentSaaS.API.Extensions;
+using RentSaaS.Infrastructure.Data;  
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using RentSaaS.Infrastructure.Data; 
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,63 +36,101 @@ builder.Services.AddCors(o =>
 //TODO: Add Rate Limiter
 
 //------------------------- Logger
-//string logPath = builder.Configuration.GetSection("Logging:LogPath").Value;
-//if (!string.IsNullOrWhiteSpace(logPath))
-//{
-//    var _logger = new LoggerConfiguration()
-//        .MinimumLevel.Information()
-//        .MinimumLevel.Override("microsoft", Serilog.Events.LogEventLevel.Warning)
-//        .Enrich.FromLogContext()
-//        .WriteTo.File(logPath)
-//        .CreateLogger();
-//    builder.Logging.AddSerilog(_logger);
-//}
-//else
-//{
-//    throw new InvalidOperationException("Log path is not configured.");
-//}
+string logPath = builder.Configuration.GetSection("Logging:LogPath").Value;
+if (!string.IsNullOrWhiteSpace(logPath))
+{
+    var _logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("microsoft", Serilog.Events.LogEventLevel.Warning)
+        .Enrich.FromLogContext()
+        .WriteTo.File(logPath)
+        .CreateLogger();
+    builder.Logging.AddSerilog(_logger);
+}
+else
+{
+    throw new InvalidOperationException("Log path is not configured.");
+}
 
 //------------------------- Add Authentication
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new InvalidOperationException("JWT Key is not configured");
+}
+
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    var SecurectKey = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value);
-    //options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
     {
-        //ValidateIssuer = true,
-        //ValidateAudience = true,
-        //ValidateLifetime = true,
-        //ValidateIssuerSigningKey = true,
-        //ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        //ValidAudience = builder.Configuration["Jwt:Audience"],
-        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
 
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(SecurectKey),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = false,
-        RequireExpirationTime = false,
-        ClockSkew = TimeSpan.Zero
-
-    };
-});
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogError("Authentication failed: {Error}", context.Exception);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("Token validated successfully");
+                return Task.CompletedTask;
+            },
+            OnMessageReceived = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("Auth header: {Header}", context.Request.Headers["Authorization"].ToString());
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 
 builder.Services.AddControllers(); 
  
 var app = builder.Build();
- 
+
+
+
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+    if (context.User.Identity?.IsAuthenticated ?? false)
+    {
+        logger.LogInformation("User is authenticated: {User}", context.User.Identity.Name);
+    }
+    else
+    {
+        logger.LogWarning("User is not authenticated");
+        var token = context.Request.Headers["Authorization"].ToString();
+        logger.LogInformation("Authorization header: {Token}", token);
+    }
+
+    await next();
+});
+
+
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI();
 //}
 
