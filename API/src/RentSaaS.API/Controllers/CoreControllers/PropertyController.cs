@@ -2,15 +2,13 @@ using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using RentSaaS.Application.DTOs.Property;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
-
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PropertyController : ControllerBase
 {
     // add comment for github
@@ -23,20 +21,21 @@ public class PropertyController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
-   
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var countries = await _unitOfWork.PropertyRepository.GetAll();
-        if (countries == null)
+        _logger.LogInformation("User Claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
+        _logger.LogInformation("Is Authenticated: {IsAuthenticated}", User.Identity?.IsAuthenticated);
+
+        var properties = await _unitOfWork.PropertyRepository.GetAll();
+        if (properties == null)
         {
             return NotFound();
         }
-        return Ok(countries);
+        return Ok(properties);
     }
 
     [HttpGet]
-    //[Authorize]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
@@ -48,9 +47,6 @@ public class PropertyController : ControllerBase
         return NotFound();
     }
 
-
-
-    [Authorize]
     [HttpPost("Add")]
     public async Task<IActionResult> Add([FromBody] PropertyCreateDto property)
     {
@@ -77,9 +73,6 @@ public class PropertyController : ControllerBase
             //Unite = property.Unite
         };
 
-
-
-
         try
         {
             //_logger.LogInformation("Create new property, property name #{Id}", Property.Id);
@@ -94,19 +87,7 @@ public class PropertyController : ControllerBase
             return new JsonResult($"error on creating new property {Property.Id}") { StatusCode = 500 };
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    //[Authorize]
+     
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, PropertyUpdateDto property)
     {
@@ -119,7 +100,6 @@ public class PropertyController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
