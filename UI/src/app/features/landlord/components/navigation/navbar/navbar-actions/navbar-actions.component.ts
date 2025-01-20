@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AZURE_COLORS } from '../../../../../shared/constants/colors';
+import { AZURE_COLORS } from '../../../../../../shared/constants/colors';
 
 @Component({
   selector: 'app-navbar-actions',

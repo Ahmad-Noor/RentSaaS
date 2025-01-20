@@ -66,56 +66,24 @@
                   </div>
                 }
         
-        
-                @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('pattern'))
-                {
-                  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <span class="font-medium"> "Please enter the address in the correct format, such as the following example:
-                      123 Main St, Springfield, IL 62701"</span> 
-                  </div>
-                }
-        
+
         
             </div>
         
         
         
-            <div>
+            <!-- <div>
               <label for="unite" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unite</label>
               <input type="text" id="unite"formControlName="unite"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Suite 200s" required />
+            </div> -->
         
-        
-        
-        
-        
-        
-        
-        
-        
-                
-                @if(propertyForm.get('unite')?.touched&&propertyForm.get('unite')?.getError('minlength'))
-                {
-                  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <span class="font-medium"> You must enter more than 4 characters for the unite</span> 
-                  </div>
-                }
-        
-        
-                @if(propertyForm.get('unite')?.touched&&propertyForm.get('unite')?.getError('required'))
-                {
-                  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <span class="font-medium">Please enter the unite </span> 
-                  </div>
-                }
-            </div>
-        
-        
+          <!--
             <div class="space-y-4">
               <label for="Note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Note</label>
               
-              <textarea 
+             <textarea 
                 id="note"
                 formControlName="note"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-48 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -128,11 +96,11 @@
             ZIP Code: 62701"
                 
               ></textarea>
-        
+      
               
-            </div>
+            </div> 
             
-        
+          -->
       
           </div>
         
