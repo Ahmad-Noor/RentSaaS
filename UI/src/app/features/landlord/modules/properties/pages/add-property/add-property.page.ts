@@ -25,8 +25,8 @@ export class AddPropertyPage {
     address: new FormControl(null, [Validators.required,Validators.minLength(10),
       Validators.pattern("^(\\d+)\\s([A-Za-z0-9\\s]+),?\\s([A-Za-z\\s]+),\\s([A-Z]{2})\\s(\\d{5})(-\\d{4})?$")
     ]),
-    unite: new FormControl("", [Validators.required, Validators.minLength(4)]),
-    note: new FormControl(null),
+    unite: new FormControl(""),
+    note: new FormControl(""),
   });
 
   CreateNewProperty(form: FormGroup) {
@@ -39,12 +39,14 @@ export class AddPropertyPage {
         unite: form.get("unite")?.value,
         organizationId: localStorage.getItem("orgnaizationId"),
         createdAt: new Date().toISOString(),
-        createdBy: "00000000-0000-0000-0000-000000000001".trim(),
-        isDeleted: false,
-        lastModifiedAt: null,
-        lastModifiedBy: null,
-        deletedAt: null,
-        deletedBy: null,
+        createdBy: "00000000-0000-0000-0000-000000000001".trim(), // current user get from local storage 
+
+        
+        // isDeleted: false, // send null 
+        // lastModifiedAt: null,
+        // lastModifiedBy: null,
+        // deletedAt: null,
+        // deletedBy: null,
       };
 
       console.log(PropertyDataAll);

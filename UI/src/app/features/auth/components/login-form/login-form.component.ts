@@ -80,7 +80,7 @@ export class LoginFormComponent {
               console.log('Decoded JWT Token:', jwtToken);
               localStorage.setItem('token', response.token);
               localStorage.setItem('orgnaizationId', response.orgnaizationId);
-              // this.authService.SaveData();
+              this.authService.SaveData();
   
               if (response.userType === 'tenant') {
                 this._router.navigate(['/tenant']);

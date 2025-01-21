@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { LoginResponse, SocialLoginResponse } from "../types/auth.types";
 import { LoginInterface } from "../../../interfaces/LoginInterface";
@@ -6,6 +6,7 @@ import { RegisterInterface } from "../../../interfaces/RegisterInterface";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
+import { isPlatformBrowser } from "@angular/common";
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +16,17 @@ export class AuthService {
 
   userData: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor(private _HttpClient: HttpClient, private _router: Router) {}
+  constructor(private _HttpClient: HttpClient, private _router: Router, @Inject(PLATFORM_ID) private Checkplatform:object) {
+
+
+    if(isPlatformBrowser(this.Checkplatform))
+      {
+        if(localStorage.getItem("Token"))
+        {
+          this.SaveData();
+        }
+      }
+  }
 
   login(LoginInterfaces: LoginInterface): Observable<any> {
     return this._HttpClient.post(`${this.baseUrl}login`, LoginInterfaces);
@@ -27,13 +38,14 @@ export class AuthService {
   }
 
   SignOut() {
-    localStorage.removeItem("Token");
+    localStorage.removeItem("token");
+    localStorage.removeItem("orgnaizationId");
     this._router.navigate(["/login"]);
   }
 
   SaveData(): void {
     this.userData.next(
-      jwtDecode(JSON.stringify(localStorage.getItem("Token")))
+      jwtDecode(JSON.stringify(localStorage.getItem("token")))
     );
     console.log(this.userData);
   }
