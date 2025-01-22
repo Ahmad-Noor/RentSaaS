@@ -22,6 +22,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
+    [Route("GetAll")]
     public async Task<IActionResult> GetAll()
     {
         _logger.LogInformation("User Claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
@@ -36,7 +37,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id:Guid}")]
+    [Route("GetById/{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var property = await _unitOfWork.PropertyRepository.GetById(id);
@@ -47,7 +48,8 @@ public class PropertyController : ControllerBase
         return NotFound();
     }
 
-    [HttpPost("Add")]
+    [HttpPost]
+    [Route("Add")]
     public async Task<IActionResult> Add([FromBody] PropertyCreateDto property)
     {
         if (!ModelState.IsValid)
@@ -88,7 +90,8 @@ public class PropertyController : ControllerBase
         }
     }
      
-    [HttpPut("{id}")]
+    [HttpPut]
+    [Route("Update/{id:Guid}")]
     public async Task<IActionResult> Update(Guid id, PropertyUpdateDto property)
     {
         if (id != property.Id)
@@ -100,7 +103,8 @@ public class PropertyController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
+    [Route("Delete/{id:Guid}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var property = await _unitOfWork.PropertyRepository.FirstOrDefaultAsync(w => w.Id == id);

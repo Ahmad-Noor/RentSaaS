@@ -22,8 +22,8 @@ export class AddPropertyPage {
   loading = false;
   error:string='';
   propertyForm = new FormGroup({
-    address: new FormControl(null, [Validators.required,Validators.minLength(10),
-      Validators.pattern("^(\\d+)\\s([A-Za-z0-9\\s]+),?\\s([A-Za-z\\s]+),\\s([A-Z]{2})\\s(\\d{5})(-\\d{4})?$")
+    //address: new FormControl(null, [Validators.required,Validators.minLength(10),Validators.pattern("^(\\d+)\\s([A-Za-z0-9\\s]+),?\\s([A-Za-z\\s]+),\\s([A-Z]{2})\\s(\\d{5})(-\\d{4})?$")
+    address: new FormControl(null, [Validators.required,Validators.minLength(10)
     ]),
     unite: new FormControl(""),
     note: new FormControl(""),
