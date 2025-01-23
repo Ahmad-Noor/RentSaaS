@@ -21,8 +21,7 @@ import { PropertyActionsComponent } from '../../components/property-actions/prop
     ActionBarComponent,
     ViewToggleComponent,
     PropertyCardComponent,
-    PropertyActionsComponent
-  ],
+   ],
   templateUrl: './properties-list.page.html',
   styleUrls: ['./properties-list.page.css']
 })

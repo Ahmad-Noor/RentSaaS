@@ -14,7 +14,7 @@ export class PropertyService {
     "Content-Type": "application/json",
     "X-OrganizationId": "00000000-0000-0000-0000-000000000001",
     Authorization:
-      "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjE0ZDNhZjQ5LTRjY2MtNDVkZi1iMWQyLWZiMDg1MTcwODc5MCIsInN1YiI6IkhhcmVkeXNzQHJlbnRzYWFzLmNvbSIsImVtYWlsIjoiSGFyZWR5c3NAcmVudHNhYXMuY29tIiwiZ2l2ZW5fbmFtZSI6Ik1vaGFtZWRzIEhhcmVkeXNzIiwianRpIjoiODEwNzEyNjgtNzUxZC00ZDdkLThmMDktNDk0MDI4YmZlYWI5IiwibmJmIjoxNzM2MjYxNDg0LCJleHAiOjE3MzYyNjE0OTQsImlhdCI6MTczNjI2MTQ4NH0.mRwD576CkXmCYnu3sK0b4shujpjXIGGcmqas1MjwjBRo0mdb6ZbSpONsZpfyiP7c3FRv9i1unlQ0sEU0OycQ3w",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI5OGE5YzRhMC1hNzFiLTQ4MDItYWFmNi03MTk5MDAyMTkxMjIiLCJzdWIiOiJIYXJlZHlzc2FAcmVudHNhYXMuY29tIiwiZW1haWwiOiJIYXJlZHlzc2FAcmVudHNhYXMuY29tIiwiZ2l2ZW5fbmFtZSI6Ik1vaGFtZWRzYSBIYXJlZHlzYXMiLCJqdGkiOiIxY2YwN2VhZi1kMjg0LTQ0MWMtYjU0OS05Yzk3ZDE1NWRlZjYiLCJuYmYiOjE3Mzc1NzIzMjEsImV4cCI6MTczNzY1ODcyMSwiaWF0IjoxNzM3NTcyMzIxfQ.QpE-A3SlB4Zs8x4GrYvi--GHbJ190whKZY4nMEiUjK4",
   });
 
   constructor(private _httpClient: HttpClient) {
@@ -22,7 +22,7 @@ export class PropertyService {
   }
 
   getAllProperties(): Observable<any> {
-    return this._httpClient.get("https://localhost:7164/api/Property", {
+    return this._httpClient.get("https://localhost:7164/api/Property/GetAll", {
       headers: this.headers,
     });
   }
