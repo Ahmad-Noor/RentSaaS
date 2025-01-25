@@ -1,0 +1,79 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-semibold">Lease Agreements</h1>
+        <p class="mt-1 text-gray-600">Manage and track lease agreements</p>
+      </div>
+      <a 
+        routerLink="create"
+        class="bg-[#0078D4] text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-[#106EBE] transition-colors"
+      >
+        <span class="material-icons text-sm">add</span>
+        Create Agreement
+      </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <app-search-bar 
+          placeholder="Search lease agreements"
+          (onSearch)="handleSearch($event)"
+        />
+        <div class="flex gap-2">
+          <button class="p-2 text-gray-600 hover:bg-gray-100 rounded">
+            <span class="material-icons">filter_list</span>
+          </button>
+          <button class="p-2 text-gray-600 hover:bg-gray-100 rounded">
+            <span class="material-icons">download</span>
+          </button>
+        </div>
+      </div>
+
+      <table class="w-full">
+        <thead>
+          <tr class="border-b">
+            <th class="text-left py-3 px-4">Property</th>
+            <th class="text-left py-3 px-4">Tenant</th>
+            <th class="text-left py-3 px-4">Type</th>
+            <th class="text-left py-3 px-4">Start Date</th>
+            <th class="text-right py-3 px-4">Monthly Rent</th>
+            <th class="text-left py-3 px-4">Status</th>
+            <th class="text-left py-3 px-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lease of filteredLeases; trackBy: trackByLeaseId" class="border-b hover:bg-gray-50">
+            <td class="py-3 px-4">{{ lease.propertyName }}</td>
+            <td class="py-3 px-4">{{ lease.tenantName }}</td>
+            <td class="py-3 px-4 capitalize">{{ lease.type }}</td>
+            <td class="py-3 px-4">{{ lease.startDate | date:'mediumDate' }}</td>
+            <td class="py-3 px-4 text-right">{{ lease.monthlyRent | currency }}</td>
+            <td class="py-3 px-4">
+              <span [ngClass]="getStatusClass(lease.status)">
+                {{ lease.status }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex gap-2">
+                <button *ngIf="lease.status === 'draft'" 
+                        class="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                        (click)="handleAction({ type: 'send', lease })">
+                  <span class="material-icons">send</span>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded"
+                        (click)="handleAction({ type: 'view', lease })">
+                  <span class="material-icons">visibility</span>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded"
+                        (click)="handleAction({ type: 'delete', lease })">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
