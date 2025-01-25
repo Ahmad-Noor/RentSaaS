@@ -117,6 +117,7 @@ public class RentSaaSDBContext : DbContext
     public DbSet<Lease> leases { get; set; } 
     public DbSet<Property> Properties { get; set; } 
     public DbSet<Expense> Expenses { get; set; } 
+    public DbSet<ExpenseFile> expenseFiles { get; set; } 
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<User> Users { get; set; } 
 
