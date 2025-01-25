@@ -22,7 +22,7 @@ export class PropertyService {
   }
 
   getAllProperties(): Observable<any> {
-    return this._httpClient.get("https://localhost:7164/api/Property/GetAll", {
+    return this._httpClient.get("https://localhost:44327/api/Property/GetAll", {
       headers: this.headers,
     });
   }
@@ -36,7 +36,7 @@ export class PropertyService {
 
     console.log(JSON.stringify(Property)); // Log the payload
     return this._httpClient.post(
-      "https://localhost:7164/api/Property/Add",
+      "https://localhost:44327/api/Property/Add",
       Property, // Use the extended object here
       { headers: this.headers }
     );
@@ -48,7 +48,7 @@ export class PropertyService {
 Delete(id:UUID):Observable<any>
 {
 
-  return this._httpClient.delete(`https://localhost:7164/api/Property/${id}`,{ headers: this.headers })
+  return this._httpClient.delete(`https://localhost:44327/api/Property/${id}`,{ headers: this.headers })
 }
 
 
