@@ -12,7 +12,7 @@ import { isPlatformBrowser } from "@angular/common";
   imports: [RouterLink, NavLinkComponent, MobileMenuComponent],
   standalone: true,
   templateUrl: "./header.component.html",
-  styleUrl: "./header.component.css",
+  styleUrl: "./header.componen.css",
 })
 export class HeaderComponent implements OnInit {
   isMobileMenuOpen = false;
@@ -28,12 +28,12 @@ export class HeaderComponent implements OnInit {
   islogin: any;
 
   constructor(private _auth: AuthService, @Inject(PLATFORM_ID) private platformId: object) {
-    //console.log("header is working ");
+    console.log("header is working ");
 
     if (isPlatformBrowser(platformId)) {
 
 
-      //console.log("header is working ",localStorage.getItem("token"));
+      console.log("header is working ",localStorage.getItem("token"));
       if (localStorage.getItem("token")!=null) {
         this._auth.SaveData();  
     }

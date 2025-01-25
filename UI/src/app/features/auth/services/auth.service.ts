@@ -12,14 +12,14 @@ import { isPlatformBrowser } from "@angular/common";
   providedIn: "root",
 })
 export class AuthService {
-  baseUrl: string = "https://localhost:44327/api/Auth/";
+  baseUrl: string = "https://localhost:7164/api/Auth/";
 
   userData: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor(private _HttpClient: HttpClient, private _router: Router, @Inject(PLATFORM_ID) private CheckPlatform:object) {
+  constructor(private _HttpClient: HttpClient, private _router: Router, @Inject(PLATFORM_ID) private Checkplatform:object) {
 
 
-    if(isPlatformBrowser(this.CheckPlatform))
+    if(isPlatformBrowser(this.Checkplatform))
       {
         if(localStorage.getItem("Token"))
         {
@@ -39,7 +39,7 @@ export class AuthService {
 
   SignOut() {
     localStorage.removeItem("token");
-    localStorage.removeItem("organizationId");
+    localStorage.removeItem("orgnaizationId");
     this._router.navigate(["/login"]);
   }
 
