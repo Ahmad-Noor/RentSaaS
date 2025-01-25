@@ -6,7 +6,8 @@ public interface IUnitOfWork : IAsyncDisposable
     ICompanyRepository CompanyRepository { get; set; }
     IPropertyRepository PropertyRepository { get; set; } 
     IExpenseRepository ExpenseRepository { get; set; }
-    ILeaseRepository LeaseRepository { get; set; } 
+    ILeaseRepository LeaseRepository { get; set; }
+    IExpenseFileRepository ExpenseFileRepository { get; set; } 
      
     Task<int> SaveChangesAsync();
     void Rollback(); 
