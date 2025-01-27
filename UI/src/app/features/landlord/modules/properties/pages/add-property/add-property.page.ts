@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PropertyService } from '../../services/property.service';
+import { environment } from '../../../../../../../environments/environment.development';
 
 
 @Component({
@@ -17,8 +18,15 @@ export class AddPropertyPage {
   constructor(
     private router: Router,
     private _propertyServices: PropertyService
-  ) {}
+  ) {
+
+
+  }
   
+
+
+
+
   loading = false;
   error:string='';
   propertyForm = new FormGroup({
@@ -29,7 +37,15 @@ export class AddPropertyPage {
     note: new FormControl(""),
   });
 
+
+
+
+
+
+
+
   CreateNewProperty(form: FormGroup) {
+
     if (form.valid) {
       this.loading=true;
 
@@ -37,7 +53,7 @@ export class AddPropertyPage {
         address: form.get("address")?.value,
         note: form.get("note")?.value?.trim(),
         unite: form.get("unite")?.value,
-        organizationId: localStorage.getItem("orgnaizationId"),
+        organizationId: "00000000-0000-0000-0000-000000000001".trim(),
         createdAt: new Date().toISOString(),
         createdBy: "00000000-0000-0000-0000-000000000001".trim(), // current user get from local storage 
 
@@ -48,17 +64,20 @@ export class AddPropertyPage {
         // deletedAt: null,
         // deletedBy: null,
       };
-
       console.log(PropertyDataAll);
-      console.log(localStorage.getItem("orgnaizationId"));
+      console.log(localStorage.getItem("organizationId"));
+
+
+      
       this._propertyServices.CreateNewProperty(PropertyDataAll).subscribe({
         next:(responceSuccess)=>{
-
+          console.log(responceSuccess);
          this.router.navigate(['/landlord/properties'])
         },
 
 
         error:(responce)=>{
+          console.log(responce);
 this.error=responce.error.message
     
         },

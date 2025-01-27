@@ -70,35 +70,59 @@ export class LoginFormComponent {
       this.loading = true;
       this.error = '';
   
-      this.authService.login(loginForm.value)
-        .subscribe({
-          next: (response) => {
+      this.authService.login(loginForm.value).subscribe({
+        next: (response) => {
+          try {
             console.log('Login Response:', response);
-      
-              console.log('Login Successful:', response);
-              const jwtToken = jwtDecode(response.token);
-              console.log('Decoded JWT Token:', jwtToken);
-              localStorage.setItem('token', response.token);
-              localStorage.setItem('orgnaizationId', response.orgnaizationId);
-              this.authService.SaveData();
   
-              if (response.userType === 'tenant') {
-                this._router.navigate(['/tenant']);
-              } else if (response.userType === 'landlord') {
-                this._router.navigate(['/landlord']);
-              }
-          },
-          error: (err) => {
-            this.error = err.error.message;
-            console.error('Login Error:', err);
-            this.loading = false;
-          },
-          complete: () => {
+            if (!response.token) throw new Error('Token is missing in the response.');
+  
+            const jwtToken = jwtDecode(response.token);
 
-            this.loading = false;
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('organizationId', response.orgnaizationId || '');
+            this.authService.SaveData();
+  
+            this.navigateBasedOnUserType(response.userType);
+          } catch (errorexceptions:any) {
+            console.error('Error processing login response:', errorexceptions.message);
+            this.error = 'An unexpected error occurred. Please try again.';
           }
-        });
+        },
+        error: (err) => {
+          this.error = err.error.message || 'Login failed. Please try again.';
+          console.error('Login Error:', err);
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
+    } else {
+      this.error = 'Please fill out the form correctly before submitting.';
     }
   }
+  
+  navigateBasedOnUserType(userType: string): void {
+    if (!userType) {
+      console.error('User type is missing.');
+      this.error = 'User type is missing. Please contact support.';
+      return;
+    }
+  
+    const userTypeLower = userType.toLowerCase();
+    if (userTypeLower === 'tenant') {
+      this._router.navigate(['/tenant']);
+    } else if (userTypeLower === 'landlord') {
+      this._router.navigate(['/landlord']);
+    } else {
+      console.warn(`Unhandled user type: ${userType}`);
+      this.error = 'Unexpected user type. Please contact support.';
+    }
+  }
+
+  
+
+
 }
 
