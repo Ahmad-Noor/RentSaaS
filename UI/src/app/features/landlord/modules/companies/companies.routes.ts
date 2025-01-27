@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export default [
   {
     path: '',
-    loadComponent: () => import('./pages/companies-list/companies-list.page').then(m => m.CompaniesListPage)
+    loadComponent: () => import('./pages/companies/companies.page').then(m => m.CompaniesPage)
   },
   {
     path: 'new',

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Company } from '../types/company.types';
 
 @Injectable({
@@ -33,6 +34,8 @@ export class CompaniesService {
     }
   ]);
 
+  constructor(private http: HttpClient) {}
+
   getCompanies(): Observable<Company[]> {
     return this.companies.asObservable();
   }
@@ -56,8 +59,7 @@ export class CompaniesService {
     this.companies.next(updatedCompanies);
   }
 
-  deleteCompany(id: number): void {
-    const currentCompanies = this.companies.getValue();
-    this.companies.next(currentCompanies.filter(company => company.id !== id));
+  deleteCompany(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/companies/${id}`);
   }
 }

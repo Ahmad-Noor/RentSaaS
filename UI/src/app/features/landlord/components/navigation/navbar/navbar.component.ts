@@ -5,7 +5,7 @@ import { AZURE_COLORS } from '../../../../../shared/constants/colors';
 @Component({
   selector: "app-navbar",
   standalone: true,
-  imports: [NavbarActionsComponent, NavbarSearchComponent],
+  imports: [ NavbarSearchComponent],
   templateUrl: './navbar.component.html',
   styleUrl  :'./navbar.component.css'
 })
