@@ -1,28 +1,42 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Property, PropertyCreate } from '../types/property.types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
+import { environment } from '../../../../../../environments/environment.development';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: "root",
 })
 export class PropertyService {
+
+  baseUrl = environment.baseUrl;
+
   private properties!: BehaviorSubject<Property[]>;
+  private headers!: HttpHeaders;
 
-  private headers = new HttpHeaders({
-    "Content-Type": "application/json",
-    "X-OrganizationId": "00000000-0000-0000-0000-000000000001",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI5OGE5YzRhMC1hNzFiLTQ4MDItYWFmNi03MTk5MDAyMTkxMjIiLCJzdWIiOiJIYXJlZHlzc2FAcmVudHNhYXMuY29tIiwiZW1haWwiOiJIYXJlZHlzc2FAcmVudHNhYXMuY29tIiwiZ2l2ZW5fbmFtZSI6Ik1vaGFtZWRzYSBIYXJlZHlzYXMiLCJqdGkiOiIxY2YwN2VhZi1kMjg0LTQ0MWMtYjU0OS05Yzk3ZDE1NWRlZjYiLCJuYmYiOjE3Mzc1NzIzMjEsImV4cCI6MTczNzY1ODcyMSwiaWF0IjoxNzM3NTcyMzIxfQ.QpE-A3SlB4Zs8x4GrYvi--GHbJ190whKZY4nMEiUjK4",
-  });
-
-  constructor(private _httpClient: HttpClient) {
+  constructor(private _httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
     this.properties = new BehaviorSubject<Property[]>([]);
+    this.initializeHeaders(); // Initialize headers here
+  }
+
+  private initializeHeaders(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.headers = new HttpHeaders({
+        "Content-Type": "application/json",
+        "X-OrganizationId": `${localStorage.getItem('organizationId')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      });
+
+      console.log(this.headers);
+    } else {
+      this.headers = new HttpHeaders(); // Empty headers for non-browser platforms
+    }
   }
 
   getAllProperties(): Observable<any> {
-    return this._httpClient.get("https://localhost:7164/api/Property/GetAll", {
+    return this._httpClient.get(`${this.baseUrl}api/Property/GetAll`, {
       headers: this.headers,
     });
   }
@@ -32,35 +46,16 @@ export class PropertyService {
   }
 
   CreateNewProperty(Property: PropertyCreate): Observable<any> {
-    console.log("Final PropertyDataAll:", Property);
-
-    console.log(JSON.stringify(Property)); // Log the payload
     return this._httpClient.post(
-      "https://localhost:7164/api/Property/Add",
-      Property, // Use the extended object here
+      `${this.baseUrl}api/Property/Add`,
+      Property,
       { headers: this.headers }
     );
   }
 
-
-
-
-Delete(id:UUID):Observable<any>
-{
-
-  return this._httpClient.delete(`https://localhost:7164/api/Property/${id}`,{ headers: this.headers })
-}
-
-
-
-
-
-
-
-
-
-
-
+  Delete(id: UUID): Observable<any> {
+    return this._httpClient.delete(`${this.baseUrl}api/Property/Delete/${id}`, { headers: this.headers });
+  }
 
   private getPropertyTypeLabel(type: string): string {
     const labels: Record<string, string> = {
@@ -72,3 +67,4 @@ Delete(id:UUID):Observable<any>
     return labels[type] || type;
   }
 }
+  
