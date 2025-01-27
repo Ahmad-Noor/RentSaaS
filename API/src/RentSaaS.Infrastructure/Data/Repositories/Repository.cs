@@ -60,6 +60,11 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         //    return true;
         //} 
     }
+    public Task<T> Update(T entity)
+    {
+        dbSet.Update(entity);
+        return Task.FromResult(entity);
+    }
 
     public async Task<bool> Delete(Guid id)
     {
@@ -96,9 +101,6 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         return await dbSet.Where(predicate).ToListAsync();
     }
 
-    public virtual Task<bool> Update(T entity)
-    {
-        throw new NotImplementedException();
-    }
+
 
 }

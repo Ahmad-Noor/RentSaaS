@@ -29,6 +29,8 @@ namespace RentSaaS.API.Dto.Expenses
         public bool? IsPaid { get; set; }
 
 
-        public string[]? ReceiptsFiles { get; set; }
+        public IFormFile? ReceiptsFiles { get; set; }
+
+        //public string[]? ReceiptsFiles { get; set; }
     }
 }
