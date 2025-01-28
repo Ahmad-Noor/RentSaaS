@@ -61,9 +61,10 @@ export class CompaniesPage implements OnInit, OnChanges {
     this.companiesService.getCompanies().subscribe({
       next: companies => {
         console.log(localStorage.getItem('token'))
-        this.companies = companies;
-        this.filteredCompanies = companies;
-        console.log(companies)
+
+        this.companies = companies.data;
+        this.filteredCompanies = companies.data;;
+        console.log(companies.data)
       },
       error: error => {
         console.error('Error fetching companies', error);
