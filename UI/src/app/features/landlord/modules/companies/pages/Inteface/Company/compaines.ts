@@ -1,7 +1,6 @@
 export interface Compaines {
   id: string;
   name: string;
-
   commercialNo: any;
   siteURL: any;
   defaultCurrencyId: any;
@@ -14,7 +13,6 @@ export interface Compaines {
   deletedAt: string;
   deletedBy: string;
   note: string;
-
   logoURL: any;
   showLogo: any;
   addressId: any;

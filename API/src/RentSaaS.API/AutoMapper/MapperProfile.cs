@@ -26,6 +26,7 @@ namespace RentSaaS.API.AutoMapper
 
             #region Company
             CreateMap<CompanyCreateDto, Company>();
+            CreateMap<Company, CompanyGetDto>();
             #endregion
 
         }

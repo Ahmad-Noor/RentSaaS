@@ -45,9 +45,6 @@
                 <ng-template #defaultContent>
                   <ng-container *ngIf="column.key !== 'actions'">
                     <ng-container *ngIf="column.type === 'status'">
-                      <!-- <span [class]="getStatusClass(row[column.key].toString())">
-                        {{ row[column.key] }}
-                      </span> -->
                     </ng-container>
                     <ng-container *ngIf="column.type !== 'status'">
                       {{ row[column.key] }}

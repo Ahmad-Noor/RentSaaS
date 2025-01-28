@@ -5,37 +5,13 @@ import { Company } from '../types/company.types';
 import { environment } from '../../../../../../environments/environment.development';
 import { isPlatformBrowser } from '@angular/common';
 import { CompanyCreate } from '../pages/Inteface/Company/company-create';
+import { UUID } from 'crypto';
 
 @Injectable({
   providedIn: "root",
 })
 export class CompaniesService {
-  private companies = new BehaviorSubject<Company[]>([
-    {
-      id: 1,
-      name: "Skyline Properties",
-      type: "Property Management",
-      properties: "12",
-      employees: "45",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Urban Living",
-      type: "Real Estate",
-      properties: "8",
-      employees: "23",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Metro Rentals",
-      type: "Property Management",
-      properties: "15",
-      employees: "32",
-      status: "Active",
-    },
-  ]);
+
 
   baseUrl = environment.baseUrl;
   private headers!: HttpHeaders;
@@ -90,16 +66,26 @@ export class CompaniesService {
     return this._httpClient.post(`${this.baseUrl}api/Company/Add`, companyCreate,{headers:this.headers});
   }
 
-  updateCompany(id: number, updates: Partial<Company>): void {
-    const currentCompanies = this.companies.getValue();
-    const updatedCompanies = currentCompanies.map((company) =>
-      company.id === id ? { ...company, ...updates } : company
-    );
-    this.companies.next(updatedCompanies);
+  deleteCompany(id: string): Observable<any> {
+    this.ensureHeadersInitialized();
+    return this._httpClient.delete(`${this.baseUrl}api/Company/${id}`, { headers: this.headers });
   }
 
-  deleteCompany(id: number): Observable<void> {
-    this.ensureHeadersInitialized();
-    return this._httpClient.delete<void>(`/api/companies/${id}`, { headers: this.headers });
-  }
+
+
+
+
+  // updateCompany(id: number, updates: Partial<Company>): void {
+  //   const currentCompanies = this.companies.getValue();
+  //   const updatedCompanies = currentCompanies.map((company) =>
+  //     company.id === id ? { ...company, ...updates } : company
+  //   );
+  //   this.companies.next(updatedCompanies);
+  // }
+
+
+
+
+
+
 }
