@@ -1,5 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RentSaaS.API.ApiResponse;
+using RentSaaS.API.Dto.Company;
 using RentSaaS.Application.DTOs.Company;
 using RentSaaS.Domain;
 using RentSaaS.Domain.Entities;
@@ -15,12 +18,54 @@ public class CompanyController : ControllerBase
  
     private readonly ILogger<CompanyController> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _Mapper;
 
-    public CompanyController(ILogger<CompanyController> logger, IUnitOfWork unitOfWork)
+    public CompanyController(ILogger<CompanyController> logger, IUnitOfWork unitOfWork,IMapper Mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _Mapper = Mapper;
     }
+
+
+    #region Create Company
+    [Authorize]
+    [HttpPost("Add")]
+    [ProducesResponseType(typeof(ApiResponse<CompanyCreateDto>), 200)]
+    public async Task<IActionResult> Add([FromBody] CompanyCreateDto CompanyDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var Company = _Mapper.Map<Company>(CompanyDto);
+
+        try
+        {
+
+        var resulte =    await _unitOfWork.CompanyRepository.Add(Company);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(new ApiResponse<CompanyCreateDto>(true,"Company Is Create Success", CompanyDto));
+        }
+        catch (Exception)
+        {
+            return new JsonResult($"error on creating new Company {Company.Id}") { StatusCode = 500 };
+        }
+    }
+
+    #endregion
+
+
+
+
+
+
+
+
+
+
 
 
     [HttpGet]
@@ -33,6 +78,10 @@ public class CompanyController : ControllerBase
         }
         return Ok(Companies);
     }
+
+
+
+
 
     [HttpGet]
     //[Authorize]
@@ -49,48 +98,23 @@ public class CompanyController : ControllerBase
 
 
 
-    [Authorize]
-    [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] CompanyCreateDto company)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
 
 
-        var Companies = new Company
-        {
-            OrganizationId = company.OrganizationId,
-            CreatedAt = company.CreatedAt,
-            CreatedBy = company.CreatedBy,
-            LastModifiedAt = company.LastModifiedAt,
-            LastModifiedBy = company.LastModifiedBy,
-            IsDeleted = company.IsDeleted,
-            DeletedAt = company.DeletedAt,
-            DeletedBy = company.DeletedBy,
-            Note = company.Note,
-            Name = company.Name,
-            //Address = company.Address,
-            //Phone = company.Phone,
-            //Email = company.Email,
-            //Website = company.Website,
-            //Logo = company.Logo
-        };
 
-        try
-        {
 
-            await _unitOfWork.CompanyRepository.Add(Companies);
-            await _unitOfWork.SaveChangesAsync();
 
-            return Ok(Companies);
-        }
-        catch (Exception)
-        {
-            return new JsonResult($"error on creating new Company {Companies.Id}") { StatusCode = 500 };
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //[Authorize]

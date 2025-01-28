@@ -19,10 +19,10 @@ export class CompaniesPage implements OnInit, OnChanges {
 
   columns: Array<{ key: keyof Company | 'actions'; label: string; type?: string }> = [
     { key: 'name', label: 'Company Name' },
-    { key: 'type', label: 'Type' },
-    { key: 'properties', label: 'Properties' },
-    { key: 'employees', label: 'Employees' },
-    { key: 'status', label: 'Status', type: 'status' },
+    // { key: 'type', label: 'Type' },
+    // { key: 'properties', label: 'Properties' },
+    // { key: 'employees', label: 'Employees' },
+    // { key: 'status', label: 'Status', type: 'status' },
     { key: 'actions', label: 'Actions', type: 'actions' } // Handle actions separately in template
   ];
   
@@ -43,11 +43,23 @@ export class CompaniesPage implements OnInit, OnChanges {
 
   ngOnInit() {
     // Fetch companies when the component initializes
-    this.companiesService.getCompanies().subscribe(companies => {
-      console.log(companies);
-      this.companies = companies;
-      this.filteredCompanies = companies;
-    });
+    this.companiesService.getCompanies().subscribe({
+      next: companies => {
+        console.log(localStorage.getItem('token'))
+        this.companies = companies;
+        this.filteredCompanies = companies;
+        console.log(companies)
+      },
+      error: error => {
+        console.error('Error fetching companies', error);
+      },
+      complete:()=>{console.log('completed')}
+    }
+      
+
+        
+      
+    );
   }
 
 
