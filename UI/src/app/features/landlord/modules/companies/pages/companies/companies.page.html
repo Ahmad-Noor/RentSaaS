@@ -24,20 +24,27 @@
               </th>
               }
 
-
-
             </tr>
           </thead>
           <tbody>
+
+
             @for (row of filteredCompanies; track $index) {
 
             <tr class="border-b hover:bg-gray-50">
-              @for (column of columns; track $index) {
-              <td class="py-3 px-4">
-                @if (column.key === 'actions') {
-
-                }
-
+              <td *ngFor="let column of columns" class="py-3 px-4">
+                <ng-container *ngIf="column.key === 'actions'; else defaultContent">
+                  <div class="flex gap-2">
+                    <button class="text-gray-600 hover:text-blue-600"
+                      (click)="handleAction({ type: 'edit', item: row })">
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button class="text-gray-600 hover:text-red-600"
+                      (click)="handleAction({ type: 'delete', item: row })">
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </ng-container>
 
                 <ng-template #defaultContent>
                   <ng-container *ngIf="column.key !== 'actions'">
@@ -52,9 +59,11 @@
                   </ng-container>
                 </ng-template>
               </td>
-              }
             </tr>
+
             }
+
+
 
           </tbody>
         </table>
