@@ -9,7 +9,6 @@
         Add Company
       </a>
     </div>
-
     <div class="bg-white rounded-lg shadow">
       <div class="p-6">
         <app-action-bar searchPlaceholder="Search companies" (onSearch)="handleSearch($event)" />
@@ -23,16 +22,13 @@
                 {{ column.label }}
               </th>
               }
-
             </tr>
           </thead>
           <tbody>
-
-
             @for (row of filteredCompanies; track $index) {
-
             <tr class="border-b hover:bg-gray-50">
-              <td *ngFor="let column of columns" class="py-3 px-4">
+              @for (column of columns; track $index) {
+              <td class="py-3 px-4">
                 <ng-container *ngIf="column.key === 'actions'; else defaultContent">
                   <div class="flex gap-2">
                     <button class="text-gray-600 hover:text-blue-600"
@@ -59,16 +55,11 @@
                   </ng-container>
                 </ng-template>
               </td>
+              }
             </tr>
-
             }
-
-
-
           </tbody>
         </table>
-
-
       </div>
     </div>
   </div>
