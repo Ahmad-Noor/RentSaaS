@@ -34,15 +34,30 @@ export class CompaniesPage implements OnInit, OnChanges {
     private companiesService: CompaniesService,
     private confirmDialog: ConfirmDialogService,
     private router: Router
-  ) {}
+  ) {
+
+
+
+
+  }
 
   ngOnInit() {
     // Fetch companies when the component initializes
     this.companiesService.getCompanies().subscribe(companies => {
+      console.log(companies);
       this.companies = companies;
       this.filteredCompanies = companies;
     });
   }
+
+
+
+
+
+
+
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     // Whenever the input data changes, reset filteredCompanies
