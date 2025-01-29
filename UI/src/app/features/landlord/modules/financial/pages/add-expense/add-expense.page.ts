@@ -9,26 +9,8 @@ import { mapFormDataToDTO } from '../../utils/expense-form.utils';
   selector: 'app-add-expense-page',
   standalone: true,
   imports: [RouterLink, ExpenseFormComponent],
-  template: `
-    <div class="space-y-6">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">Add New Expense</h1>
-        <a 
-          routerLink="../"
-          class="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-        >
-          <span class="material-icons">arrow_back</span>
-          Back to Expenses
-        </a>
-      </div>
-
-      <div class="bg-white rounded-lg shadow">
-        <div class="p-6">
-          <app-expense-form (save)="handleSave($event)" />
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: './add-expense.page.html',
+  styleUrls: ['./add-expense.page.css']
 })
 export class AddExpensePage {
   constructor(

@@ -6,6 +6,7 @@ using RentSaaS.Application.Services.Interfaces;
 using RentSaaS.Domain.Base;
 using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data.Repositories;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace RentSaaS.Infrastructure.Data;
@@ -91,16 +92,19 @@ public class RentSaaSDBContext : DbContext
                 OrganizationId = organizationId,
                 UserType = "Landlord",
             });
-            //ExpenseCategory.Create("Maintenance", "Property maintenance expenses", "#FF5733", "wrench", null, true, 1),
-            //ExpenseCategory.Create("Utilities", "Utility bills and services", "#33FF57", "bolt", null, true, 2),
-            //ExpenseCategory.Create("Insurance", "Property insurance expenses", "#3357FF", "shield", null, true, 3),
-            //ExpenseCategory.Create("Taxes", "Property taxes and related expenses", "#FF33F5", "file-invoice-dollar", null, true, 4),
-            //ExpenseCategory.Create("Marketing", "Marketing and advertising expenses", "#33FFF5", "bullhorn", null, true, 5),
-            //ExpenseCategory.Create("Administrative", "Administrative and office expenses", "#F5FF33", "building", null, true, 6),
-            //ExpenseCategory.Create("Legal", "Legal and professional fees", "#FF3333", "gavel", null, true, 7),
-            //ExpenseCategory.Create("Other", "Miscellaneous expenses", "#808080", "ellipsis-h", null, true, 8)
+        //ExpenseCategory.Create("Maintenance", "Property maintenance expenses", "#FF5733", "wrench", null, true, 1),
+        //ExpenseCategory.Create("Utilities", "Utility bills and services", "#33FF57", "bolt", null, true, 2),
+        //ExpenseCategory.Create("Insurance", "Property insurance expenses", "#3357FF", "shield", null, true, 3),
+        //ExpenseCategory.Create("Taxes", "Property taxes and related expenses", "#FF33F5", "file-invoice-dollar", null, true, 4),
+        //ExpenseCategory.Create("Marketing", "Marketing and advertising expenses", "#33FFF5", "bullhorn", null, true, 5),
+        //ExpenseCategory.Create("Administrative", "Administrative and office expenses", "#F5FF33", "building", null, true, 6),
+        //ExpenseCategory.Create("Legal", "Legal and professional fees", "#FF3333", "gavel", null, true, 7),
+        //ExpenseCategory.Create("Other", "Miscellaneous expenses", "#808080", "ellipsis-h", null, true, 8)
 
-         
+
+
+
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -112,13 +116,13 @@ public class RentSaaSDBContext : DbContext
 
         return base.SaveChangesAsync(cancellationToken);
     }
-    public DbSet<Address> Addresses { get; set; } 
-    public DbSet<Company> Companies { get; set; } 
-    public DbSet<Lease> leases { get; set; } 
-    public DbSet<Property> Properties { get; set; } 
-    public DbSet<Expense> Expenses { get; set; } 
-    public DbSet<ExpenseFile> expenseFiles { get; set; } 
+    public DbSet<Address> Addresses { get; set; }
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<Lease> leases { get; set; }
+    public DbSet<Property> Properties { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
+    public DbSet<ExpenseFile> expenseFiles { get; set; }
     public DbSet<Organization> Organizations { get; set; }
-    public DbSet<User> Users { get; set; } 
+    public DbSet<User> Users { get; set; }
 
 }

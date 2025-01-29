@@ -11,37 +11,8 @@ import { ConfirmDialogService } from '../../../../../../shared/services/confirm-
   selector: 'app-expenses-page',
   standalone: true,
   imports: [CommonModule, RouterLink, ExpenseTableComponent, ActionBarComponent],
-  template: `
-    <div class="space-y-6">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-semibold">Expenses</h1>
-          <p class="mt-1 text-gray-600">Track and manage your property expenses</p>
-        </div>
-        <a 
-          routerLink="new"
-          class="bg-[#0078D4] text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-[#106EBE] transition-colors"
-        >
-          <span class="material-icons text-sm">add</span>
-          Add Expense
-        </a>
-      </div>
-
-      <div class="bg-white rounded-lg shadow">
-        <div class="p-6">
-          <app-action-bar 
-            searchPlaceholder="Search expenses" 
-            (onSearch)="handleSearch($event)"
-          />
-          
-          <app-expense-table
-            [expenses]="filteredExpenses"
-            (onAction)="handleAction($event)"
-          />
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: './expenses.page.html',
+  styleUrls: ['./expenses.page.css']
 })
 export class ExpensesPage {
   expenses: Expense[] = [];

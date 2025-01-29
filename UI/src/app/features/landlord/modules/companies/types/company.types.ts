@@ -1,8 +1,7 @@
 export interface Company {
-  id: number;
+  id: string;
   name: string;
   type: string;
-  properties: string;
-  employees: string;
-  status: 'Active' | 'Inactive';
+  ein: string;
+  // status: 'Active' | 'Inactive';
 }

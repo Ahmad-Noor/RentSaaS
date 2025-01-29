@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250128183943_add Type And Ein In Company ")]
+    partial class addTypeAndEinInCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,8 +263,8 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<string>("SiteURL")
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<string>("type")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -655,10 +658,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8b6ac32c-1b1e-4b63-afd7-f13229d03709"),
+                            Id = new Guid("efae1cf0-e419-4e58-a570-531fc563d407"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a9d40862-c70e-4f7d-be3f-e3427987e680",
-                            CreatedAt = new DateTime(2025, 1, 28, 20, 43, 46, 432, DateTimeKind.Utc).AddTicks(6776),
+                            ConcurrencyStamp = "5d886e77-b51c-4c7d-82bd-2e874dc4b1e0",
+                            CreatedAt = new DateTime(2025, 1, 28, 18, 39, 43, 505, DateTimeKind.Utc).AddTicks(8681),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -668,7 +671,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "AImTzbcBxHZR93/EHzsGscqaazkCZ5V9IiPG8E13ARbu/9CG3uHLjx3rlAZLv8yR6A==",
+                            PasswordHash = "AL+Cxj/cPxLSPmWaDcIqnjGfXfOKu4M1rJzl9PnFDC1pznZ2VHjwLqDu5rhwsHkXdg==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

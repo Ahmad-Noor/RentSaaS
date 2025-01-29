@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Inject, inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmDialogService } from '../../../../../../shared/services/confirm-dialog/confirm-dialog.service';
 import { CompaniesService } from '../../services/companies.service';
 import { Company } from '../../types/company.types';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActionBarComponent } from '../../../../../../shared/components/action-bar/action-bar.component';
+import { platformBrowser } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-companies-page',
@@ -20,29 +21,64 @@ export class CompaniesPage implements OnInit, OnChanges {
   columns: Array<{ key: keyof Company | 'actions'; label: string; type?: string }> = [
     { key: 'name', label: 'Company Name' },
     { key: 'type', label: 'Type' },
-    { key: 'properties', label: 'Properties' },
-    { key: 'employees', label: 'Employees' },
-    { key: 'status', label: 'Status', type: 'status' },
+    { key: 'ein', label: 'ein' },
+    // { key: 'employees', label: 'Employees' },
+    // { key: 'status', label: 'Status', type: 'status' },
     { key: 'actions', label: 'Actions', type: 'actions' } // Handle actions separately in template
   ];
   
 
   companies: Company[] = [];
   filteredCompanies: Company[] = [];
+  platformId=inject(PLATFORM_ID);
+
+
 
   constructor(
     private companiesService: CompaniesService,
     private confirmDialog: ConfirmDialogService,
-    private router: Router
-  ) {}
+    private router: Router,
+ 
+  ) {
+
+
+
+
+  }
 
   ngOnInit() {
-    // Fetch companies when the component initializes
-    this.companiesService.getCompanies().subscribe(companies => {
-      this.companies = companies;
-      this.filteredCompanies = companies;
-    });
+    if(isPlatformBrowser(this.platformId))
+    {
+      this.getData();
+    }
+
   }
+
+
+
+
+  getData(){
+    this.companiesService.getCompanies().subscribe({
+      next: companies => {
+        console.log(localStorage.getItem('token'))
+
+        this.companies = companies.data;
+        this.filteredCompanies = companies.data;;
+        console.log(companies.data)
+      },
+      error: error => {
+        console.error('Error fetching companies', error);
+      },
+      complete:()=>{console.log('completed')}
+    }
+    );
+  }
+
+
+
+
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     // Whenever the input data changes, reset filteredCompanies
@@ -74,9 +110,9 @@ export class CompaniesPage implements OnInit, OnChanges {
         });
 
         if (confirmed) {
-          this.companiesService.deleteCompany(action.item.id).subscribe(() => {
-            this.filteredCompanies = this.filteredCompanies.filter(c => c.id !== action.item.id);
-          });
+            this.companiesService.deleteCompany(action.item.id).subscribe({
+              next:()=>{console.log("delete Company Is Done Succes")},
+            });
         }
         break;
     }

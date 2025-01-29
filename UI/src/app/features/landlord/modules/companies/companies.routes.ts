@@ -7,10 +7,10 @@ export default [
   },
   {
     path: 'new',
-    loadComponent: () => import('./pages/company-form/company-form.page').then(m => m.CompanyFormPage)
+    loadComponent: () => import('./pages/companies/company-form/company-form.page').then(m => m.CompanyFormPage)
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./pages/company-form/company-form.page').then(m => m.CompanyFormPage)
+    loadComponent: () => import('./pages/companies/company-form/company-form.page').then(m => m.CompanyFormPage)
   }
 ] as Routes;
