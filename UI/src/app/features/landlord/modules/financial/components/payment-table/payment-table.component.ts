@@ -6,51 +6,7 @@ import { Payment } from '../../types/payment.types';
   selector: 'app-payment-table',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <table class="w-full">
-      <thead>
-        <tr class="border-b">
-          <th class="text-left py-3 px-4">Date</th>
-          <th class="text-left py-3 px-4">Property</th>
-          <th class="text-left py-3 px-4">Description</th>
-          <th class="text-right py-3 px-4">Amount</th>
-          <th class="text-left py-3 px-4">Status</th>
-          <th class="text-left py-3 px-4">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (payment of payments; track payment.id) {
-          <tr class="border-b hover:bg-gray-50">
-            <td class="py-3 px-4">{{ payment.date | date:'mediumDate' }}</td>
-            <td class="py-3 px-4">{{ payment.property }}</td>
-            <td class="py-3 px-4">{{ payment.description }}</td>
-            <td class="py-3 px-4 text-right">{{ payment.amount | currency }}</td>
-            <td class="py-3 px-4">
-              <span [class]="getStatusClass(payment.status)">
-                {{ payment.status }}
-              </span>
-            </td>
-            <td class="py-3 px-4">
-              <div class="flex gap-2">
-                <button 
-                  class="p-1 text-gray-600 hover:text-blue-600"
-                  (click)="onAction.emit({ type: 'view', payment })"
-                >
-                  <span class="material-icons text-sm">visibility</span>
-                </button>
-                <button 
-                  class="p-1 text-gray-600 hover:text-blue-600"
-                  (click)="onAction.emit({ type: 'download', payment })"
-                >
-                  <span class="material-icons text-sm">download</span>
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  `
+  templateUrl:'./Payment-Table.Component.html'
 })
 export class PaymentTableComponent {
   @Input() payments: Payment[] = [];
