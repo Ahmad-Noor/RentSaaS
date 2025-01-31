@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Receipt } from '../../types/receipt.types';
-import { formatFileSize } from '../../utils/receipt.utils';
-
-@Component({
+ @Component({
   selector: 'app-receipt-item',
   standalone: true,
   imports: [CommonModule],
+
   template: `
     <div class="flex items-center justify-between p-2 border rounded">
       <div class="flex items-center gap-2">
@@ -33,5 +32,6 @@ export class ReceiptItemComponent {
   @Input() receipt!: Receipt;
   @Output() onRemove = new EventEmitter<Receipt>();
 
-  formatSize = formatFileSize;
-}
+  formatSize(size: number): string {
+    return `${size} bytes`; // Placeholder implementation, replace with actual logic if needed
+  }}
