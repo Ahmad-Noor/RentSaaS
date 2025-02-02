@@ -14,11 +14,10 @@ public class Organization : IEntity
     public DateTime? LastModifiedAt { get; set; }
     public Guid? LastModifiedBy { get; set; }
     public bool? IsActive { get; set; } 
-    public bool IsDeleted { get; set; }
+    public bool? IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
     public Guid? DeletedBy { get; set; }
 
     [Column(TypeName = "nvarchar(500)")]
     public string? Note { get; set; } 
-     
 }
