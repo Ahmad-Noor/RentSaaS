@@ -1,21 +1,19 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using RentSaaS.API.ApiErrorResponse;
-using RentSaaS.API.ApiResponse;
-using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Domain;
+using Microsoft.AspNetCore.Mvc;
+using RentSaaS.API.ApiResponse;
 using RentSaaS.Domain.Entities;
+using RentSaaS.API.ApiErrorResponse;
+using RentSaaS.Application.Dtos.Company;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
-
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CompanyController : ControllerBase
 {
-
     private readonly ILogger<CompanyController> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _Mapper;
@@ -26,7 +24,6 @@ public class CompanyController : ControllerBase
         _unitOfWork = unitOfWork;
         _Mapper = Mapper;
     }
-
 
     #region Create Company
     [Authorize]
@@ -59,8 +56,6 @@ public class CompanyController : ControllerBase
 
     #endregion
 
-
-
     #region Delete
 
     [Authorize]
@@ -80,12 +75,6 @@ public class CompanyController : ControllerBase
         return NotFound(new ApiErrorResponses(404));
     }
     #endregion
-
-
-
-
-
-
 
     #region Get 
     [Authorize]
@@ -107,10 +96,7 @@ public class CompanyController : ControllerBase
 
     #endregion
 
-
     #region Get By Id
-
-
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ApiResponse<CompanyGetDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
@@ -127,27 +113,7 @@ public class CompanyController : ControllerBase
         return NotFound();
     }
 
-
-
-
     #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //[Authorize]
     //[HttpPut("{id}")]
@@ -161,8 +127,4 @@ public class CompanyController : ControllerBase
     //    await _unitOfWork.SaveChangesAsync();
     //    return NoContent();
     //}
-
-
-
-
 }
