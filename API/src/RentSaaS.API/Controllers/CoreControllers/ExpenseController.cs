@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.ApiErrorResponse;
 using RentSaaS.API.ApiResponse;
-using RentSaaS.API.Dto.Expenses;
-using RentSaaS.API.DTOs.ExpenseFileDto;
 using RentSaaS.Application.DTOs.Expense;
 using RentSaaS.Domain;
 using RentSaaS.Domain.Entities;
@@ -34,13 +32,13 @@ public class ExpenseController : Controller
 
 
 
- 
+
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
     [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
     [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
-    public async Task<IActionResult> Add([FromBody] ExpenseCreateDto expenseCreateDto, List<IFormFile>  formFiles)
+    public async Task<IActionResult> Add([FromBody] ExpenseCreateDTO expenseCreateDto, List<IFormFile> formFiles)
     {
         if (!ModelState.IsValid)
         {
@@ -74,7 +72,7 @@ public class ExpenseController : Controller
         }
     }
 
-    
+
     [Authorize]
     [HttpGet]
     [Route("getall")]
@@ -89,7 +87,7 @@ public class ExpenseController : Controller
         {
             return NotFound(new ApiErrorResponses(404));
         }
-        var expense = _mapper.Map<List<ExpenseGetAllDto>>(expenses);
+        var expense = _mapper.Map<List<GetExpenseDto>>(expenses);
 
 
         return Ok(expense);
@@ -111,20 +109,20 @@ public class ExpenseController : Controller
             return NotFound(new ApiErrorResponses(404));
         }
 
-        var expense = _mapper.Map<ExpenseGetByIdDto>(expensesById);
+        var expense = _mapper.Map<GetExpenseByIdDto>(expensesById);
 
 
         return Ok(expense);
     }
 
-   
+
 
     [HttpPut]
     [Route("update/{id:Guid}")]
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
     [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
     [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
-    public async Task<IActionResult> Update([FromRoute] Guid id, ExpenseUpdateDto expenseUpdateDto )
+    public async Task<IActionResult> Update([FromRoute] Guid id, ExpenseUpdateDTO expenseUpdateDto)
     {
         if (!ModelState.IsValid)
         {
@@ -142,11 +140,11 @@ public class ExpenseController : Controller
         {
             _logger.LogInformation("Updating expense with ID: {ExpenseId}", expensesById.Id);
 
-             var expenseupdate = _mapper.Map(expenseUpdateDto, expensesById);
-     
+            var expenseupdate = _mapper.Map(expenseUpdateDto, expensesById);
+
             _logger.LogInformation("Updated expense: {@Expense}", expensesById);
 
-            
+
             await _unitOfWork.ExpenseRepository.Update(expensesById);
             await _unitOfWork.SaveChangesAsync();
 

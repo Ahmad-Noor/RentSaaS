@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.ApiErrorResponse;
 using RentSaaS.API.ApiResponse;
-using RentSaaS.API.Dto.Company;
-using RentSaaS.Application.DTOs.Company;
+using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Domain;
 using RentSaaS.Domain.Entities;
 namespace RentSaaS.API.Controllers.CoreControllers;
@@ -16,12 +15,12 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 
 public class CompanyController : ControllerBase
 {
- 
+
     private readonly ILogger<CompanyController> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _Mapper;
 
-    public CompanyController(ILogger<CompanyController> logger, IUnitOfWork unitOfWork,IMapper Mapper)
+    public CompanyController(ILogger<CompanyController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -47,10 +46,10 @@ public class CompanyController : ControllerBase
         try
         {
 
-        var resulte =    await _unitOfWork.CompanyRepository.Add(Company);
+            var resulte = await _unitOfWork.CompanyRepository.Add(Company);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new ApiResponse<CompanyCreateDto>(true,"Company Is Create Success", CompanyDto));
+            return Ok(new ApiResponse<CompanyCreateDto>(true, "Company Is Create Success", CompanyDto));
         }
         catch (Exception)
         {
@@ -76,7 +75,7 @@ public class CompanyController : ControllerBase
         {
             company.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
-            return Ok(new ApiResponse<CompanyGetDto>(true,"Delete Is Success"));
+            return Ok(new ApiResponse<CompanyGetDto>(true, "Delete Is Success"));
         }
         return NotFound(new ApiErrorResponses(404));
     }
@@ -102,8 +101,8 @@ public class CompanyController : ControllerBase
             return NotFound(new ApiErrorResponses(404));
         }
 
-        var CompanyMapper=_Mapper.Map<List<CompanyGetDto>>(Companies);
-        return Ok(new ApiResponse<List<CompanyGetDto>>(true,"All Data For Company",CompanyMapper));
+        var CompanyMapper = _Mapper.Map<List<CompanyGetDto>>(Companies);
+        return Ok(new ApiResponse<List<CompanyGetDto>>(true, "All Data For Company", CompanyMapper));
     }
 
     #endregion
