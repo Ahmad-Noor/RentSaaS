@@ -11,7 +11,7 @@
         public DateTime? DueDate { get; set; }
         public string? Details { get; set; }
         public bool? IsPaid { get; set; }
-        public string[]? ReceiptsFiles { get; set; }
+        public List<string>? ReceiptsFiles { get; set; }
         public string? PropertyName { get; set; } 
     }
 }

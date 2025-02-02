@@ -16,14 +16,17 @@ public class Expense : BaseEntity
 
 
 
-
-
-
+    [ForeignKey("company")]
+    public Guid? CompanyId { get; set; }
+    public Company?Company { get; set; }
     public string? PaymentSchedule { get; set; }
     public string? Category { get; set; }
 
     public string? Details { get; set; }
     public bool? IsPaid { get; set; }
     public string[]? ReceiptsFiles { get; set; }
+
+    public ICollection<ExpenseFile>? ExpenseFiles { get; set; }
+
 }
 

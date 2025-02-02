@@ -1,7 +1,7 @@
 ﻿using RentSaaS.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace RentSaaS.API.Dto.Company
+namespace RentSaaS.Application.Dtos.Company
 {
     public class CompanyGetDto
     {
