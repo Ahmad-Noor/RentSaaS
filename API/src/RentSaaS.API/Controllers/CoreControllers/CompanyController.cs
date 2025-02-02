@@ -28,9 +28,9 @@ public class CompanyController : ControllerBase
     #region Create Company
     [Authorize]
     [HttpPost("Add")]
-    [ProducesResponseType(typeof(ApiResponse<CompanyCreateDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    [ProducesResponseType(typeof(ApiResponse<CompanyCreateDto>), 200)]
     public async Task<IActionResult> Add([FromBody] CompanyCreateDto CompanyDto)
     {
         if (!ModelState.IsValid)
