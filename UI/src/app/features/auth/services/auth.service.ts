@@ -7,12 +7,13 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
 import { isPlatformBrowser } from "@angular/common";
+import { environment } from "../../../../environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  baseUrl: string = "https://localhost:7164/api/Auth/";
+  baseUrl: string = environment.apiUrl + "api/Auth/";
 
   userData: BehaviorSubject<any> = new BehaviorSubject(null);
 

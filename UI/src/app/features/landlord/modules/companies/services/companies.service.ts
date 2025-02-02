@@ -2,7 +2,7 @@ import { inject, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from '../types/company.types';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import { CompanyCreate } from '../pages/Inteface/Company/company-create';
 import { UUID } from 'crypto';
@@ -13,7 +13,7 @@ import { UUID } from 'crypto';
 export class CompaniesService {
 
 
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.apiUrl;
   private headers!: HttpHeaders;
   platformId=inject(PLATFORM_ID);
   constructor(

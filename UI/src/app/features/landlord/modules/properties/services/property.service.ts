@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Property, PropertyCreate } from '../types/property.types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class PropertyService {
 
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.apiUrl;
 
   private properties!: BehaviorSubject<Property[]>;
   private headers!: HttpHeaders;

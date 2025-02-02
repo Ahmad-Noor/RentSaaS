@@ -21,7 +21,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
     {
         //try
         //{
-        return await dbSet.ToListAsync();
+        return await dbSet.AsNoTracking().Where(c=>c.IsDeleted != true).ToListAsync();
         //}
         //catch (Exception ex)
         //{
@@ -97,6 +97,10 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         return await dbSet.FirstOrDefaultAsync(expression);
     }
     public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+    {
+        return await dbSet.Where(predicate).ToListAsync();
+    }   
+    public async Task<IEnumerable<T>> Where(Expression<Func<T, bool>> predicate)
     {
         return await dbSet.Where(predicate).ToListAsync();
     }

@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PropertyService } from '../../services/property.service';
-import { environment } from '../../../../../../../environments/environment.development';
+import { PropertyService } from '../../services/property.service'; 
 
 
 @Component({

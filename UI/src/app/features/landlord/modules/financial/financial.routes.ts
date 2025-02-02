@@ -13,10 +13,10 @@ export default [
     path: 'expenses/new',
     loadComponent: () => import('./pages/add-expense/add-expense.page').then(m => m.AddExpensePage)
   },
-  {
-    path: 'expenses/:id/edit',
-    loadComponent: () => import('./pages/edit-expense/edit-expense.page').then(m => m.EditExpensePage)
-  },
+  // {
+  //   path: 'expenses/:id/edit',
+  //   loadComponent: () => import('./pages/edit-expense/edit-expense.page').then(m => m.EditExpensePage)
+  // },
   {
     path: 'payments',
     loadComponent: () => import('./pages/payment-list/payment-list.page').then(m => m.PaymentListPage)
