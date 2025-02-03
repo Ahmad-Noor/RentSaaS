@@ -13,7 +13,7 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 public class ExpenseController : Controller
 {
