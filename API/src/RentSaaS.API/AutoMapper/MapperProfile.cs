@@ -21,7 +21,11 @@ namespace RentSaaS.API.AutoMapper
             #endregion
 
 
-
+            #region Property
+            CreateMap<PropertyCreateDto, Property>()/*.ReverseMap()*/;
+            CreateMap<PropertyUpdateDto, Property>();
+            CreateMap<Property, PropertyGetDto>();
+            #endregion
 
 
 
