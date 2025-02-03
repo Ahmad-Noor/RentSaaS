@@ -31,16 +31,11 @@ namespace RentSaaS.API.AutoMapper
             CreateMap<Company, CompanyGetDto>();
             #endregion
 
-            #region Property
-            CreateMap<PropertyCreateDto, Property>()/*.ReverseMap()*/;
-            CreateMap<PropertyUpdateDto, Property>();
-            CreateMap<Property, PropertyGetDto>();
-            #endregion
 
-            #region Address
-            CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;
-            CreateMap<AddressUpdateDto, Address>();
-            CreateMap<Address, AddressGetDto>();
+            #region Lease
+            CreateMap<LeaseCreateDto, Lease>()/*.ReverseMap()*/;
+            CreateMap<LeaseUpdateDto, Lease>();
+            CreateMap<Lease, LeaseGetDto>();
             #endregion
 
         }
