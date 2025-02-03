@@ -8,7 +8,7 @@ import { FormFieldComponent } from "../../../../../../../shared/components/form-
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
   template: `
-    <div [formGroup]="formGroup">
+    <!-- <div [formGroup]="formGroup">
       <app-form-field
         label="Property"
         id="propertyId"
@@ -25,7 +25,7 @@ import { FormFieldComponent } from "../../../../../../../shared/components/form-
           </option>
         </select>
       </app-form-field>
-    </div>
+    </div> -->
   `,
 })
 export class PropertySelectorComponent {
