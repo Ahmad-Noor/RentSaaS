@@ -38,6 +38,18 @@ namespace RentSaaS.API.AutoMapper
             CreateMap<Lease, LeaseGetDto>();
             #endregion
 
+            #region Property
+            CreateMap<PropertyCreateDto, Property>()/*.ReverseMap()*/;
+            CreateMap<PropertyUpdateDto, Property>();
+            CreateMap<Property, PropertyGetDto>();
+            #endregion
+
+            #region Address
+            CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;
+            CreateMap<AddressUpdateDto, Address>();
+            CreateMap<Address, AddressGetDto>();
+            #endregion
+
         }
 
 
