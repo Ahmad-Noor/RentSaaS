@@ -2,8 +2,11 @@ using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using RentSaaS.Application.DTOs.Property;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
+using RentSaaS.API.ApiErrorResponse;
+using RentSaaS.API.ApiResponse;
+using RentSaaS.Application.DTOs.Property;
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
@@ -14,15 +17,22 @@ public class PropertyController : ControllerBase
     // add comment for github
     private readonly ILogger<PropertyController> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _Mapper;
 
-    public PropertyController(ILogger<PropertyController> logger, IUnitOfWork unitOfWork)
+    public PropertyController(ILogger<PropertyController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _Mapper = Mapper;
     }
+
+    #region GetAll
 
     [HttpGet]
     [Route("GetAll")]
+    [ProducesResponseType(typeof(ApiResponse<List<PropertyGetDto>>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> GetAll()
     {
         _logger.LogInformation("User Claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
@@ -31,49 +41,54 @@ public class PropertyController : ControllerBase
         var properties = await _unitOfWork.PropertyRepository.GetAll();
         if (properties == null)
         {
-            return NotFound();
+            return NotFound(new ApiErrorResponses(404));
         }
-        return Ok(properties);
+
+        var PropertyMapper = _Mapper.Map<List<PropertyGetDto>>(properties);
+        return Ok(new ApiResponse<List<PropertyGetDto>>(true, "All Data For Property", PropertyMapper));
     }
+
+    #endregion
+
+
+
+    #region Get By Id
 
     [HttpGet]
     [Route("GetById/{id:Guid}")]
+    [ProducesResponseType(typeof(ApiResponse<PropertyGetDto>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var property = await _unitOfWork.PropertyRepository.GetById(id);
+        var PropertyMapper = _Mapper.Map<PropertyGetDto>(property);
         if (property != null)
         {
-            return Ok(property);
+            return Ok(new ApiResponse<PropertyGetDto>(true, "All Data For Property", PropertyMapper));
         }
         return NotFound();
     }
 
+    #endregion
+
+
+
+    #region Add Property
+
     [HttpPost]
     [Route("Add")]
-    public async Task<IActionResult> Add([FromBody] PropertyCreateDto property)
+    [ProducesResponseType(typeof(ApiResponse<PropertyCreateDto>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    public async Task<IActionResult> Add([FromBody] PropertyCreateDto propertyDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest();
         }
 
-
-        var Property = new Property
-        {
-            OrganizationId = property.OrganizationId,
-            CreatedAt = property.CreatedAt,
-            CreatedBy = property.CreatedBy,
-            LastModifiedAt = property.LastModifiedAt,
-            LastModifiedBy = property.LastModifiedBy,
-            IsDeleted = property.IsDeleted,
-            DeletedAt = property.DeletedAt,
-            DeletedBy = property.DeletedBy,
-            Note = property.Note,
-
-            // Mapping property fields
-            Address = property.Address,
-            //Unite = property.Unite
-        };
+        var Property = _Mapper.Map<Property>(propertyDto);
 
         try
         {
@@ -81,7 +96,7 @@ public class PropertyController : ControllerBase
             await _unitOfWork.PropertyRepository.Add(Property);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(property);
+            return Ok(new ApiResponse<PropertyCreateDto>(true, "Property Is Create Success", propertyDto));
         }
         catch (Exception ex)
         {
@@ -89,12 +104,21 @@ public class PropertyController : ControllerBase
             return new JsonResult($"error on creating new property {Property.Id}") { StatusCode = 500 };
         }
     }
-     
+
+    #endregion
+
+
+
+    #region Update
+
     [HttpPut]
     [Route("Update/{id:Guid}")]
-    public async Task<IActionResult> Update(Guid id, PropertyUpdateDto property)
+    [ProducesResponseType(typeof(ApiResponse<PropertyUpdateDto>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    public async Task<IActionResult> Update(Guid id, PropertyUpdateDto propertyDto)
     {
-        if (id != property.Id)
+        if (id != propertyDto.Id)
         {
             return BadRequest();
         }
@@ -103,8 +127,17 @@ public class PropertyController : ControllerBase
         return NoContent();
     }
 
+    #endregion
+
+
+
+    #region DeleteAsync
+
     [HttpDelete]
     [Route("Delete/{id:Guid}")]
+    [ProducesResponseType(typeof(ApiResponse<PropertyCreateDto>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var property = await _unitOfWork.PropertyRepository.FirstOrDefaultAsync(w => w.Id == id);
@@ -114,7 +147,9 @@ public class PropertyController : ControllerBase
             await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
-        return NotFound(id);
+        return NotFound(new ApiErrorResponses(404));
 
     }
+
+    #endregion
 }
