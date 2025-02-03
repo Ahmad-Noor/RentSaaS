@@ -14,42 +14,10 @@ import { initializeExpenseForm } from './utils/form-utils';
   selector: 'app-expense-form',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    ExpenseDetailsFormComponent,
-    ExpenseTypeSelectorComponent,
-    PropertySelectorComponent,
-    ReceiptUploadComponent
+
   ],
   template: `
-    <form [formGroup]="expenseForm" (ngSubmit)="handleSubmit()" class="space-y-6">
-      <app-expense-type-selector [formGroup]="expenseForm" />
-      
-      @if (expenseForm.get('type')?.value === 'property') {
-        <app-property-selector [formGroup]="expenseForm" />
-      }
 
-      <app-expense-details-form [formGroup]="expenseForm" />
-      
-      <app-receipt-upload [formGroup]="expenseForm" />
-
-      <div class="flex justify-end gap-4">
-        <a 
-          routerLink=".."
-          class="px-4 py-2 text-gray-700 hover:text-gray-900"
-        >
-          Cancel
-        </a>
-        <button
-          type="submit"
-          [disabled]="!expenseForm.valid || loading"
-          class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {{ loading ? 'Saving...' : 'Save Expense' }}
-        </button>
-      </div>
-    </form>
   `
 })
 export class ExpenseFormComponent implements OnInit {

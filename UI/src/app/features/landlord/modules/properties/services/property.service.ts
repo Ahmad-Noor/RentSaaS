@@ -41,9 +41,9 @@ export class PropertyService {
     });
   }
 
-  getProperties(): Observable<any> {
-    return this.properties.asObservable();
-  }
+  // getProperties(): Observable<any> {
+  //   return this.properties.asObservable();
+  // }
 
   CreateNewProperty(Property: PropertyCreate): Observable<any> {
     return this._httpClient.post(

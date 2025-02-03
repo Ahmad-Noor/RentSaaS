@@ -18,7 +18,7 @@ import { PropertyService } from '../../../properties/services/property.service';
         >
           <option value="">Select property</option>
           @for (property of properties; track property.id) {
-            <option [value]="property.id">{{ property.name }}</option>
+            <option [value]="property.id">{{ property.address }}</option>
           }
         </select>
       </app-form-field>
@@ -30,8 +30,21 @@ export class PropertySelectorComponent {
   properties: any[] = [];
 
   constructor(private propertyService: PropertyService) {
-    this.propertyService.getProperties().subscribe(properties => {
-      this.properties = properties;
+    console.log( this.properties);
+    this.propertyService.getAllProperties().subscribe(properties => {
+      console.log(properties);
+      this.properties = properties.data;
     });
+
+
+
+
+
+
+
+
+
+
+
   }
 }

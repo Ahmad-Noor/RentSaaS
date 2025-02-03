@@ -1,20 +1,41 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Add New Expense</h1>
+    <a routerLink="../" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+      <span class="material-icons">arrow_back</span>
+      Back to Expenses
+    </a>
+  </div>
 
-    <div class="space-y-6">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">Add New Expense</h1>
-        <a 
-          routerLink="../"
-          class="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-        >
-          <span class="material-icons">arrow_back</span>
-          Back to Expenses
-        </a>
-      </div>
+  <div class="bg-white rounded-lg shadow">
+    <div class="p-6">
+      <form [formGroup]="expenseForm" (ngSubmit)="handleSubmit()" class="space-y-6">
+        <app-expense-type-selector [formGroup]="expenseForm" />
 
-      <div class="bg-white rounded-lg shadow">
-        <div class="p-6">
-          <app-expense-form (save)="handleSave($event)" />
+        @if (expenseForm.get('type')?.value === 'property') {
+        <app-property-selector [formGroup]="expenseForm" />
+        }
+
+        <app-expense-details-form [formGroup]="expenseForm" />
+
+        <app-receipt-upload [formGroup]="expenseForm" />
+
+        <div class="flex justify-end gap-4">
+          <a routerLink=".." class="px-4 py-2 text-gray-700 hover:text-gray-900">
+            Cancel
+          </a>
+          <button type="submit" [disabled]="!expenseForm.valid || loading"
+            class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
+            {{ loading ? 'Saving...' : 'Save Expense' }}
+          </button>
         </div>
-      </div>
+      </form>
+
+
+
+
+      
+      <!-- <app-expense-form (save)="handleSave($event)" /> -->
     </div>
-  
+  </div>
+</div>

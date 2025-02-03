@@ -30,7 +30,7 @@ export class PropertySelectorComponent {
   properties: any[] = [];
 
   constructor(private propertyService: PropertyService) {
-    this.propertyService.getProperties().subscribe(properties => {
+    this.propertyService.getAllProperties().subscribe(properties => {
       this.properties = properties;
     });
   }

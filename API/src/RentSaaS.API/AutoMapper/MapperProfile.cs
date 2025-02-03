@@ -2,6 +2,7 @@
 using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Application.DTOs.Address;
 using RentSaaS.Application.DTOs.Expense;
+using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.Property;
 using RentSaaS.Domain.Entities;
 
@@ -12,6 +13,25 @@ namespace RentSaaS.API.AutoMapper
 
         public MapperProfile()
         {
+
+
+
+
+
+
+
+
+            #region Property
+            CreateMap<PropertyCreateDto, Property>();
+
+            CreateMap<Property, PropertyGetDto>();
+
+            #endregion
+
+
+
+
+
             #region Expense 
             CreateMap<ExpenseCreateDTO, Expense>()/*.ReverseMap()*/;
             CreateMap<ExpenseUpdateDTO, Expense>();

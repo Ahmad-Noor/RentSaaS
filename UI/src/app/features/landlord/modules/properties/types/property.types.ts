@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 export type PropertyListView = 'list' | 'grid';
 
 export type PropertyType = 'house' | 'condo' | 'townhouse' | 'community';
@@ -17,36 +19,8 @@ export interface PropertyCreate {
 
 
 export interface Property {
-
-
-
-
   address:        string;
-  unite:          null;
-  id:             string;
-  organizationId: string;
-  note:           string;
-  isDeleted:      boolean;
-  leases:         null;
-  createdAt:      Date;
-  createdBy:      string;
-  lastModifiedAt: Date;
-  lastModifiedBy: string;
-  deletedAt:      Date;
-  deletedBy:      string;
-  type:      string;
-
-
-  // id: number;
-  // name: string;
-  // address: string;
-  // propertyType: PropertyType;
-  // type: string;
-  // units: string;
-  // occupancy: string;
-  // status: PropertyStatus;
-  // unitNumber?: string;
-  // imageUrl?: string;
+  id:        UUID;
 }
 
 
