@@ -38,7 +38,8 @@ public class ExpenseController : Controller
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
     [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
     [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
-    public async Task<IActionResult> Add([FromBody] ExpenseCreateDTO expenseCreateDto, List<IFormFile> formFiles)
+    
+    public async Task<IActionResult> Add([FromForm] ExpenseCreateDTO expenseCreateDto)
     {
         if (!ModelState.IsValid)
         {
