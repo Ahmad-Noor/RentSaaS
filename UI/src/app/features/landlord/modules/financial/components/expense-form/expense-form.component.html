@@ -1,5 +1,5 @@
 
-<form [formGroup]="DataForm" (ngSubmit)="handleSubmit()" class="space-y-6">
+<form [formGroup]="DataForm" (ngSubmit)="handleSubmit(DataForm)" class="space-y-6">
 
 
     <!-- <app-expense-type-selector [formGroup]="DataForm" /> -->
@@ -11,11 +11,11 @@
     <!-- Property/General Type Selection -->
     <div class="flex gap-4">
       <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
-             [class.border-blue-500]="DataForm.get('type')?.value === 'property'"
-             [class.bg-blue-50]="DataForm.get('type')?.value === 'property'">
+             [class.border-blue-500]="DataForm.get('expenseType')?.value === 'property'"
+             [class.bg-blue-50]="DataForm.get('expenseType')?.value === 'property'">
         <input
           type="radio"
-          formControlName="type"
+          formControlName="expenseType"
           value="property"
           class="hidden"
         >
@@ -24,11 +24,11 @@
       </label>
 
       <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
-             [class.border-blue-500]="DataForm.get('type')?.value === 'general'"
-             [class.bg-blue-50]="DataForm.get('type')?.value === 'general'">
+             [class.border-blue-500]="DataForm.get('expenseType')?.value === 'general'"
+             [class.bg-blue-50]="DataForm.get('expenseType')?.value === 'general'">
         <input
           type="radio"
-          formControlName="type"
+          formControlName="expenseType"
           value="general"
           class="hidden"
         >
@@ -38,10 +38,10 @@
     </div>
 
     <!-- Recurring/One-time Selection -->
-    <app-form-field label="Payment Schedule" id="expenseType" [error]="getFieldError('expenseType')">
+    <app-form-field label="Payment Schedule" id="paymentSchedule" [error]="getFieldError('paymentSchedule')">
       <select
-        id="expenseType"
-        formControlName="expenseType"
+        id="paymentSchedule"
+        formControlName="paymentSchedule"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
         <option value="onetime">One-time</option>
         <option value="recurring">Recurring</option>
@@ -49,7 +49,7 @@
       </select>
     </app-form-field>
   </div>
-    @if (DataForm.get('type')?.value === 'property') {
+    @if (DataForm.get('expenseType')?.value === 'property') {
       <!-- <app-property-selector [formGroup]="DataForm" /> -->
       <div [formGroup]="DataForm">
         <app-form-field
@@ -70,9 +70,45 @@
 
 
     
-    <!-- <app-expense-details-form [formGroup]="DataForm" /> -->
+    <app-expense-details-form [formGroup]="DataForm" />
     
     <!-- <app-receipt-upload [formGroup]="DataForm" /> -->
+
+
+
+
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
+        <button type="button" (click)="fileInput.click()"
+          class="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100">
+          <span class="material-icons">upload_file</span>
+          Upload Receipts
+        </button>
+        <span class="text-sm text-gray-500">Upload up to 5 receipts (PDF or images)</span>
+      </div>
+    
+      <input #fileInput type="file" (change)="onFilesSelected($event)" accept="image/*,.pdf" class="hidden" multiple>
+    
+      @if (error) {
+      <p class="text-sm text-red-600">{{ error }}</p>
+      }
+    
+      @if (receipts.length > 0) {
+      <div class="space-y-2">
+        @for (receipt of receipts; track receipt.id) {
+        <app-receipt-item [receipt]="receipt" (remove)="removeReceipt($event)" />
+        }
+      </div>
+      }
+    </div>
+
+
+
+
+
+
+
+
 
     <div class="flex justify-end gap-4">
       <a 

@@ -24,7 +24,6 @@ export class PropertyService {
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
-        "Content-Type": "application/json",
         "X-OrganizationId": `${localStorage.getItem('organizationId')}`,
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       });

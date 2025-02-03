@@ -1,16 +1,33 @@
-import { Component, EventEmitter, Input, Output, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { ExpenseDetailsFormComponent } from './expense-details-form/expense-details-form.component';
-import { PropertySelectorComponent } from './property-selector/property-selector.component';
-import { ReceiptUploadComponent } from './receipt-upload/receipt-upload.component';
-import { Expense } from '../../types/expense.types';
-import { ExpenseFormData } from './models/expense-form.model';
-import { initializeExpenseForm } from './utils/form-utils';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  Inject,
+  PLATFORM_ID,
+} from "@angular/core";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { ExpenseDetailsFormComponent } from "./expense-details-form/expense-details-form.component";
+import { PropertySelectorComponent } from "./property-selector/property-selector.component";
+import { ReceiptUploadComponent } from "./receipt-upload/receipt-upload.component";
+import { Expense } from "../../types/expense.types";
+import { ExpenseFormData } from "./models/expense-form.model";
+import { initializeExpenseForm } from "./utils/form-utils";
 import { FormFieldComponent } from "../../../../../../shared/components/form-field/form-field.component";
-import { PropertyService } from '../../../properties/services/property.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PropertyService } from "../../../properties/services/property.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Receipt } from "../../types/receipt.types";
+import { ReceiptItemComponent } from "./receipt-item.component";
+import { ExpenseService } from "../../services/expense.service";
 
 @Component({
   selector: "app-expense-form",
@@ -23,6 +40,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     PropertySelectorComponent,
     ReceiptUploadComponent,
     FormFieldComponent,
+    ReceiptItemComponent,
   ],
   templateUrl: "./expense-form.component.html",
 })
@@ -30,50 +48,50 @@ export class ExpenseFormComponent implements OnInit {
   @Input() expense?: Expense;
   @Output() save = new EventEmitter<ExpenseFormData>();
 
+  receipts: Receipt[] = [];
+  error = "";
+
   expenseForm: FormGroup;
   loading = false;
-  properties:any[] = [];
+  properties: any[] = [];
 
-
-DataForm= new FormGroup({
-  propertyId: new FormControl(""),
-  category: new FormControl(null),
-  expenseType: new FormControl(null),
-  amount: new FormControl(null),
-  dueDate: new FormControl(null),
-  details: new FormControl(null),
-  isPaid: new FormControl(null),
-  receipts: new FormControl(null),
-  type: new FormControl('property'),
-})
-
-    // type: ['property', Validators.required],
-    // propertyId: [''],
-    // category: ['', Validators.required],
-    // expenseType: ['onetime', Validators.required],
-    // amount: ['', [Validators.required, Validators.min(0)]],
-    // dueDate: ['', Validators.required],
-    // details: [''],
-    // receipts: [[]],
-    // isPaid: [false]
-
-    
+  DataForm = new FormGroup({
+    propertyId: new FormControl(null, Validators.required),
+    paymentSchedule: new FormControl(null),
+    category: new FormControl(null),
+    expenseType: new FormControl("property"),
+    amount: new FormControl(null),
+    dueDate: new FormControl(null),
+    details: new FormControl(null),
+    isPaid: new FormControl(true, Validators.required),
+    type: new FormControl("property"),
+    receipts: new FormControl([]),
+  });
+  formGroup: any;
   constructor(
     private fb: FormBuilder,
     private _propertyServices: PropertyService,
-    @Inject(PLATFORM_ID) private platformId: Object,private _httpclint:HttpClient
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private _httpclint: HttpClient,
+    private _expenseService: ExpenseService
   ) {
     this.expenseForm = initializeExpenseForm(fb);
 
-
-    if(isPlatformBrowser(platformId))
-    {
+    if (isPlatformBrowser(platformId)) {
       this.getAllProperties();
-    }
+      this._expenseService. getAllExpenses().subscribe((resulte)=>{
+        console.log(resulte);
 
+      });
+    }
   }
 
   ngOnInit() {
+
+
+
+
+
     if (this.expense) {
       this.expenseForm.patchValue({
         type: this.expense.type || "property",
@@ -88,59 +106,46 @@ DataForm= new FormGroup({
     }
   }
 
-  handleSubmit(): void {
+  handleSubmit(data: FormGroup): void {
+    console.log(data.value);
+    console.log(data);
 
-  let formData = new FormData();
+    let formData = new FormData();
 
-  formData.append("expenseType"," ");
-  formData.append("propertyId", "84abbe44-9e4c-4d20-9a56-2f6601fdaea9");
-  formData.append("category", " ");
-  formData.append("amount", " ");
-  formData.append("dueDate", " ");
-  formData.append("details", " ");
-  formData.append("isPaid", " ");
-  formData.append("receipts", " ");
-
-  let headers = new HttpHeaders({
-    "X-OrganizationId": `${localStorage.getItem('organizationId')}`,
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-  });
-  console.log(headers)
-  console.log(formData.values)
+    formData.append("expenseType", data.get("expenseType")?.value);
+    formData.append("propertyId", data.get("propertyId")?.value);
+    formData.append("category", data.get("category")?.value);
+    formData.append("amount", data.get("amount")?.value);
+    formData.append("dueDate", data.get("dueDate")?.value);
+    formData.append("details", data.get("details")?.value);
+    formData.append("isPaid", data.get("isPaid")?.value);
+    this.receipts.forEach(receipt => {
+      formData.append('ReceiptsFiles', receipt.file, receipt.name);
+    });
 
 
 
-  this._httpclint.post("https://localhost:7164/api/Expense/add", formData, { headers: headers }).subscribe({
-    next: (data) => {
-      console.log(data);
-    },
-    error: (error) => {
-      console.log(error);
-    },
-    complete: () => {}
-  });
+    let headers = new
+     HttpHeaders({
+      "X-OrganizationId": `${localStorage.getItem("organizationId")}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
 
+    this._httpclint
+      .post("https://localhost:7164/api/Expense/add", formData, {
+        headers: headers,
+      })
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {},
+      });
 
-    // if (this.expenseForm.valid) {
-    //   this.loading = true;
-    //   const formData: ExpenseFormData = {
-    //     type: this.expenseForm.value.type,
-    //     propertyId: this.expenseForm.value.propertyId,
-    //     category: this.expenseForm.value.category,
-    //     expenseType:" ",
-    //     amount: this.expenseForm.value.amount,
-    //     dueDate: this.expenseForm.value.dueDate,
-    //     details: this.expenseForm.value.details,
-    //     receipts: this.expenseForm.value.receipts || [],
-    //     isPaid: this.expenseForm.value.isPaid,
-    //   };
-    //   this.save.emit(formData);
-    // }
   }
-
-
-
-
 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
@@ -161,4 +166,59 @@ DataForm= new FormGroup({
     }
     return "";
   }
+
+  onFilesSelected(event: any): void {
+    const files = Array.from((event.target as HTMLInputElement).files || []);
+
+    if (this.receipts.length + files.length > 5) {
+      this.error = "You can upload a maximum of 5 receipts";
+      return;
+    }
+
+    files.forEach((file) => {
+      const validation = validateReceipt(file); // Assume this function exists
+      if (!validation.isValid) {
+        this.error = validation.error || "Invalid file";
+        return;
+      }
+
+      const receipt: Receipt = {
+        id: crypto.randomUUID(),
+        file,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+      };
+
+      this.receipts.push(receipt);
+    });
+
+    // Clear the input
+    (event.target as HTMLInputElement).value = "";
+  }
+
+  removeReceipt(receipt: any): void {
+    this.receipts = this.receipts.filter((r) => r.id !== receipt.id);
+    // Optionally update your formGroup if it holds the receipts
+    // this.formGroup.patchValue({ receipts: this.receipts });
+    this.error = "";
+  }
+
+
+
+}
+
+function validateReceipt(file: File): { isValid: boolean; error?: string } {
+  const validTypes = ["image/jpeg", "image/png", "application/pdf"];
+  const maxSize = 5 * 1024 * 1024; // 5MB
+
+  if (!validTypes.includes(file.type)) {
+    return { isValid: false, error: "Invalid file type" };
+  }
+
+  if (file.size > maxSize) {
+    return { isValid: false, error: "File size exceeds 5MB" };
+  }
+
+  return { isValid: true };
 }
