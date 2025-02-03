@@ -46,7 +46,7 @@ import { FormFieldComponent } from '../../../../../../../shared/components/form-
       >
         <select
           id="expenseType"
-          formControlName="PaymentSchedule"
+          formControlName="expenseType"
           class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
         >
           <option value="onetime">One-time</option>

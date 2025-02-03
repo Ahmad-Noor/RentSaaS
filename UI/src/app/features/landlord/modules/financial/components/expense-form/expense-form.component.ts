@@ -9,16 +9,22 @@ import { ReceiptUploadComponent } from './receipt-upload/receipt-upload.componen
 import { Expense } from '../../types/expense.types';
 import { ExpenseFormData } from './models/expense-form.model';
 import { initializeExpenseForm } from './utils/form-utils';
+import { FormFieldComponent } from "../../../../../../shared/components/form-field/form-field.component";
 
 @Component({
   selector: 'app-expense-form',
   standalone: true,
   imports: [
-
-  ],
-  template: `
-
-  `
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    ExpenseDetailsFormComponent,
+    ExpenseTypeSelectorComponent,
+    PropertySelectorComponent,
+    ReceiptUploadComponent,
+    FormFieldComponent
+],
+  templateUrl: './expense-form.component.html',
 })
 export class ExpenseFormComponent implements OnInit {
   @Input() expense?: Expense;
@@ -62,5 +68,16 @@ export class ExpenseFormComponent implements OnInit {
       };
       this.save.emit(formData);
     }
+  }
+
+
+  getFieldError(field: string): string {
+    const control = this.expenseForm.get(field);
+    if (control?.touched && control.errors) {
+      if (control.errors['required']) {
+        return `${field} is required`;
+      }
+    }
+    return '';
   }
 }
