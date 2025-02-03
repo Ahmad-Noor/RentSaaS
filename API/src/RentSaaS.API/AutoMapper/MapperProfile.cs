@@ -2,6 +2,7 @@
 using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Application.DTOs.Address;
 using RentSaaS.Application.DTOs.Expense;
+using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.Property;
 using RentSaaS.Domain.Entities;
 
