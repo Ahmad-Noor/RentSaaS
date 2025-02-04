@@ -74,6 +74,9 @@ public class ExpenseController : Controller
     }
 
 
+
+
+
     [HttpGet]
     [Route("getall")]
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
@@ -92,6 +95,9 @@ public class ExpenseController : Controller
 
         return Ok(expense);
     }
+
+
+
 
 
 

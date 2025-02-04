@@ -44,6 +44,7 @@
 	<Folder Include="Controllers\SearchAndUtility\" />
 	<Folder Include="Controllers\SettingsAndConfiguration\" />
 	<Folder Include="Helper\" />
+	<Folder Include="Uploads\Expenses\00000000-0000-0000-0000-000000000000\" />
   </ItemGroup>
 
   <ItemGroup>
