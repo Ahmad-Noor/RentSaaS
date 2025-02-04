@@ -33,9 +33,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let expense of filteredExpenses" class="border-b hover:bg-gray-50">
-            <td class="py-3 px-4">{{ expense.date | date:'mediumDate' }}</td>
+            <td class="py-3 px-4">{{ expense.dueDate | date:'mediumDate' }}</td>
             <td class="py-3 px-4">
-              {{ expense.description }}
+              {{ expense.details }}
               <span *ngIf="expense.recurring" class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Recurring</span>
             </td>
             <td class="py-3 px-4">

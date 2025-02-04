@@ -13,8 +13,8 @@ import { ConfirmDialogService } from '../../../../../../shared/services/confirm-
   styleUrls: ['./expenses.page.css']
 })
 export class ExpensesPage {
-  expenses: Expense[] = [];
-  filteredExpenses: Expense[] = [];
+  expenses: any[] = [];
+  filteredExpenses: any[] = [];
   @Output() onAction = new EventEmitter<{ type: string; expense: Expense }>();
   dataSource: any;
 
@@ -27,6 +27,18 @@ export class ExpensesPage {
       this.expenses = expenses;
       this.filteredExpenses = expenses; // Initialize with all expenses
     });
+
+
+this.expenseService.getAllExpenses().subscribe({
+  next: (expenses) => {
+    console.log(expenses);
+    this.expenses = expenses;
+    this.filteredExpenses = expenses;
+  }
+}
+)
+
+    
   }
 
   getStatusClass(status: string): string {

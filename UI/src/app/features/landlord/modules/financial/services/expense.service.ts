@@ -1,11 +1,11 @@
-import { Inject, inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Expense, CreateExpenseDTO } from '../types/expense.types';
-import { MOCK_EXPENSES } from '../data/mock-expenses';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../../../../environments/environment';
-import { NameConstnt } from '../../../../../../assets/nameConstant';
-import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { BehaviorSubject, Observable, map } from "rxjs";
+import { Expense, CreateExpenseDTO } from "../types/expense.types";
+import { MOCK_EXPENSES } from "../data/mock-expenses";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../../../../../environments/environment";
+import { NameConstnt } from "../../../../../../assets/nameConstant";
+import { isPlatformBrowser } from "@angular/common";
 
 @Injectable({
   providedIn: "root",
@@ -14,9 +14,6 @@ export class ExpenseService {
   baseUrl: string = environment.apiUrl;
   headers!: HttpHeaders;
   private expenses = new BehaviorSubject<Expense[]>(MOCK_EXPENSES);
-
-
-
 
   initalizationHeader(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -31,24 +28,13 @@ export class ExpenseService {
     }
   }
 
-
-
-
-
-  constructor(private _httpclint: HttpClient,@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private _httpclint: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.expenses = new BehaviorSubject<Expense[]>([]);
     this.initalizationHeader();
-
-
-
   }
-
-
-
-
-
-
- 
 
   getExpenses(): Observable<Expense[]> {
     return this.expenses.asObservable();
@@ -92,6 +78,5 @@ export class ExpenseService {
   }
 
 
-
-
+  
 }
