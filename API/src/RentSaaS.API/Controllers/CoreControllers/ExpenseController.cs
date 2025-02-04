@@ -13,7 +13,7 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 public class ExpenseController : Controller
 {
@@ -55,14 +55,14 @@ public class ExpenseController : Controller
             await _unitOfWork.ExpenseRepository.Add(expense);
             await _unitOfWork.SaveChangesAsync();
 
-            //if (expenseCreateDto.ReceiptsFiles != null && expenseCreateDto.ReceiptsFiles.Count > 0)
-            //{
-            //    var fileUploadResult = await UploadFiles(expense.Id, expense.OrganizationId, expenseCreateDto.ReceiptsFiles);
-            //    if (!fileUploadResult.IsSuccess)
-            //    {
-            //        return BadRequest(fileUploadResult.ErrorMessage);
-            //    }
-            //}
+            if (expenseCreateDto.ReceiptsFiles != null && expenseCreateDto.ReceiptsFiles.Count() > 0)
+            {
+                var fileUploadResult = await UploadFiles(expense.Id, expense.OrganizationId, expenseCreateDto.ReceiptsFiles.ToList());
+                if (!fileUploadResult.IsSuccess)
+                {
+                    return BadRequest(fileUploadResult.ErrorMessage);
+                }
+            }
 
             return Ok(expense);
         }
@@ -74,7 +74,6 @@ public class ExpenseController : Controller
     }
 
 
-    [Authorize]
     [HttpGet]
     [Route("getall")]
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
