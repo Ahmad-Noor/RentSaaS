@@ -24,7 +24,6 @@ export class PropertyService {
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
-        "Content-Type": "application/json",
         "X-OrganizationId": `${localStorage.getItem('organizationId')}`,
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       });
@@ -41,9 +40,9 @@ export class PropertyService {
     });
   }
 
-  getProperties(): Observable<any> {
-    return this.properties.asObservable();
-  }
+  // getProperties(): Observable<any> {
+  //   return this.properties.asObservable();
+  // }
 
   CreateNewProperty(Property: PropertyCreate): Observable<any> {
     return this._httpClient.post(

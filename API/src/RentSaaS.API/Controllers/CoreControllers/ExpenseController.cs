@@ -13,7 +13,7 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 public class ExpenseController : Controller
 {
@@ -38,7 +38,8 @@ public class ExpenseController : Controller
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
     [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
     [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
-    public async Task<IActionResult> Add([FromBody] ExpenseCreateDTO expenseCreateDto, List<IFormFile> formFiles)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Add([FromForm] ExpenseCreateDTO expenseCreateDto)
     {
         if (!ModelState.IsValid)
         {

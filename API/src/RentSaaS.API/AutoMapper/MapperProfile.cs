@@ -13,6 +13,18 @@ namespace RentSaaS.API.AutoMapper
 
         public MapperProfile()
         {
+
+
+
+
+
+
+
+
+
+
+
+
             #region Expense 
             CreateMap<ExpenseCreateDTO, Expense>()/*.ReverseMap()*/;
             CreateMap<ExpenseUpdateDTO, Expense>();
@@ -43,11 +55,7 @@ namespace RentSaaS.API.AutoMapper
             CreateMap<Lease, LeaseGetDto>();
             #endregion
 
-            #region Property
-            CreateMap<PropertyCreateDto, Property>()/*.ReverseMap()*/;
-            CreateMap<PropertyUpdateDto, Property>();
-            CreateMap<Property, PropertyGetDto>();
-            #endregion
+
 
             #region Address
             CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;

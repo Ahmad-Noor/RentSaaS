@@ -2,6 +2,7 @@
 {
     public class PropertyGetDto
     {
+        public Guid Id { get; set; }
         public string Address { get; set; }
     }
 }
