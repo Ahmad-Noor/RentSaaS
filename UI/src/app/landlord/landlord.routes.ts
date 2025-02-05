@@ -21,35 +21,35 @@ export default [
       },
       {
         path: 'companies',
-        loadChildren: () => import('./modules/companies/companies.routes')
+        loadChildren: () => import('./companies/companies.routes')
       },
       {
         path: 'properties',
-        loadChildren: () => import('./modules/properties/properties.routes')
+        loadChildren: () => import('./properties/properties.routes')
       },
       {
         path: 'financial',
-        loadChildren: () => import('./modules/financial/financial.routes')
+        loadChildren: () => import('./financial/financial.routes')
       },
       {
         path: 'maintenance',
-        loadChildren: () => import('./modules/maintenance/maintenance.routes')
+        loadChildren: () => import('./maintenance/maintenance.routes')
       },
       {
         path: 'messages',
-        loadChildren: () => import('./modules/messages/messages.routes')
+        loadChildren: () => import('./messages/messages.routes')
       },
       {
         path: 'forms',
-        loadChildren: () => import('./modules/forms/forms.routes')
+        loadChildren: () => import('./forms/forms.routes')
       },
       {
         path: 'team',
-        loadChildren: () => import('./modules/team/team.routes')
+        loadChildren: () => import('./team/team.routes')
       },
       {
         path: 'users',
-        loadChildren: () => import('./modules/users/users.routes')
+        loadChildren: () => import('./users/users.routes')
       }
     ]
   }

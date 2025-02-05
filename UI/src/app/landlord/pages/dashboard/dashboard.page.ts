@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ResourceOverviewComponent } from '../../components/dashboard/resource-overview/resource-overview.component';
-import { PerformanceChartsComponent } from '../../components/dashboard/performance-charts/performance-charts.component';
-import { MetricsGridComponent } from '../../components/dashboard/metrics-grid/metrics-grid.component';
+import { ResourceOverviewComponent } from '../../dashboard/resource-overview/resource-overview.component';
+import { PerformanceChartsComponent } from '../../dashboard/performance-charts/performance-charts.component';
+import { MetricsGridComponent } from '../../dashboard/metrics-grid/metrics-grid.component';
 
 @Component({
   selector: 'app-dashboard-page',

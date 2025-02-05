@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from '../../components/navigation/sidebar/sidebar.component';
-import { NavbarComponent } from '../../components/navigation/navbar/navbar.component';
+import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
+import { NavbarComponent } from '../../navigation/navbar/navbar.component';
 
 @Component({
   selector: 'app-landlord-portal',

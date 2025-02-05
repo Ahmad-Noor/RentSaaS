@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { HeaderComponent } from "../../../../components/header/header.component";
+import { HeaderComponent } from "../../../../shared/header/header.component";
 import { PricingCardComponent } from "../../components/pricing-card/pricing-card.component";
 import { PricingFaqComponent } from "../../components/pricing-faq/pricing-faq.component";
 
