@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TenantPortalPage } from './pages/tenant-portal/tenant-portal.page';
+import { TenantPortalPage } from './tenant-portal/tenant-portal.page';
 
 export default [
   {
@@ -8,19 +8,19 @@ export default [
     children: [
       {
         path: 'applications',
-        loadChildren: () => import('./modules/applications/applications.routes')
+        loadChildren: () => import('./applications/applications.routes')
       },
       {
         path: 'rent',
-        loadChildren: () => import('./modules/rent/rent.routes')
+        loadChildren: () => import('./rent/rent.routes')
       },
       {
         path: 'maintenance',
-        loadChildren: () => import('./modules/maintenance/maintenance.routes')
+        loadChildren: () => import('./maintenance/maintenance.routes')
       },
       {
         path: 'messages',
-        loadChildren: () => import('./modules/messages/messages.routes')
+        loadChildren: () => import('./messages/messages.routes')
       }
     ]
   }

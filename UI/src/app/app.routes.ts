@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './home/pages/home/home.page';
+import { HomePage } from './home/home.page';
 
 export const routes: Routes = [
   {
@@ -12,11 +12,11 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./auth/pages/login/login.page').then(m => m.LoginPage)
+    loadComponent: () => import('./auth/login/login.page').then(m => m.LoginPage)
   },
   {
     path: 'register',
-    loadComponent: () => import('./auth/pages/register/register.page').then(m => m.RegisterPage)
+    loadComponent: () => import('./auth/register/register.page').then(m => m.RegisterPage)
   },
   {
     path: 'landlord',

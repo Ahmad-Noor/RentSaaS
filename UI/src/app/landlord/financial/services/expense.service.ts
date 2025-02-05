@@ -4,7 +4,7 @@ import { Expense, CreateExpenseDTO } from "../types/expense.types";
 import { MOCK_EXPENSES } from "../data/mock-expenses";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { NameConstnt } from "../../../../assets/nameConstant";
+import { NameConstant } from "../../../../assets/nameConstant";
 import { isPlatformBrowser } from "@angular/common";
 
 @Injectable({
@@ -15,13 +15,13 @@ export class ExpenseService {
   headers!: HttpHeaders;
   private expenses = new BehaviorSubject<Expense[]>(MOCK_EXPENSES);
 
-  initalizationHeader(): void {
+  initializationHeader(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
         "X-OrganizationId": `${localStorage.getItem(
-          NameConstnt.organizationId
+          NameConstant.organizationId
         )}`,
-        Authorization: `Bearer ${localStorage.getItem(NameConstnt.token)}`,
+        Authorization: `Bearer ${localStorage.getItem(NameConstant.token)}`,
       });
     } else {
       this.headers = new HttpHeaders();
@@ -33,7 +33,7 @@ export class ExpenseService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.expenses = new BehaviorSubject<Expense[]>([]);
-    this.initalizationHeader();
+    this.initializationHeader();
   }
 
   getExpenses(): Observable<Expense[]> {

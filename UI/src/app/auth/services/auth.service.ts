@@ -1,9 +1,9 @@
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { LoginResponse, SocialLoginResponse } from "../types/auth.types";
-import { LoginInterface } from "../../interfaces/LoginInterface";
-import { RegisterInterface } from "../../interfaces/RegisterInterface";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import {  SocialLoginResponse } from "../types/auth.types";
+import { LoginInterface } from "../interfaces/LoginInterface";
+import { RegisterInterface } from "../interfaces/RegisterInterface";
+import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
 import { isPlatformBrowser } from "@angular/common";
@@ -40,7 +40,7 @@ export class AuthService {
 
   SignOut() {
     localStorage.removeItem("token");
-    localStorage.removeItem("orgnaizationId");
+    localStorage.removeItem("organizationId");
     this._router.navigate(["/login"]);
   }
 

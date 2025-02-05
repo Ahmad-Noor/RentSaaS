@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { LandlordPortalPage } from './pages/landlord-portal/landlord-portal.page';
+import { LandlordPortalPage } from './dashboard/landlord-portal/landlord-portal.page';
 
 export default [
   {
@@ -17,7 +17,7 @@ export default [
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./pages/dashboard/dashboard.page').then(m => m.DashboardPage)
+        loadComponent: () => import('./dashboard/dashboard.page').then(m => m.DashboardPage)
       },
       {
         path: 'companies',

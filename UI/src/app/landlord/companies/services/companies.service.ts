@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from '../types/company.types';
 import { environment } from '../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
-import { CompanyCreate } from '../pages/Inteface/Company/company-create';
+import { CompanyCreate } from '../Company/company-create';
 import { UUID } from 'crypto';
 
 @Injectable({
