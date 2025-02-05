@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './features/home/pages/home/home.page';
+import { HomePage } from './home/home.page';
 
 export const routes: Routes = [
   {
@@ -8,23 +8,23 @@ export const routes: Routes = [
   },
   {
     path: 'pricing',
-    loadComponent: () => import('./features/pricing/pages/pricing/pricing.page').then(m => m.PricingPage)
+    loadComponent: () => import('./home/pricing/pages/pricing/pricing.page').then(m => m.PricingPage)
   },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/pages/login/login.page').then(m => m.LoginPage)
+    loadComponent: () => import('./auth/login/login.page').then(m => m.LoginPage)
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/pages/register/register.page').then(m => m.RegisterPage)
+    loadComponent: () => import('./auth/register/register.page').then(m => m.RegisterPage)
   },
   {
     path: 'landlord',
-    loadChildren: () => import('./features/landlord/landlord.routes')
+    loadChildren: () => import('./landlord/landlord.routes').then(m => m.default)
   },
   {
     path: 'tenant',
-    loadChildren: () => import('./features/tenant/tenant.routes')
+    loadChildren: () => import('./tenant/tenant.routes')
   },
   {
     path: '**',
