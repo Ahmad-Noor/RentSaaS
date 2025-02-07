@@ -10,6 +10,7 @@ using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data;
 using RentSaaS.Application.DTOs;
 using RentSaaS.Application.DTOs.UserDtos;
+using AutoMapper;
 namespace RentSaaS.API.Controllers.SecurityAndAdministration;
 
 [ApiController]
@@ -20,11 +21,12 @@ public class AuthController : ControllerBase
     private readonly RentSaaSDBContext _rentSaaSDBContext;
     private readonly IConfiguration _configuration;
 
-    public AuthController(ILogger<UserController> logger,
-                                    IConfiguration configuration,
-                                    RentSaaSDBContext db)
+    public IMapper _Mapper { get; }
+
+    public AuthController(ILogger<UserController> logger,IMapper Mapper,IConfiguration configuration,RentSaaSDBContext db)
     {
         _logger = logger;
+        _Mapper = Mapper;
         _configuration = configuration;
         _rentSaaSDBContext = db;
     }
@@ -55,32 +57,36 @@ public class AuthController : ControllerBase
                 IsDeleted=false
             };
 
-
+            
             _rentSaaSDBContext.Organizations.Add(Organization);
             _rentSaaSDBContext.SaveChanges();
 
             #region Make Mapper Between this 
-            var user = new User
-            {
-                FirstName = Request.FirstName,
-                LastName = Request.LastName,
-                ShowFullName = true,
-                Email = Request.Email,
+
+            var User = _Mapper.Map<User>(Request);
+            User.PasswordHash = Password.HashPassword(Request.Password);
+            User.OrganizationId = Organization.OrganizationId;
 
 
-                OrganizationId = Organization.OrganizationId,
-                PasswordHash = Password.HashPassword(Request.Password),
 
-                IsActive = true,
-                UserType = Request.UserType // role of the user
+            //var user = new User
+            //{
+            //    FirstName = Request.FirstName,
+            //    LastName = Request.LastName,
+            //    ShowFullName = true,
+            //    Email = Request.Email,
+            //    OrganizationId = Organization.OrganizationId,
+            //    PasswordHash = Password.HashPassword(Request.Password),
 
-            }; 
+            //    IsActive = true,
+            //    UserType = Request.UserType // role of the user
+
+            //}; 
             #endregion
-            _rentSaaSDBContext.Users.Add(user);
+            _rentSaaSDBContext.Users.Add(User);
             await _rentSaaSDBContext.SaveChangesAsync();
-
-            var token = CreateJwtToken(user);
-            return Ok(new AuthenticateResponse(user, token));
+            var token = CreateJwtToken(User);
+            return Ok(new AuthenticateResponse(User, token));
         }
         catch (Exception ex)
         {

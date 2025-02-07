@@ -4,6 +4,7 @@ using RentSaaS.Application.DTOs.Address;
 using RentSaaS.Application.DTOs.Expense;
 using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.Property;
+using RentSaaS.Application.DTOs.UserDtos;
 using RentSaaS.Domain.Entities;
 
 namespace RentSaaS.API.AutoMapper
@@ -17,8 +18,10 @@ namespace RentSaaS.API.AutoMapper
 
 
 
+            #region Auth
 
-
+            CreateMap<UserRegistrationRequestDto, User>();
+            #endregion
 
 
 
