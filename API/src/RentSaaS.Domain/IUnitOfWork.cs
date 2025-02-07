@@ -8,7 +8,8 @@ public interface IUnitOfWork : IAsyncDisposable
     IExpenseRepository ExpenseRepository { get; set; }
     ILeaseRepository LeaseRepository { get; set; }
     IExpenseFileRepository ExpenseFileRepository { get; set; } 
-     
+    IAdvertisingRepository AdvertisingRepository { get; set; }
+    IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
     Task<int> SaveChangesAsync();
     void Rollback(); 
 }

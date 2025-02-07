@@ -19,8 +19,8 @@ namespace RentSaaS.Application.DTOs.Lease
         public string? TenantName { get; set; }
         public string? LeaseType { get; set; }
 
-        public OrganizationDto? Organization { get; set; }
-        public PropertyDto? Property { get; set; }
+        public LeasOrganizDto? Organization { get; set; }
+        public LeasPropDto? Property { get; set; }
 
 
     }
