@@ -41,7 +41,7 @@ export class RegisterFormComponent {
       Validators.required,
       Validators.minLength(8),
     ]),
-    userType:new FormControl(null,[Validators.required]),
+    userType:new FormControl("landlord",[Validators.required]),
   });
 
   constructor(private router: Router, private _AuthService: AuthService) {}
@@ -55,8 +55,7 @@ export class RegisterFormComponent {
   }
 
   onSubmit(registerForm: FormGroup): void {
-    console.log(registerForm.value);
-    console.log(registerForm);
+
     if (this.registerForm.valid) {
       this.loading=true;
       this._AuthService.Register(registerForm.value).subscribe({
@@ -72,6 +71,10 @@ export class RegisterFormComponent {
           this.loading=false;
         },
       });
+    }
+    else
+    {
+      this.registerForm.markAllAsTouched;
     }
   }
 }
