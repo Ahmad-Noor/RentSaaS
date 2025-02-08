@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { getFieldErrorMessage } from '../utils/error-messages';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-
+import { Constant } from "../../constants";
 
 
 
@@ -79,8 +79,9 @@ export class LoginFormComponent {
   
             const jwtToken = jwtDecode(response.token);
 
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('organizationId', response.organizationId || '');
+            localStorage.setItem(Constant.token, response.token);
+
+            localStorage.setItem(Constant.OrganizationIdRentSass, response.organizationId || '');
             this.authService.SaveData();
   
             this.navigateBasedOnUserType(response.userType);

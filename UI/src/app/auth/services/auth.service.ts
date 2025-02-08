@@ -8,10 +8,15 @@ import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
 import { isPlatformBrowser } from "@angular/common";
 import { environment } from "../../../environments/environment";
-
+import { Constant } from "../../constants";
 @Injectable({
   providedIn: "root",
 })
+
+
+
+
+
 export class AuthService {
   baseUrl: string = environment.apiUrl + "api/Auth/";
 
@@ -22,7 +27,7 @@ export class AuthService {
 
     if(isPlatformBrowser(this.Checkplatform))
       {
-        if(localStorage.getItem("Token"))
+        if(localStorage.getItem(Constant.token))
         {
           this.SaveData();
         }
@@ -39,14 +44,14 @@ export class AuthService {
   }
 
   SignOut() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("organizationId");
+    localStorage.removeItem(Constant.token);
+    localStorage.removeItem(Constant.OrganizationIdRentSass);
     this._router.navigate(["/login"]);
   }
 
   SaveData(): void {
     this.userData.next(
-      jwtDecode(JSON.stringify(localStorage.getItem("token")))
+      jwtDecode(JSON.stringify(localStorage.getItem(Constant.token)))
     );
     console.log(this.userData);
   }

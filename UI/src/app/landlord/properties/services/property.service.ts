@@ -5,6 +5,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
 import { environment } from '../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { Constant } from '../../../constants';
+
 
 @Injectable({
   providedIn: "root",
@@ -12,6 +14,8 @@ import { isPlatformBrowser } from '@angular/common';
 export class PropertyService {
 
   baseUrl = environment.apiUrl;
+
+
 
   private properties!: BehaviorSubject<Property[]>;
   private headers!: HttpHeaders;
@@ -24,8 +28,8 @@ export class PropertyService {
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
-        "X-OrganizationId": `${localStorage.getItem('organizationId')}`,
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        "X-OrganizationId": `${localStorage.getItem(Constant.OrganizationIdRentSass)}`,
+        Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
       });
 
       console.log(this.headers);

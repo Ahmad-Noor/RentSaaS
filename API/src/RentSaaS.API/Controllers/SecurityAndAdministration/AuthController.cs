@@ -56,32 +56,13 @@ public class AuthController : ControllerBase
                 Name = string.Concat(Request.FirstName, Request.LastName),
                 IsDeleted=false
             };
-
-            
             _rentSaaSDBContext.Organizations.Add(Organization);
             _rentSaaSDBContext.SaveChanges();
 
             #region Make Mapper Between this 
 
             var User = _Mapper.Map<User>(Request);
-            User.PasswordHash = Password.HashPassword(Request.Password);
             User.OrganizationId = Organization.OrganizationId;
-
-
-
-            //var user = new User
-            //{
-            //    FirstName = Request.FirstName,
-            //    LastName = Request.LastName,
-            //    ShowFullName = true,
-            //    Email = Request.Email,
-            //    OrganizationId = Organization.OrganizationId,
-            //    PasswordHash = Password.HashPassword(Request.Password),
-
-            //    IsActive = true,
-            //    UserType = Request.UserType // role of the user
-
-            //}; 
             #endregion
             _rentSaaSDBContext.Users.Add(User);
             await _rentSaaSDBContext.SaveChangesAsync();
