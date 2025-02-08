@@ -2,7 +2,7 @@
 
 namespace RentSaaS.Application.DTOs.Lease
 {
-    public class OrganizationDto :BaseEntityDto
+    public class LeasOrganizDto :BaseEntityDto
     {
         public string? Name { get; set; } 
 

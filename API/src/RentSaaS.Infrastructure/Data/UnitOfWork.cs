@@ -17,6 +17,9 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public ILeaseRepository LeaseRepository { get; set; } 
     public IExpenseFileRepository ExpenseFileRepository { get; set; } 
 
+    public IAdvertisingRepository AdvertisingRepository { get; set; }
+    public IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
+
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger("logs");
@@ -28,6 +31,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         ExpenseRepository = new ExpenseRepository(dbContext, _logger); 
         LeaseRepository = new LeaseRepository(dbContext, _logger);
         ExpenseFileRepository = new ExpenseFileRepository(dbContext, _logger); 
+        AdvertisingRepository=new AdvertisingRepository(dbContext, _logger);
+        ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, _logger);
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity

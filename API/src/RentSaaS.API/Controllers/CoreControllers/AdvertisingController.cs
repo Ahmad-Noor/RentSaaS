@@ -1,27 +1,28 @@
-﻿using RentSaaS.Domain;
-using Microsoft.AspNetCore.Mvc;
-using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿
+
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.ApiErrorResponse;
 using RentSaaS.API.ApiResponse;
 using RentSaaS.Application.DTOs.Advertising;
-using RentSaaS.Application.DTOs.Lease;
+using RentSaaS.Domain;
+using RentSaaS.Domain.Entities;
 
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class LeaseController : ControllerBase
+public class AdvertisingController : ControllerBase
 {
     // add comment for github
     private readonly ILogger<LeaseController> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _Mapper;
 
-    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -32,18 +33,19 @@ public class LeaseController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<List<LeaseGetDto>>), 200)]
+    [Route("GetAll")]
+    [ProducesResponseType(typeof(ApiResponse<List<AdvertisingGetDto>>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var leases = await _unitOfWork.LeaseRepository.GetAll();
-        if (leases == null)
+        var advertising = await _unitOfWork.AdvertisingRepository.GetAll();
+        if (advertising == null)
         {
             return NotFound(new ApiErrorResponses(404));
         }
-        var LeaseMapper = _Mapper.Map<List<LeaseGetDto>>(leases);
-        return Ok(new ApiResponse<List<LeaseGetDto>>(true, "All Data For Lease", LeaseMapper)); ;
+        var AdvertisingMapper = _Mapper.Map<List<AdvertisingGetDto>>(advertising);
+        return Ok(new ApiResponse<List<AdvertisingGetDto>>(true, "All Data For Advertising",AdvertisingMapper)); 
     }
 
     #endregion
@@ -54,16 +56,16 @@ public class LeaseController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("{id:Guid}")]
-    [ProducesResponseType(typeof(ApiResponse<LeaseGetDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<AdvertisingGetDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var leases = await _unitOfWork.LeaseRepository.GetById(id);
-        var LeaseMapper = _Mapper.Map<LeaseGetDto>(leases);
-        if (leases != null)
+        var advertising = await _unitOfWork.AdvertisingRepository.GetById(id);
+        var AdvertisingMapper = _Mapper.Map<AdvertisingGetDto>(advertising);
+        if (advertising != null)
         {
-            return Ok(new ApiResponse<LeaseGetDto>(true, "All Data For Lease", LeaseMapper));
+            return Ok(new ApiResponse<AdvertisingGetDto>(true, "All Data For Advertising", AdvertisingMapper));
         }
         return NotFound(new ApiErrorResponses(404));
     }
@@ -75,25 +77,26 @@ public class LeaseController : ControllerBase
     #region Create Lease
 
     [HttpPost]
-    [ProducesResponseType(typeof(ApiResponse<LeaseCreateDto>), 200)]
+    [Route("Add")]
+    [ProducesResponseType(typeof(ApiResponse<AdvertisingCreateDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
-    public async Task<IActionResult> Add([FromBody] LeaseCreateDto leasesDto)
+    public async Task<IActionResult> Add([FromBody] AdvertisingCreateDto advertisingDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest();
         }
 
-        var Lease = _Mapper.Map<Lease>(leasesDto);
+        var Advertising = _Mapper.Map<Advertising>(advertisingDto);
 
         try
         {
-            _logger.LogInformation("Create new leases");
-            await _unitOfWork.LeaseRepository.Add(Lease);
+            _logger.LogInformation("Create new Advertising");
+            await _unitOfWork.AdvertisingRepository.Add(Advertising);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new ApiResponse<LeaseCreateDto>(true, "Lease Is Create Success", leasesDto));
+            return Ok(new ApiResponse<AdvertisingCreateDto>(true, "Advertising Is Create Success",advertisingDto));
         }
         catch (Exception ex)
         {
@@ -109,12 +112,12 @@ public class LeaseController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<LeaseUpdateDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<AdvertisingUpdateDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 404)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    public async Task<IActionResult> Update(Guid id, LeaseUpdateDto leasesDto)
+    public async Task<IActionResult> Update(Guid id, AdvertisingUpdateDto advertisingDto)
     {
-        if (id != leasesDto.Id)
+        if (id != advertisingDto.Id)
         {
             return BadRequest();
         }
@@ -130,17 +133,17 @@ public class LeaseController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<LeaseCreateDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<AdvertisingCreateDto>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var leases = await _unitOfWork.LeaseRepository.FirstOrDefaultAsync(w => w.Id == id);
-        if (leases != null)
+        var advertising = await _unitOfWork.AdvertisingRepository.FirstOrDefaultAsync(w => w.Id == id);
+        if (advertising != null)
         {
-            leases.IsDeleted = true;
+            advertising.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
-            //return Ok(new ApiResponse<LeaseCreateDto>(true, "Delete Is Success"));
+          //  return Ok(new ApiResponse<AdvertisingCreateDto>(true, "Delete Is Success"));
             return NoContent();
         }
         return NotFound(new ApiErrorResponses(404));
