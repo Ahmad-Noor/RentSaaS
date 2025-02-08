@@ -35,9 +35,7 @@ public class PropertyController : ControllerBase
     [ProducesResponseType(typeof(ApiErrorResponses), 500)]
     public async Task<IActionResult> GetAll()
     {
-        _logger.LogInformation("User Claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
-        _logger.LogInformation("Is Authenticated: {IsAuthenticated}", User.Identity?.IsAuthenticated);
-
+      
         var properties = await _unitOfWork.PropertyRepository.GetAll();
         if (properties == null)
         {

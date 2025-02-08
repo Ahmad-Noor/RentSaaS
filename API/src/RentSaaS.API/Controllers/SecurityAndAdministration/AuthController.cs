@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
                 ShowFullName = true,
                 Email = Request.Email,
        
-                //OrganizationId = Request.OrganizationId,
+                OrganizationId = Guid.NewGuid(),
                 PasswordHash = Password.HashPassword(Request.Password),
                
                 IsActive = true,
@@ -92,25 +92,39 @@ public class AuthController : ControllerBase
 
     private string CreateJwtToken(User user)
     {
-        var keyString = _configuration.GetValue<string>("Jwt:Key");
-        if (string.IsNullOrEmpty(keyString))
+        var keyString = _configuration["Jwt:Key"];
+        var issuer = _configuration["Jwt:Issuer"];
+        var audience = _configuration["Jwt:Audience"];
+
+        if (string.IsNullOrEmpty(keyString) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
         {
-            throw new InvalidOperationException("JWT Key is not configured.");
+            throw new InvalidOperationException("JWT configuration is missing.");
         }
 
-        var key = Encoding.ASCII.GetBytes(keyString);
+        var key = Encoding.UTF8.GetBytes(keyString);
         var tokenHandler = new JwtSecurityTokenHandler();
+
+        var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+
+        // 🔹 Add organization ID if it exists
+        if (!string.IsNullOrEmpty(user.OrganizationId.ToString()))
+        {
+            claims.Add(new Claim("organizationId", user.OrganizationId.ToString()));
+        }
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        }),
+            Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddHours(24),
+            Issuer = issuer,
+            Audience = audience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
@@ -119,6 +133,7 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
     private async Task<bool> CheckUserNameEmailAsync(string email)
     {
         var user = await _rentSaaSDBContext.Users.SingleOrDefaultAsync(w => w.Email == email);
