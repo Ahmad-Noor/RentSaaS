@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +69,8 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer(options =>
     {
+        options.Authority = "https://accounts.google.com";
+        options.Audience = builder.Configuration["1000319891618-fnnc0set8ng1rrrke3hujb67cd6cpb5u.apps.googleusercontent.com"];
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -105,7 +108,16 @@ builder.Services.AddAuthentication(options =>
 
 
 
-builder.Services.AddAuthentication().AddGoogle();
+builder.Services.AddAuthentication().AddGoogle(optionsGoogle =>
+{
+    optionsGoogle.ClientId = "1000319891618-fnnc0set8ng1rrrke3hujb67cd6cpb5u.apps.googleusercontent.com";
+
+    optionsGoogle.ClientSecret = "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";
+    optionsGoogle.CallbackPath = "/signin-google"; // Ensure this matches your Google Console settings
+});
+
+
+
 
 
 
