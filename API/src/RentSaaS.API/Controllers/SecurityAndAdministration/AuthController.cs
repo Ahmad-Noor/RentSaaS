@@ -91,6 +91,19 @@ public class AuthController : ControllerBase
         return Ok(new AuthenticateResponse(user, token));
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     private string CreateJwtToken(User user)
     {
         var keyString = _configuration.GetValue<string>("Jwt:Key");

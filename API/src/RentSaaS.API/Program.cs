@@ -102,6 +102,15 @@ builder.Services.AddAuthentication(options =>
     });
 
 
+
+
+
+builder.Services.AddAuthentication().AddGoogle();
+
+
+
+
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
