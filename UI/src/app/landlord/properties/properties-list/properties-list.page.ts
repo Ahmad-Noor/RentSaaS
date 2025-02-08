@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router'; 
+import { RouterLink } from '@angular/router';
 import { PropertyTableComponent } from '../data-table/data-table.component';
 import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
 import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
@@ -42,7 +42,7 @@ export class PropertiesListPage {
       console.log(responce.data)
     });
 
-console.log(this.properties)
+    console.log(this.properties)
 
 
 

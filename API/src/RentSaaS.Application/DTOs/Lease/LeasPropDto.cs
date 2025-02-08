@@ -1,6 +1,6 @@
 ﻿namespace RentSaaS.Application.DTOs.Lease
 {
-    public class PropertyDto :BaseEntityDto
+    public class LeasPropDto :BaseEntityDto
     {
         public Guid Id { get; set; }
         public string Address { get; set; }
