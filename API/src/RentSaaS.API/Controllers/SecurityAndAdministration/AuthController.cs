@@ -46,8 +46,20 @@ public class AuthController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Create new user, Email #{Email}", Request.Email); 
+            _logger.LogInformation("Create new user, Email #{Email}", Request.Email);
 
+
+            Organization organization = new Organization
+            {
+                OrganizationId = Guid.NewGuid(),
+                Name = Request.FirstName + " "+ Request.LastName,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = Guid.Parse("00000000-0000-0000-0000-000000000000")
+            };
+
+            _rentSaaSDBContext.Organizations.Add(organization);
+            await _rentSaaSDBContext.SaveChangesAsync();
             var user = new User
             {
                 FirstName = Request.FirstName,
@@ -55,7 +67,7 @@ public class AuthController : ControllerBase
                 ShowFullName = true,
                 Email = Request.Email,
        
-                OrganizationId = Guid.NewGuid(),
+                OrganizationId = organization.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
                
                 IsActive = true,

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RentSaaS.Application.Services.Interfaces;
 using RentSaaS.Domain.Base;
+using RentSaaS.Domain.Common;
 using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data.Repositories;
 using System.Reflection;
@@ -76,6 +77,7 @@ public class RentSaaSDBContext : DbContext
                 OrganizationId = organizationId,
                 Name = "Organization 1",
                 IsActive = true,
+                CreatedBy = Guid.Parse("00000000-0000-0000-0000-000000000000")
             });
 
 
@@ -109,7 +111,7 @@ public class RentSaaSDBContext : DbContext
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in ChangeTracker.Entries<IEntity>().Where(e => e.State == EntityState.Added))
+        foreach (var entry in ChangeTracker.Entries<BaseEntity>().Where(e => e.State == EntityState.Added))
         {
             entry.Entity.OrganizationId = _organizationService.GetCurrentOrganization()!.OrganizationId;
         }
