@@ -9,7 +9,7 @@ public class AuthenticateResponse
     public string LastName { get; set; }
     public string Email { get; set; }
     public string UserType { get; set; }
-    public Guid OrgnaizationId { get; set; }
+    public Guid OrganizationId { get; set; }
     public string Token { get; set; }
     public AuthenticateResponse(User user, string token)
     {
@@ -18,7 +18,7 @@ public class AuthenticateResponse
         LastName = user.LastName;
         Email = user.Email;
         UserType = user.UserType;
-        OrgnaizationId = user.OrganizationId;
+        OrganizationId = user.OrganizationId;
         Token = token;
     }
 }

@@ -10,6 +10,11 @@ using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data;
 using RentSaaS.Application.DTOs;
 using RentSaaS.Application.DTOs.UserDtos;
+using AutoMapper;
+using RentSaaS.API.Helper;
+using Microsoft.AspNetCore.Identity;
+using Google.Apis.Auth;
+using System.Text.Json;
 namespace RentSaaS.API.Controllers.SecurityAndAdministration;
 
 [ApiController]
@@ -20,11 +25,14 @@ public class AuthController : ControllerBase
     private readonly RentSaaSDBContext _rentSaaSDBContext;
     private readonly IConfiguration _configuration;
 
-    public AuthController(ILogger<UserController> logger,
-                                    IConfiguration configuration,
-                                    RentSaaSDBContext db)
+    public UserManager<User> _userManager { get; }
+    public IMapper _Mapper { get; }
+
+    public AuthController(UserManager<User> userManager,ILogger<UserController> logger,IMapper Mapper,IConfiguration configuration,RentSaaSDBContext db)
     {
+        _userManager = userManager;
         _logger = logger;
+        _Mapper = Mapper;
         _configuration = configuration;
         _rentSaaSDBContext = db;
     }
@@ -47,6 +55,7 @@ public class AuthController : ControllerBase
         try
         {
             _logger.LogInformation("Create new user, Email #{Email}", Request.Email);
+
 
 
             Organization organization = new Organization
@@ -73,12 +82,25 @@ public class AuthController : ControllerBase
                 IsActive = true,
                 UserType=Request.UserType // role of the user
 
-            };
-            _rentSaaSDBContext.Users.Add(user);
-            await _rentSaaSDBContext.SaveChangesAsync();
 
-            var token = CreateJwtToken(user);
-            return Ok(new AuthenticateResponse(user, token));
+// ahmed alaa
+      //     var Organization = new Organization()
+      //     {
+      //         Name = string.Concat(Request.FirstName, Request.LastName),
+      //         IsDeleted=false
+      //     };
+      //     _rentSaaSDBContext.Organizations.Add(Organization);
+      //     _rentSaaSDBContext.SaveChanges();
+
+         //   #region Make Mapper Between this 
+
+      //   var User = _Mapper.Map<User>(Request);
+      //   User.OrganizationId = Organization.OrganizationId;
+       //     #endregion
+            _rentSaaSDBContext.Users.Add(User);
+            await _rentSaaSDBContext.SaveChangesAsync();
+            var token = CreateJwtToken(User);
+            return Ok(new AuthenticateResponse(User, token));
         }
         catch (Exception ex)
         {
@@ -101,6 +123,94 @@ public class AuthController : ControllerBase
         var token = CreateJwtToken(user);
         return Ok(new AuthenticateResponse(user, token));
     }
+
+
+
+
+    [HttpPost("external-login")]
+    public async Task<IActionResult> ExternalLogin([FromBody] ExternalAuthDto model)
+    {
+        var idToken = await ExchangeAuthorizationCodeForIdToken(model.IdToken);
+
+        var payload = await VerifyGoogleToken(model);
+        if (payload == null)
+            return BadRequest(new { message = "Invalid External Authentication" });
+
+        var user = await _userManager.FindByEmailAsync(payload.Email);
+        if (user == null)
+        {
+            user = new User
+            {
+                Email = payload.Email,
+                UserName = payload.Email,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = Guid.NewGuid(),
+                IsDeleted = false,
+                FirstName = payload.GivenName,
+                LastName = payload.FamilyName,
+                UserType = "landlord"
+            };
+            await _userManager.CreateAsync(user);
+        }
+
+        var token = CreateJwtToken(user);
+        return Ok(new { token });
+    }
+
+
+
+
+    private async Task<string> ExchangeAuthorizationCodeForIdToken(string authorizationCode)
+    {
+        using (var client = new HttpClient())
+        {
+            var values = new Dictionary<string, string>
+        {
+            { "code", authorizationCode },
+            { "client_id", "YOUR_CLIENT_ID" },
+            { "client_secret", "YOUR_CLIENT_SECRET" },
+            { "redirect_uri", "YOUR_REDIRECT_URI" },
+            { "grant_type", "authorization_code" }
+        };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync("https://oauth2.googleapis.com/token", content);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            using var jsonDoc = JsonDocument.Parse(responseString);
+            var root = jsonDoc.RootElement;
+
+            return root.GetProperty("id_token").GetString();
+        }
+    }
+
+
+
+
+
+    private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalAuthDto model)
+    {
+        var settings = new GoogleJsonWebSignature.ValidationSettings
+        {
+            Audience = new List<string> { "1000319891618-fnnc0set8ng1rrrke3hujb67cd6cpb5u.apps.googleusercontent.com" }
+        };
+        return await GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private string CreateJwtToken(User user)
     {

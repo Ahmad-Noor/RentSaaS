@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using Common;
 using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Application.DTOs.Address;
 using RentSaaS.Application.DTOs.Expense;
 using RentSaaS.Application.DTOs.Advertising;
 using RentSaaS.Application.DTOs.Property;
+using RentSaaS.Application.DTOs.UserDtos;
 using RentSaaS.Domain.Entities;
 using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.RentApplication;
@@ -19,8 +22,13 @@ namespace RentSaaS.API.AutoMapper
 
 
 
+            #region Auth
+     
+           
 
-
+            CreateMap<UserRegistrationRequestDto, User>()
+                .ForMember(x=>x.PasswordHash,Dis=>Dis.MapFrom(Source => Password.HashPassword(Source.Password)));
+            #endregion
 
 
 

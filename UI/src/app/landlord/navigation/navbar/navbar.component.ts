@@ -1,9 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 import { AZURE_COLORS } from '../../../shared/constants/colors';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { initFlowbite } from 'flowbite';
 @Component({
   selector: "app-navbar",
   standalone: true,
-  
+
   templateUrl: './navbar.component.html',
   styleUrl  :'./navbar.component.css'
 })
@@ -13,7 +15,15 @@ export class NavbarComponent {
   colors = AZURE_COLORS;
 
  
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {
     const colors = AZURE_COLORS;    
   }
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      initFlowbite();
+    }
+  }
+
+
+
 }
