@@ -58,19 +58,45 @@ public class AuthController : ControllerBase
 
 
 
-            var Organization = new Organization()
+            Organization organization = new Organization
             {
-                Name = string.Concat(Request.FirstName, Request.LastName),
-                IsDeleted=false
+                OrganizationId = Guid.NewGuid(),
+                Name = Request.FirstName + " "+ Request.LastName,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = Guid.Parse("00000000-0000-0000-0000-000000000000")
             };
-            _rentSaaSDBContext.Organizations.Add(Organization);
-            _rentSaaSDBContext.SaveChanges();
 
-            #region Make Mapper Between this 
+            _rentSaaSDBContext.Organizations.Add(organization);
+            await _rentSaaSDBContext.SaveChangesAsync();
+            var user = new User
+            {
+                FirstName = Request.FirstName,
+                LastName = Request.LastName,
+                ShowFullName = true,
+                Email = Request.Email,
+       
+                OrganizationId = organization.OrganizationId,
+                PasswordHash = Password.HashPassword(Request.Password),
+               
+                IsActive = true,
+                UserType=Request.UserType // role of the user
 
-            var User = _Mapper.Map<User>(Request);
-            User.OrganizationId = Organization.OrganizationId;
-            #endregion
+
+// ahmed alaa
+      //     var Organization = new Organization()
+      //     {
+      //         Name = string.Concat(Request.FirstName, Request.LastName),
+      //         IsDeleted=false
+      //     };
+      //     _rentSaaSDBContext.Organizations.Add(Organization);
+      //     _rentSaaSDBContext.SaveChanges();
+
+         //   #region Make Mapper Between this 
+
+      //   var User = _Mapper.Map<User>(Request);
+      //   User.OrganizationId = Organization.OrganizationId;
+       //     #endregion
             _rentSaaSDBContext.Users.Add(User);
             await _rentSaaSDBContext.SaveChangesAsync();
             var token = CreateJwtToken(User);
