@@ -25,12 +25,20 @@ export class PropertyService {
     this.initializeHeaders(); // Initialize headers here
   }
 
+
+
+  
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
         "X-OrganizationId": `${localStorage.getItem(Constant.OrganizationIdRentSass)}`,
         Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
       });
+
+
+
+
+
 
       console.log(this.headers);
     } else {

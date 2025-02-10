@@ -1,11 +1,10 @@
-import { inject, Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import {  Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Company } from '../types/company.types';
 import { environment } from '../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import { CompanyCreate } from '../Company/company-create';
-import { UUID } from 'crypto';
+import { Constant } from '../../../constants';
 
 @Injectable({
   providedIn: "root",
@@ -24,15 +23,18 @@ export class CompaniesService {
 
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem("token");
-      const organizationId = localStorage.getItem("organizationId");
-      
+      const token = localStorage.getItem(Constant.token);
+      const organizationId = localStorage.getItem(Constant.OrganizationIdRentSass );
       if (token && organizationId) {
         this.headers = new HttpHeaders({
           "Content-Type": "application/json",
           "X-OrganizationId": organizationId,
           Authorization: `Bearer ${token}`,
+
         });
+
+      
+
       } else {
         console.error("Missing token or organizationId in localStorage.");
         this.headers = new HttpHeaders(); // Fallback in case of missing values

@@ -4,8 +4,8 @@ import { Expense, CreateExpenseDTO } from "../types/expense.types";
 import { MOCK_EXPENSES } from "../data/mock-expenses";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { NameConstant } from "../../../../assets/nameConstant";
 import { isPlatformBrowser } from "@angular/common";
+import { Constant } from "../../../constants";
 
 @Injectable({
   providedIn: "root",
@@ -19,9 +19,9 @@ export class ExpenseService {
     if (isPlatformBrowser(this.platformId)) {
       this.headers = new HttpHeaders({
         "X-OrganizationId": `${localStorage.getItem(
-          NameConstant.organizationId
+          Constant.OrganizationIdRentSass
         )}`,
-        Authorization: `Bearer ${localStorage.getItem(NameConstant.token)}`,
+        Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
       });
     } else {
       this.headers = new HttpHeaders();
