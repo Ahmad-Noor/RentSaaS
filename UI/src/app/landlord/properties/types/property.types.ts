@@ -23,10 +23,4 @@ export interface Property {
   id:        UUID;
 }
 
-
-
-export interface CreatePropertyDTO {
-  address: string;
-  propertyType: PropertyType;
-  unitNumber?: string;
-}
+ 

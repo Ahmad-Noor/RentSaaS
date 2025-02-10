@@ -1,102 +1,108 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Inject, Output, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component'; 
-import { PropertySelectorComponent } from '../property-selector/property-selector.component';
+//import { ApplicationSelectorComponent } from './Application-selector/Application-selector.component';
+import { ApplicationService } from '../services/application.service';
+import { Constant } from '../../../constants';
 
 @Component({
   selector: 'app-application-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, PropertySelectorComponent],
-  template: `
-    <form [formGroup]="applicationForm" (ngSubmit)="handleSubmit()" class="space-y-6">
-      <app-property-selector [formGroup]="applicationForm" />
-
-      <div class="grid grid-cols-2 gap-4">
-        <app-form-field label="Applicant Email" id="email">
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-            placeholder="tenant@example.com"
-          >
-        </app-form-field>
-
-        <app-form-field label="Phone Number" id="phone">
-          <input
-            type="tel"
-            id="phone"
-            formControlName="phone"
-            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-            placeholder="(555) 123-4567"
-          >
-        </app-form-field>
-      </div>
-
-      <app-form-field label="Message" id="message">
-        <textarea
-          id="message"
-          formControlName="message"
-          rows="4"
-          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          placeholder="Add a personal message to the applicant..."
-        ></textarea>
-      </app-form-field>
-
-      <div class="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="requestBackground"
-          formControlName="requestBackground"
-          class="rounded border-gray-300"
-        >
-        <label for="requestBackground" class="text-sm text-gray-700">
-          Request background check
-        </label>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="requestCredit"
-          formControlName="requestCredit"
-          class="rounded border-gray-300"
-        >
-        <label for="requestCredit" class="text-sm text-gray-700">
-          Request credit report
-        </label>
-      </div>
-
-      <div class="flex justify-end gap-4">
-        <button
-          type="submit"
-          [disabled]="!applicationForm.valid || loading"
-          class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {{ loading ? 'Sending...' : 'Send Application' }}
-        </button>
-      </div>
-    </form>
-  `
+  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent,/*ApplicationSelectorComponent*/RouterLink],
+  templateUrl:"./application-form.component.html"
 })
 export class ApplicationFormComponent {
   @Output() submit = new EventEmitter<any>();
 
   applicationForm: FormGroup;
   loading = false;
+  orgid !:string;
 
-  constructor(private fb: FormBuilder) {
+  
+  constructor(
+    @Inject(PLATFORM_ID) private Checkplatform:object,
+    private fb: FormBuilder,
+    private router: Router,
+    private _applicationServices: ApplicationService) {
     this.applicationForm = this.fb.group({
-      propertyId: ['', Validators.required],
+      ApplicationId: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       message: [''],
       requestBackground: [true],
       requestCredit: [true]
     });
+    this.init()
   }
 
+
+  init()
+{
+if (isPlatformBrowser(this.Checkplatform)) {
+  const orgIdFromStorage = localStorage.getItem(Constant.OrganizationIdRentSass);
+  if (orgIdFromStorage) {
+    this.orgid =  orgIdFromStorage ;
+  }
+}
+
+}
+
+
+
+CreateNewApplication(form: FormGroup) {
+
+  if (form.valid) {
+    this.loading=true;
+
+    const ApplicationDataAll = {
+       
+      organizationId: this.orgid,
+      propertyId: form.get("ApplicationId")?.value,
+      applicantEmail: form.get("email")?.value,
+      phoneNumber: form.get("phone")?.value,
+      message: form.get("message")?.value,
+      requestBackgroundCheck: form.get("requestBackground")?.value,
+      requestCreditReport: form.get("requestCredit")?.value,
+      createdAt: new Date().toISOString(),
+      createdBy: "00000000-0000-0000-0000-000000000001".trim(), // current user get from local storage 
+      // isDeleted: false, // send null 
+      // lastModifiedAt: null,
+      // lastModifiedBy: null,
+      // deletedAt: null,
+      // deletedBy: null,
+ 
+
+    };
+    console.log(ApplicationDataAll);
+     
+
+
+    
+    this._applicationServices.CreateNewApplication(ApplicationDataAll).subscribe({
+      next:(responceSuccess)=>{
+        console.log(responceSuccess);
+       this.router.navigate(['/landlord/properties/applications'])
+      },
+
+
+      error:(responce)=>{
+        console.log(responce);
+      //    this.error=responce.error.message
+  
+      },
+
+      complete:()=>{
+
+        this.loading=false;
+      }
+
+
+
+    });
+  }
+}
   handleSubmit(): void {
     if (this.applicationForm.valid) {
       this.loading = true;
@@ -104,3 +110,6 @@ export class ApplicationFormComponent {
     }
   }
 }
+
+
+// <app-property-selector [formGroup]="applicationForm" />

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+ import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
+import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
 import { RouterLink } from '@angular/router';
-import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
+
 
 interface Listing {
   id: number;
@@ -21,7 +23,7 @@ interface TableColumn {
 @Component({
   selector: 'app-advertising-page',
   standalone: true,
-  imports: [CommonModule, ActionBarComponent],
+  imports: [CommonModule, ActionBarComponent,RouterLink],
   templateUrl: './advertising.page.html',
 })
 export class AdvertisingPage implements OnInit, OnChanges {
@@ -56,6 +58,8 @@ export class AdvertisingPage implements OnInit, OnChanges {
       status: 'Active'
     }
   ];
+  router: any;
+  view: 'grid' | 'list' = 'list';
 
   constructor() {}
 
@@ -63,9 +67,25 @@ export class AdvertisingPage implements OnInit, OnChanges {
 
   ngOnChanges() {}
 
+ 
+
   handleAction(action: { type: string; item: Listing }) {
-    // Action handler for edit/delete or any other actions
-    console.log(action);
+    switch (action.type) {
+      case "add":
+        this.router.navigate(["landlord", "properties", "advertising", "add"]);
+        break;
+      case "edit":
+        this.router.navigate(["landlord", "properties", "advertising", "edit", action.item.id]);
+        break;
+      case "delete":
+        if (confirm("Are you sure you want to delete this advertisement?")) {
+          // Call delete method here
+          console.log("Deleting:", action.item);
+        }
+        break;
+      default:
+        console.log("Unhandled action:", action);
+    }
   }
 
   getStatusClass(status: string): string {

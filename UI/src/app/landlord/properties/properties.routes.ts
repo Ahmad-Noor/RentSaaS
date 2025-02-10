@@ -14,8 +14,8 @@ export default [
     loadComponent: () => import('./advertising/advertising.page').then(m => m.AdvertisingPage)
   },
   {
-    path: 'advertising/create',
-    loadComponent: () => import('./create-listing/create-listing.page').then(m => m.CreateListingPage)
+    path: 'advertising/add',
+    loadComponent: () => import('./advertising/add-advertising/add-advertising.page').then(m => m.CreateListingPage)
   },
   {
     path: 'applications',

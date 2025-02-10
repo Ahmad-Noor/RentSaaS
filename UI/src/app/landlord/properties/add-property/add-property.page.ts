@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { PropertyService } from '../services/property.service';
+import { Constant } from '../../../constants';
+import { stringify } from 'querystring';
 
 
 @Component({
@@ -14,12 +16,15 @@ import { PropertyService } from '../services/property.service';
   styleUrls: ["./add-property.page.css"],
 })
 export class AddPropertyPage {
+
+   orgid !:string;
+
   constructor(
+    @Inject(PLATFORM_ID) private Checkplatform:object,
     private router: Router,
     private _propertyServices: PropertyService
   ) {
-
-
+   this.init()
   }
   
 
@@ -38,7 +43,16 @@ export class AddPropertyPage {
 
 
 
+init()
+{
+if (isPlatformBrowser(this.Checkplatform)) {
+  const orgIdFromStorage = localStorage.getItem(Constant.OrganizationIdRentSass);
+  if (orgIdFromStorage) {
+    this.orgid =  orgIdFromStorage ;
+  }
+}
 
+}
 
 
 
@@ -52,7 +66,7 @@ export class AddPropertyPage {
         address: form.get("address")?.value,
         note: form.get("note")?.value?.trim(),
         unite: form.get("unite")?.value,
-        organizationId: "00000000-0000-0000-0000-000000000001".trim(),
+        organizationId: this.orgid,
         createdAt: new Date().toISOString(),
         createdBy: "00000000-0000-0000-0000-000000000001".trim(), // current user get from local storage 
 
@@ -64,7 +78,7 @@ export class AddPropertyPage {
         // deletedBy: null,
       };
       console.log(PropertyDataAll);
-      console.log(localStorage.getItem("organizationId"));
+       
 
 
       

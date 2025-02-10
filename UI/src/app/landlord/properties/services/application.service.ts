@@ -1,54 +1,88 @@
-import { Injectable } from '@angular/core';
+ 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Application } from '../types/application.types';
+import { Application, ApplicationCreate } from '../types/application.types';
+import { environment } from '../../../../environments/environment';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+ 
+import { Property, PropertyCreate } from '../types/property.types';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UUID } from 'crypto';
+ 
+import { isPlatformBrowser } from '@angular/common';
+import { Constant } from '../../../constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
-  private applications = new BehaviorSubject<Application[]>([
-    {
-      id: 1,
-      propertyId: 1,
-      propertyName: 'Sunset Apartments',
-      applicantName: 'John Smith',
-      email: 'john.smith@example.com',
-      phone: '(555) 123-4567',
-      status: 'new',
-      submittedAt: '2024-01-15T10:30:00Z',
-      desiredMoveIn: '2024-02-01',
-      creditScore: 720,
-      income: 75000
-    },
-    {
-      id: 2,
-      propertyId: 2,
-      propertyName: 'Downtown Lofts',
-      applicantName: 'Sarah Johnson',
-      email: 'sarah.j@example.com',
-      phone: '(555) 987-6543',
-      status: 'reviewing',
-      submittedAt: '2024-01-14T15:45:00Z',
-      desiredMoveIn: '2024-03-01',
-      creditScore: 680,
-      income: 65000
+     
+  baseUrl = environment.apiUrl;
+
+
+
+  private applications!: BehaviorSubject<Application[]>;
+  private headers!: HttpHeaders;
+
+  constructor(private _httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.applications = new BehaviorSubject<Application[]>([]);
+    this.initializeHeaders(); // Initialize headers here
+  }
+
+  private initializeHeaders(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.headers = new HttpHeaders({
+        "X-OrganizationId": `${localStorage.getItem(Constant.OrganizationIdRentSass)}`,
+        Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
+      });
+
+      console.log(this.headers);
+    } else {
+      this.headers = new HttpHeaders();  
     }
-  ]);
-
-  getApplications(): Observable<Application[]> {
-    return this.applications.asObservable();
   }
 
-  updateApplicationStatus(id: number, status: Application['status']): void {
-    const currentApplications = this.applications.getValue();
-    const updatedApplications = currentApplications.map(app => 
-      app.id === id ? { ...app, status } : app
-    );
-    this.applications.next(updatedApplications);
-  }
-
+ 
+ updateApplicationStatus(id: number, status: Application['status']): void {
+   const currentApplications = this.applications.getValue();
+   const updatedApplications = currentApplications.map(app => 
+     app.id === id ? { ...app, status } : app
+   );
+   this.applications.next(updatedApplications);
+ }
+ 
   deleteApplication(id: number): void {
     const currentApplications = this.applications.getValue();
     this.applications.next(currentApplications.filter(app => app.id !== id));
   }
+ 
+ 
+  getApplications(): Observable<any> {
+    return this._httpClient.get(`${this.baseUrl}api/ApplicationAndLeads`, {
+      headers: this.headers,
+    });
+  }
+ 
+  CreateNewApplication(x: ApplicationCreate): Observable<any> {
+    return this._httpClient.post(
+      `${this.baseUrl}api/ApplicationAndLeads`,
+      x,
+      { headers: this.headers }
+    );
+  }
+
+ // Delete(id: UUID): Observable<any> {
+ //   return this._httpClient.delete(`${this.baseUrl}api/Property/Delete/${id}`, { headers: this.headers });
+ // }
+//
+ // private getPropertyTypeLabel(type: string): string {
+ //   const labels: Record<string, string> = {
+ //     house: "Single Family",
+ //     condo: "Condo/Apartment",
+ //     townhouse: "Townhouse",
+ //     community: "Multi-family",
+ //   };
+ //   return labels[type] || type;
+ // }
+
+
 }

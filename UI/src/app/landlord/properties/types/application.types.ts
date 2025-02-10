@@ -13,3 +13,19 @@ export interface Application {
   creditScore?: number;
   income?: number;
 }
+
+
+
+export interface ApplicationCreate {
+  organizationId: string;
+  createdAt: string; 
+  createdBy: string;
+  propertyId: string;
+  applicantEmail: string;
+  phoneNumber: number;
+  message: string;
+  requestBackgroundCheck: boolean;
+  requestCreditReport: boolean;
+}
+
+ 
