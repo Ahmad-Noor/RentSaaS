@@ -75,32 +75,34 @@ public class AuthController : ControllerBase
                 LastName = Request.LastName,
                 ShowFullName = true,
                 Email = Request.Email,
-       
+
                 OrganizationId = organization.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
-               
+
                 IsActive = true,
-                UserType=Request.UserType // role of the user
+                UserType = Request.UserType // role of the user
+            };
 
+            // ahmed alaa
+            //     var Organization = new Organization()
+            //     {
+            //         Name = string.Concat(Request.FirstName, Request.LastName),
+            //         IsDeleted=false
+            //     };
+            //     _rentSaaSDBContext.Organizations.Add(Organization);
+            //     _rentSaaSDBContext.SaveChanges();
 
-// ahmed alaa
-      //     var Organization = new Organization()
-      //     {
-      //         Name = string.Concat(Request.FirstName, Request.LastName),
-      //         IsDeleted=false
-      //     };
-      //     _rentSaaSDBContext.Organizations.Add(Organization);
-      //     _rentSaaSDBContext.SaveChanges();
+            //   #region Make Mapper Between this 
 
-         //   #region Make Mapper Between this 
+            //   var User = _Mapper.Map<User>(Request);
+            //   User.OrganizationId = Organization.OrganizationId;
+            //     #endregion
 
-      //   var User = _Mapper.Map<User>(Request);
-      //   User.OrganizationId = Organization.OrganizationId;
-       //     #endregion
-            _rentSaaSDBContext.Users.Add(User);
+            _rentSaaSDBContext.Users.Add(user);
             await _rentSaaSDBContext.SaveChangesAsync();
-            var token = CreateJwtToken(User);
-            return Ok(new AuthenticateResponse(User, token));
+            var token = CreateJwtToken(user);
+            return Ok(new AuthenticateResponse(user, token));
+
         }
         catch (Exception ex)
         {
