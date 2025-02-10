@@ -24,9 +24,3 @@ export interface Property {
 }
 
 
-
-export interface CreatePropertyDTO {
-  address: string;
-  propertyType: PropertyType;
-  unitNumber?: string;
-}

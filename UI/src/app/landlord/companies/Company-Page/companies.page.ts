@@ -60,7 +60,6 @@ export class CompaniesPage implements OnInit, OnChanges {
   getData(){
     this.companiesService.getCompanies().subscribe({
       next: companies => {
-        console.log(localStorage.getItem('token'))
 
         this.companies = companies.data;
         this.filteredCompanies = companies.data;;
