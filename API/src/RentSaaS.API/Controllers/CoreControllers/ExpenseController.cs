@@ -77,11 +77,10 @@ public class ExpenseController : Controller
 
 
 
-    [HttpGet]
-    [Route("getall")]
-    [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
-    [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
+    [HttpGet("getall")]
+    //[ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
+    //[ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
+    //[ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
 
     public async Task<IActionResult> GetAll()
     {

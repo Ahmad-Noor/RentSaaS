@@ -23,23 +23,37 @@ export class ExpensesPage {
     private expenseService: ExpenseService,
     private confirmDialog: ConfirmDialogService
   ) {
-    this.expenseService.getExpenses().subscribe(expenses => {
-      this.expenses = expenses;
-      this.filteredExpenses = expenses; // Initialize with all expenses
-    });
+   
 
+   this. getAll()
 
-this.expenseService.getAllExpenses().subscribe({
-  next: (expenses) => {
-    console.log(expenses);
-    this.expenses = expenses;
-    this.filteredExpenses = expenses;
-  }
-}
-)
 
     
   }
+
+
+  getAll()
+  {
+    this.expenseService.getAllExpenses().subscribe({
+      next: (expenses) => {
+        console.log(expenses);
+        this.expenses = expenses;
+        this.filteredExpenses = expenses;
+      }
+    }
+    )
+  }
+
+
+
+  // this.expenseService.getExpenses().subscribe(expenses => {
+  //   this.expenses = expenses;
+  //   this.filteredExpenses = expenses; // Initialize with all expenses
+  // });
+
+
+
+
 
   getStatusClass(status: string): string {
     const baseClasses = 'px-2 py-1 rounded-full text-sm capitalize';

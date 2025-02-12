@@ -77,6 +77,13 @@ export class ExpenseService {
     });
   }
 
-
-  
+  add(formData: FormData): Observable<any> {
+    return this._httpclint.post(
+     `${this.baseUrl}api/Expense/add`,
+      formData,
+      {
+        headers: this.headers,
+      }
+    );
+  }
 }

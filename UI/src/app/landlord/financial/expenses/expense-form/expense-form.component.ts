@@ -26,6 +26,7 @@ import { Expense } from "../../types/expense.types";
 import { Receipt } from "../../types/receipt.types";
 import { PropertyService } from "../../../properties/services/property.service";
 import { ExpenseService } from "../../services/expense.service";
+import { Constant } from "../../../../constants";
 
 @Component({
   selector: "app-expense-form",
@@ -52,9 +53,9 @@ export class ExpenseFormComponent implements OnInit {
   properties: any[] = [];
 
   DataForm = new FormGroup({
-    propertyId: new FormControl(null, Validators.required),
-    paymentSchedule: new FormControl(null),
-    category: new FormControl(null),
+    propertyId: new FormControl("onetime", [Validators.required]),
+    paymentSchedule: new FormControl(0,[Validators.required]),
+    category: new FormControl(0,[Validators.required]),
     expenseType: new FormControl("property"),
     amount: new FormControl(null),
     dueDate: new FormControl(null),
@@ -101,13 +102,13 @@ export class ExpenseFormComponent implements OnInit {
       });
     }
   }
-
   handleSubmit(data: FormGroup): void {
-    console.log(data.value);
-    console.log(data);
+    if (data.invalid) {
+      this.error = "Please fill out all required fields correctly.";
+      return;
+    }
 
     let formData = new FormData();
-
     formData.append("expenseType", data.get("expenseType")?.value);
     formData.append("propertyId", data.get("propertyId")?.value);
     formData.append("category", data.get("category")?.value);
@@ -119,29 +120,29 @@ export class ExpenseFormComponent implements OnInit {
       formData.append('ReceiptsFiles', receipt.file, receipt.name);
     });
 
-
-
-    let headers = new
-     HttpHeaders({
-      "X-OrganizationId": `${localStorage.getItem("organizationId")}`,
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    this.loading = true;
+    this._expenseService.add(formData).subscribe({
+      next: (result) => {
+        console.log("result", result);
+        this.save.emit(result);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log("Error", error);
+        this.error = "An error occurred while saving the expense.";
+        this.loading = false;
+      },
+      complete: () => {
+        console.log("Complete");
+      }
     });
-
-    this._httpclint
-      .post("https://localhost:7164/api/Expense/add", formData, {
-        headers: headers,
-      })
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-        error: (error) => {
-          console.log(error);
-        },
-        complete: () => {},
-      });
-
   }
+
+
+
+
+
+
 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
