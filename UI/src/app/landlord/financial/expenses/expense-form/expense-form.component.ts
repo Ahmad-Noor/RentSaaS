@@ -1,3 +1,4 @@
+// expense-form.component.ts
 import {
   Component,
   EventEmitter,
@@ -16,7 +17,6 @@ import {
   Validators,
 } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ExpenseDetailsFormComponent } from "./expense-details-form/expense-details-form.component";
 import { ExpenseFormData } from "./models/expense-form.model";
 import { initializeExpenseForm } from "./utils/form-utils";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -34,11 +34,10 @@ import { ExpenseService } from "../../services/expense.service";
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    ExpenseDetailsFormComponent,
     FormFieldComponent,
     ReceiptItemComponent,
   ],
-  templateUrl: "./expense-form.component.html",
+  templateUrl: './expense-form.component.html',
 })
 export class ExpenseFormComponent implements OnInit {
   @Input() expense?: Expense;
@@ -63,7 +62,7 @@ export class ExpenseFormComponent implements OnInit {
     type: new FormControl("property"),
     receipts: new FormControl([]),
   });
-  formGroup: any;
+
   constructor(
     private fb: FormBuilder,
     private _propertyServices: PropertyService,
@@ -143,13 +142,16 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   getFieldError(field: string): string {
-    const control = this.expenseForm.get(field);
+    const control = this.DataForm.get(field);
     if (control?.touched && control.errors) {
-      if (control.errors["required"]) {
+      if (control.errors['required']) {
         return `${field} is required`;
       }
+      if (control.errors['min']) {
+        return `${field} must be greater than ${control.errors['min'].min}`;
+      }
     }
-    return "";
+    return '';
   }
 
   onFilesSelected(event: any): void {
@@ -161,7 +163,7 @@ export class ExpenseFormComponent implements OnInit {
     }
 
     files.forEach((file) => {
-      const validation = validateReceipt(file); // Assume this function exists
+      const validation = validateReceipt(file);
       if (!validation.isValid) {
         this.error = validation.error || "Invalid file";
         return;
@@ -178,14 +180,11 @@ export class ExpenseFormComponent implements OnInit {
       this.receipts.push(receipt);
     });
 
-    // Clear the input
     (event.target as HTMLInputElement).value = "";
   }
 
   removeReceipt(receipt: any): void {
     this.receipts = this.receipts.filter((r) => r.id !== receipt.id);
-    // Optionally update your formGroup if it holds the receipts
-    // this.formGroup.patchValue({ receipts: this.receipts });
     this.error = "";
   }
 }
