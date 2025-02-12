@@ -2,17 +2,13 @@ import { Component } from '@angular/core';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router'; 
 import { ExpenseService } from '../services/expense.service'; 
 import { ExpenseFormData } from '../types/expense-form.types';
-import { mapFormDataToDTO } from '../utils/expense-form.utils';
-import { ExpenseFormComponent } from '../expenses/expense-form/expense-form.component';
-// import { ExpenseService } from '../../services/expense.service';
-// import { ExpenseFormData } from '../../expense-form/models/expense-form.model';
-// import { mapFormDataToDTO } from '../../utils/expense-form.utils';
-// import { ExpenseFormComponent } from '../../expense-form/expense-form.component';
+import { mapFormDataToDTO } from '../utils/expense-form.utils'; 
+import { AddComponent } from '../expenses/add/add.component'; 
 
 @Component({
   selector: 'app-add-expense-page',
   standalone: true,
-  imports: [RouterLink, ExpenseFormComponent],
+  imports: [RouterLink, AddComponent],
   templateUrl: './add-expense.page.html',
   styleUrls: ['./add-expense.page.css']
 })

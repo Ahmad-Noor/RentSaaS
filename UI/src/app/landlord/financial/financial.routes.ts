@@ -7,10 +7,10 @@ export default [
   },
   {
     path: 'expenses',
-    loadComponent: () => import('./expenses/expenses.page').then(m => m.ExpensesPage)
+    loadComponent: () => import('./expenses/list/expenses.page').then(m => m.ExpensesPage)
   },
   {
-    path: 'expenses/new',
+    path: 'expenses/add',
     loadComponent: () => import('./add-expense/add-expense.page').then(m => m.AddExpensePage)
   },
   // {

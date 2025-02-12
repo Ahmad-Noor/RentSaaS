@@ -37,9 +37,9 @@ import { ExpenseService } from "../../services/expense.service";
     FormFieldComponent,
     ReceiptItemComponent,
   ],
-  templateUrl: './expense-form.component.html',
+  templateUrl: './add.component.html',
 })
-export class ExpenseFormComponent implements OnInit {
+export class AddComponent implements OnInit {
   @Input() expense?: Expense;
   @Output() save = new EventEmitter<ExpenseFormData>();
 

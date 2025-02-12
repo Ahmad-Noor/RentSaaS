@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
-import { ExpenseService } from "../services/expense.service";
-import { Expense } from "../types/expense.types";
-import { ConfirmDialogService } from "../../../shared/services/confirm-dialog/confirm-dialog.service";
+import { ExpenseService } from "../../services/expense.service";
+import { Expense } from "../../types/expense.types";
+import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog/confirm-dialog.service";
 
 @Component({
   selector: "app-expenses-page",
