@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormFieldComponent } from '../../../../../shared/components/form-field/form-field.component';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { PropertyService } from '../../../properties/services/property.service';
+import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 
 @Component({
   selector: 'app-property-selector',

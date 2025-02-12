@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PropertySelectorComponent } from '../property-selector/property-selector.component';
 import { PhotoUploadComponent } from '../photo-upload/photo-upload.component';
 import { MaintenanceRequest } from '../types/maintenance.types';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { PropertySelectorComponent } from '../../properties/property-selector/property-selector.component';
 
 @Component({
   selector: 'app-request-form',

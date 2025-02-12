@@ -16,11 +16,11 @@ import {
   Validators,
 } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ExpenseDetailsFormComponent } from "./expense-details-form/expense-details-form.component";  
+import { ExpenseDetailsFormComponent } from "./expense-details-form/expense-details-form.component";
 import { ExpenseFormData } from "./models/expense-form.model";
-import { initializeExpenseForm } from "./utils/form-utils"; 
-import { HttpClient, HttpHeaders } from "@angular/common/http"; 
-import { ReceiptItemComponent } from "./receipt-item.component"; 
+import { initializeExpenseForm } from "./utils/form-utils";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ReceiptItemComponent } from "./receipt-item.component";
 import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component";
 import { Expense } from "../../types/expense.types";
 import { Receipt } from "../../types/receipt.types";
@@ -34,7 +34,7 @@ import { ExpenseService } from "../../services/expense.service";
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    ExpenseDetailsFormComponent, 
+    ExpenseDetailsFormComponent,
     FormFieldComponent,
     ReceiptItemComponent,
   ],
@@ -68,26 +68,20 @@ export class ExpenseFormComponent implements OnInit {
     private fb: FormBuilder,
     private _propertyServices: PropertyService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private _httpclint: HttpClient,
+    private _httpClient: HttpClient,
     private _expenseService: ExpenseService
   ) {
     this.expenseForm = initializeExpenseForm(fb);
 
     if (isPlatformBrowser(platformId)) {
       this.getAllProperties();
-      this._expenseService. getAllExpenses().subscribe((resulte)=>{
+      this._expenseService.getAllExpenses().subscribe((resulte) => {
         console.log(resulte);
-
       });
     }
   }
 
   ngOnInit() {
-
-
-
-
-
     if (this.expense) {
       this.expenseForm.patchValue({
         type: this.expense.type || "property",
@@ -115,20 +109,16 @@ export class ExpenseFormComponent implements OnInit {
     formData.append("dueDate", data.get("dueDate")?.value);
     formData.append("details", data.get("details")?.value);
     formData.append("isPaid", data.get("isPaid")?.value);
-    this.receipts.forEach(receipt => {
-      formData.append('ReceiptsFiles', receipt.file, receipt.name);
+    this.receipts.forEach((receipt) => {
+      formData.append("ReceiptsFiles", receipt.file, receipt.name);
     });
 
-
-
-    let headers = new
-     HttpHeaders({
+    let headers = new HttpHeaders({
       "X-OrganizationId": `${localStorage.getItem("organizationId")}`,
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
 
-    this._httpclint
-      .post("https://localhost:7164/api/Expense/add", formData, {
+    this._httpClient.post("https://localhost:7164/api/Expense/add", formData, {
         headers: headers,
       })
       .subscribe({
@@ -140,7 +130,6 @@ export class ExpenseFormComponent implements OnInit {
         },
         complete: () => {},
       });
-
   }
 
   getAllProperties() {
@@ -199,9 +188,6 @@ export class ExpenseFormComponent implements OnInit {
     // this.formGroup.patchValue({ receipts: this.receipts });
     this.error = "";
   }
-
-
-
 }
 
 function validateReceipt(file: File): { isValid: boolean; error?: string } {

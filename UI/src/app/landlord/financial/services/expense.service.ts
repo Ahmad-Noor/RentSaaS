@@ -29,7 +29,7 @@ export class ExpenseService {
   }
 
   constructor(
-    private _httpclint: HttpClient,
+    private _httpClient: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.expenses = new BehaviorSubject<Expense[]>([]);
@@ -65,14 +65,18 @@ export class ExpenseService {
     this.expenses.next(updatedExpenses);
   }
 
-  deleteExpense(id: number): void {
+  deleteExpense(id: number): Observable<any> {
     const currentExpenses = this.expenses.getValue();
     this.expenses.next(currentExpenses.filter((expense) => expense.id !== id));
+    
+    return this._httpClient.delete(`${this.baseUrl}api/Expense/${id}`, {
+      headers: this.headers
+    });
   }
 
   getAllExpenses(): Observable<any> {
     console.log(this.headers);
-    return this._httpclint.get(`${this.baseUrl}api/Expense/getall`, {
+    return this._httpClient.get(`${this.baseUrl}api/Expense/getall`, {
       headers: this.headers,
     });
   }

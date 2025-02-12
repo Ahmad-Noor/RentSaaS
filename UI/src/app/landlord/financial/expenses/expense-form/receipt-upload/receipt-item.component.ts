@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Receipt } from '../../types/receipt.types';
-import { formatFileSize } from '../../utils/file.utils';
+import { Receipt } from '../../../types/receipt.types';
+ import { CommonModule } from '@angular/common'; 
+import { formatFileSize } from '../../../utils/file.utils';
 
 @Component({
   selector: 'app-receipt-item',

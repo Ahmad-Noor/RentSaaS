@@ -1,14 +1,7 @@
 
 <form [formGroup]="DataForm" (ngSubmit)="handleSubmit(DataForm)" class="space-y-6">
-
-
-    <!-- <app-expense-type-selector [formGroup]="DataForm" /> -->
-    
-
-
-
- <div  class="space-y-4">
-    <!-- Property/General Type Selection -->
+ 
+ <div  class="space-y-4"> 
     <div class="flex gap-4">
       <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
              [class.border-blue-500]="DataForm.get('expenseType')?.value === 'property'"
@@ -67,16 +60,8 @@
       </div>
     }
 
-
-
-    
     <app-expense-details-form [formGroup]="DataForm" />
     
-    <!-- <app-receipt-upload [formGroup]="DataForm" /> -->
-
-
-
-
     <div class="space-y-4">
       <div class="flex items-center gap-2">
         <button type="button" (click)="fileInput.click()"
@@ -101,15 +86,7 @@
       </div>
       }
     </div>
-
-
-
-
-
-
-
-
-
+ 
     <div class="flex justify-end gap-4">
       <a 
         routerLink=".."
