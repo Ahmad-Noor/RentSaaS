@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { ReceiptItemComponent } from './receipt-item.component';
-import { Receipt } from '../../types/receipt.types';
-import { validateReceipt } from '../../utils/receipt.utils';
+import { Receipt } from '../../../../models/receipt.types';
+import { validateReceipt } from '../../../../utils/receipt.utils';
 
 @Component({
   selector: 'app-receipt-upload',

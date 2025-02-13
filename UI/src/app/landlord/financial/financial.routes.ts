@@ -8,22 +8,32 @@ export default [
   {
     path: 'expenses',
     loadComponent: () => import('./expenses/list/expenses.page').then(m => m.ExpensesPage)
+  }, 
+  {
+    path: 'address',
+    loadComponent: () => import('./address/address.component').then(m => m.AddressComponent)
+  }, 
+  {
+    path: 'countries',
+    loadComponent: () => import('./countries/countries.component').then(m => m.CountriesComponent)
   },
+ 
   {
     path: 'expenses/add',
-    loadComponent: () => import('./add-expense/add-expense.page').then(m => m.AddExpensePage)
+    loadComponent: () => import('./expenses/add-expense/add-expense.page').then(m => m.AddExpensePage)
   },
+
   // {
   //   path: 'expenses/:id/edit',
   //   loadComponent: () => import('./edit-expense/edit-expense.page').then(m => m.EditExpensePage)
   // },
   {
     path: 'payments',
-    loadComponent: () => import('./payment-list/payment-list.page').then(m => m.PaymentListPage)
+    loadComponent: () => import('./payments/payment-list/payment-list.page').then(m => m.PaymentListPage)
   },
   {
     path: 'payments/record',
-    loadComponent: () => import('./record-payment/record-payment.page').then(m => m.RecordPaymentPage)
+    loadComponent: () => import('./payments/record-payment/record-payment.page').then(m => m.RecordPaymentPage)
   },
   {
     path: 'reports',

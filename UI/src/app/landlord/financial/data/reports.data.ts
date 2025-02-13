@@ -1,4 +1,4 @@
-import { ReportCategory } from '../types/reports.types';
+import { ReportCategory } from '../../../models/reports.types';
 
 export const REPORT_CATEGORIES: ReportCategory[] = [
   {

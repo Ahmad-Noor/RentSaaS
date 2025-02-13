@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { CompaniesService } from "../services/companies.service";
-import { CompanyCreate } from "../Company/company-create";
+import { CompaniesService } from "../../../service/companies.service";
+import { CompanyCreate } from "../../../models/company-create";
 
 @Component({
   selector: "app-company-form-page",

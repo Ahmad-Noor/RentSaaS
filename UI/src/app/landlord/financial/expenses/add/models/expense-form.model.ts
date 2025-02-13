@@ -1,4 +1,4 @@
-import { ExpenseCategory, ExpenseType } from "../../../types/expense.types";
+import { ExpenseCategory, ExpenseType } from "../../../../../models/expense.types";
 
  
 export interface ExpenseFormData {

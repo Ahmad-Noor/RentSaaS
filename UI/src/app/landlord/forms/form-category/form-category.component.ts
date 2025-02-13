@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormItemComponent } from '../form-item/form-item.component';
-import { FormCategory } from '../types/forms.types';
+import { FormCategory } from '../../../models/forms.types';
 
 @Component({
   selector: 'app-form-category',

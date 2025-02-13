@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReportCategory } from '../../types/reports.types';
+import { ReportCategory } from '../../../../models/reports.types';
 
 @Component({
   selector: 'app-report-card',

@@ -1,4 +1,3 @@
-// expense-form.component.ts
 import {
   Component,
   EventEmitter,
@@ -22,10 +21,10 @@ import { initializeExpenseForm } from "./utils/form-utils";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReceiptItemComponent } from "./receipt-item.component";
 import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component";
-import { Expense } from "../../types/expense.types";
-import { Receipt } from "../../types/receipt.types";
-import { PropertyService } from "../../../properties/services/property.service";
-import { ExpenseService } from "../../services/expense.service";
+import { Expense } from "../../../../models/expense.types";
+import { Receipt } from "../../../../models/receipt.types"; 
+import { ExpenseService } from "../../../../service/expense.service";
+import { PropertyService } from "../../../../service/property.service";
 
 @Component({
   selector: "app-expense-form",

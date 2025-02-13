@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
-import { PropertyTableComponent } from '../data-table/data-table.component';
+import { RouterLink } from '@angular/router'; 
 import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
 import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
 import { PropertyCardComponent } from '../property-card/property-card.component';
-import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
-import { PropertyService } from '../services/property.service';
-import { Property } from '../types/property.types';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service'; 
+import { Property } from '../../../models/property.types';
+import { PropertyService } from '../../../service/property.service';
+import { PropertyTableComponent } from '../data-table/data-table.component';
 
 @Component({
   selector: "app-properties-list-page",
@@ -37,9 +37,9 @@ export class PropertiesListPage {
     private confirmDialog: ConfirmDialogService,
     private propertyService: PropertyService
   ) {
-    this.propertyService.getAllProperties().subscribe((responce) => {
-      this.properties = responce.data;
-      console.log(responce.data)
+    this.propertyService.getAllProperties().subscribe((response) => {
+      this.properties = response.data;
+      console.log(response.data)
     });
 
     console.log(this.properties)

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Property } from '../types/property.types';
+import { Property } from '../../../models/property.types';
 
 @Component({
   selector: 'app-property-actions',

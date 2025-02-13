@@ -5,7 +5,7 @@ import { FormFieldComponent } from '../../../shared/components/form-field/form-f
 import { PropertySelectorComponent } from '../property-selector/property-selector.component';
 import { ListingPhotosComponent } from './listing-photos.component';
 import { ListingPlatformsComponent } from './listing-platforms.component';
-import { ListingFormData } from '../types/listing.types';
+import { ListingFormData } from '../../../models/listing.types';
 
 @Component({
   selector: 'app-listing-form',

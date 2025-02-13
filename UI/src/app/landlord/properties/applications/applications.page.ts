@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Application } from '../types/application.types';
-import { ApplicationService } from '../services/application.service';
+import { Application } from '../../../models/application.types'; 
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component'; 
+import { ApplicationService } from '../../../service/application.service';
 
 @Component({
   selector: 'app-applications-page',

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
-import { Receipt } from '../../types/receipt.types';
+import { Receipt } from '../../../../models/receipt.types';
  @Component({
   selector: 'app-receipt-item',
   standalone: true,

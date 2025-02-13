@@ -1,4 +1,4 @@
-import { FormCategory } from '../types/forms.types';
+import { FormCategory } from '../../../models/forms.types';
 
 export const FORM_CATEGORIES: FormCategory[] = [
   {

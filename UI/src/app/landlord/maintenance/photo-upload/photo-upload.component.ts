@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PhotoItemComponent } from './photo-item.component';
-import { Photo } from '../types/maintenance.types';
-import { validatePhoto } from '../utils/photo.utils';
+import { Photo } from '../../../models/maintenance.types'; 
+import { validatePhoto } from '../../../utils/photo.utils';
 
 @Component({
   selector: 'app-photo-upload',

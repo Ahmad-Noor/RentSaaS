@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaintenanceService } from '../services/maintenance.service';
-import { MaintenanceRequest } from '../types/maintenance.types';
+import { MaintenanceService } from '../../../service/maintenance.service';
+import { MaintenanceRequest } from '../../../models/maintenance.types';
 
 @Component({
   selector: 'app-request-list',

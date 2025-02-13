@@ -1,6 +1,6 @@
 import { FormBuilder, Validators } from '@angular/forms';
 import { ExpenseFormData } from '../models/expense-form.model'; 
-import { CreateExpenseDTO } from '../../../types/expense.types';
+import { CreateExpenseDTO } from '../../../../../models/expense.types';
 
 export function initializeExpenseForm(fb: FormBuilder) {
   return fb.group({

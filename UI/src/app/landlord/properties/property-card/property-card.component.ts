@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Property } from '../types/property.types';
+import { Property } from '../../../models/property.types';
 import { PropertyActionsComponent } from '../property-actions/property-actions.component';
 
 @Component({

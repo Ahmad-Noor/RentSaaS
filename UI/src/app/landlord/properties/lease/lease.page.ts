@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; 
-import { LeaseService } from '../services/lease.service';
+import { RouterLink } from '@angular/router';  
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
-import { Lease } from '../types/lease.types';
+import { Lease } from '../../../models/lease.types';
+import { LeaseService } from '../../../service/lease.service';
  
 @Component({
   selector: 'app-lease-page',

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ListingPhoto } from '../types/listing.types';
+import { ListingPhoto } from '../../../models/listing.types';
 
 @Component({
   selector: 'app-listing-photos',
