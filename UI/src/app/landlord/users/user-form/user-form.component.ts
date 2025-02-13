@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
-import { CreateUserDTO } from '../types/user.types';
+import { CreateUserDTO } from '../../../models/user.types';
 
 @Component({
   selector: 'app-user-form',
