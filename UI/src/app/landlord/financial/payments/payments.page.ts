@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { PaymentTableComponent } from '../payment-table/payment-table.component';
+import { PaymentTableComponent } from './payment-table/payment-table.component';
 import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
-import { PaymentService } from '../services/payment.service';
-import { Payment } from '../types/payment.types';
+import { PaymentService } from '../../../service/payment.service';
+import { Payment } from '../../../models/payment.types';
 
 @Component({
   selector: 'app-payments-page',

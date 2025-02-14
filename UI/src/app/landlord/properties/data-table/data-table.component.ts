@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Property } from '../types/property.types';
-import { PropertyActionsComponent } from '../property-actions/property-actions.component';
-import { PropertyService } from '../services/property.service';
+import { Property } from '../../../models/property.model';
+import { PropertyActionsComponent } from '../property-actions/property-actions.component'; 
+import { PropertyService } from '../../../service/property.service';
 
 
 @Component({
@@ -36,12 +36,12 @@ constructor(private _X:PropertyService) { }
 
   ngOnInit(){
 
-    this.getAllProperty();
+    this.getAllProperties();
   }
 
 
 
-  getAllProperty()
+  getAllProperties()
   {
     this._X.getAllProperties().subscribe((res) => {
       console.log(res);

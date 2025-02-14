@@ -1,127 +1,75 @@
-
 <div class="space-y-6">
-    <div class="flex justify-between items-center">
-      <div>
-        <h1 class="text-2xl font-semibold">First, let's add your property</h1>
-        <p class="mt-2 text-gray-600">
-          Once you add your property, you can list it for free on Zillow, Trulia, and HotPads to help
-          find your perfect renter.
-        </p>
-      </div>
-      <a 
-        routerLink=".."
-        class="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-      >
-        <span class="material-icons">arrow_back</span>
-        Back to Properties
-      </a>
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-semibold">First, let's add your property</h1>
+      <p class="mt-2 text-gray-600">
+        Once you add your property, you can list it for free on Zillow, Trulia, and HotPads to help
+        find your perfect renter.
+      </p>
     </div>
+    <a routerLink=".." class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+      <span class="material-icons">arrow_back</span>
+      Back to Properties
+    </a>
+  </div>
 
-    <div class="bg-white rounded-lg shadow">
-      <div class="p-6">
- 
-        
+  <div class="bg-white rounded-lg shadow">
+    <div class="p-6">
 
-        <form [formGroup]="propertyForm" (ngSubmit)="CreateNewProperty(propertyForm)" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
-        
-        
-        
-        
-            @if(error!=null && error!=''){
-        
-              <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                </svg>
-                <span class="sr-only">Info</span>
-                <div>
-                  <span class="font-medium">Danger alert!</span> Change a few things up and try submitting again.
-                </div>
-              </div>
-          
-        
-            }
-        
-        
-        
+      <form [formGroup]="propertyForm" (ngSubmit)="CreateNewProperty(propertyForm)" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+
+          @if(error!=null && error!=''){
+
+          <div
+            class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+            role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
             <div>
-              <label for="Address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-              <input type="text" id="Address" formControlName="address"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="example :- 123 Main St, Springfield, IL 62701" required />
-        
-                @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('required'))
-                {
-                  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <span class="font-medium">Address Is required!</span> 
-                  </div>
-                }
-        
-        
-                @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('minlength'))
-                {
-                  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <span class="font-medium"> You must enter more than 10 characters for the address</span> 
-                  </div>
-                }
-        
-
-        
+              <span class="font-medium">Danger alert!</span> Change a few things up and try submitting again.
             </div>
-        
-        
-        
-            <!-- <div>
-              <label for="unite" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unite</label>
-              <input type="text" id="unite"formControlName="unite"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Suite 200s" required />
-            </div> -->
-        
-          <!--
-            <div class="space-y-4">
-              <label for="Note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Note</label>
-              
-             <textarea 
-                id="note"
-                formControlName="note"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-48 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Property Type: Apartment
-            Unit Name/Number: Unit 305
-            Building Name: Oakwood Apartments
-            Street Address: 123 Main St
-            City: Springfield
-            State: Illinois (IL)
-            ZIP Code: 62701"
-                
-              ></textarea>
-      
-              
-            </div> 
-            
-          -->
-      
           </div>
-        
-          <div class="flex justify-end gap-4">
-            <a routerLink=".." class="px-4 py-2 text-gray-700 bg-white border rounded hover:bg-gray-50">
-              Cancel
-            </a>
-            <button type="submit" [disabled]="propertyForm.invalid || loading"
-              class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
-              {{ loading ? 'Creating...' : 'Create Property' }}
-            </button>
-          </div>
-        
-        
-        
-        
-        
-        </form>
 
+          }
 
+          <div>
+            <label for="Address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+            <input type="text" id="Address" formControlName="address"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="example :- 123 Main St, Springfield, IL 62701" required />
 
-      </div>
+            @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('required'))
+            {
+            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+              role="alert">
+              <span class="font-medium">Address Is required!</span>
+            </div>
+            }
+
+            @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('minlength'))
+            {
+            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+              role="alert">
+              <span class="font-medium"> You must enter more than 10 characters for the address</span>
+            </div>
+            } 
+          </div> 
+        </div> 
+        <div class="flex justify-end gap-4">
+          <a routerLink=".." class="px-4 py-2 text-gray-700 bg-white border rounded hover:bg-gray-50">
+            Cancel
+          </a>
+          <button type="submit" [disabled]="propertyForm.invalid || loading"
+            class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
+            {{ loading ? 'Creating...' : 'Create Property' }}
+          </button>
+        </div> 
+      </form> 
     </div>
   </div>
+</div>

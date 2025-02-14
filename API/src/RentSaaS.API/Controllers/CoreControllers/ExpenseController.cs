@@ -33,11 +33,10 @@ public class ExpenseController : Controller
 
 
 
-    [HttpPost]
-    [Route("add")]
+    [HttpPost,Route("add")] 
     [ProducesResponseType(typeof(ApiResponse<Expense>), 200)] // Success response
     [ProducesResponseType(typeof(ApiErrorResponses), 404)] // Not found response
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)] // Bad request response 
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> Add([FromForm] ExpenseCreateDTO expenseCreateDto)
     {
@@ -85,12 +84,7 @@ public class ExpenseController : Controller
     public async Task<IActionResult> GetAll()
     {
         var expenses = await _unitOfWork.ExpenseRepository.GetAll();
-        if (expenses == null || !expenses.Any())
-        {
-            return NotFound(new ApiErrorResponses(404));
-        }
         var expense = _mapper.Map<List<GetExpenseDto>>(expenses);
-
 
         return Ok(expense);
     }

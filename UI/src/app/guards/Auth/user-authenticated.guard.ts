@@ -5,9 +5,9 @@ import { Constant } from '../../constants';
 
 export const UserAuthenticatedGuard: CanActivateFn = (route, state) => {
   let routing = inject(Router);
-  let platformid=inject(PLATFORM_ID) ; 
+  let platformed=inject(PLATFORM_ID) ; 
 
-  if (isPlatformBrowser(platformid)) {
+  if (isPlatformBrowser(platformed)) {
     const token = localStorage.getItem(Constant.token);
     const orgId = localStorage.getItem(Constant.OrganizationIdRentSass);
   

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router'; 
-import { MaintenanceRequest } from '../types/maintenance.types';
-import { MaintenanceService } from '../services/maintenance.service';
+import { MaintenanceRequest } from '../../../models/maintenance.types';
+import { MaintenanceService } from '../../../service/maintenance.service';
 import { RequestFormComponent } from '../request-form/request-form.component';
 
 @Component({

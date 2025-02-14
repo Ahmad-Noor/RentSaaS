@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Photo } from '../types/maintenance.types';
-import { formatFileSize } from '../utils/file.utils';
+import { Photo } from '../../../models/maintenance.types';
+import { formatFileSize } from '../../../utils/file.utils';
+// import { formatFileSize } from '../utils/file.utils';
 
 @Component({
   selector: 'app-photo-item',

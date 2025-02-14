@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaxPayment } from '../../types/tax.types';
-import { formatTaxAmount, getStatusClass } from '../../utils/tax.utils';
+import { TaxPayment } from '../../../../models/tax.types';
+import { formatTaxAmount, getStatusClass } from '../../../../utils/tax.utils';
 
 @Component({
   selector: 'app-tax-payment-table',

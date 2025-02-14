@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaxDocument } from '../../types/tax.types';
+import { TaxDocument } from '../../../../models/tax.types';
 
 @Component({
   selector: 'app-tax-documents',

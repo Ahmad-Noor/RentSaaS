@@ -1,0 +1,59 @@
+<div mat-dialog-title>
+    <h1>Address Form</h1>
+</div>
+
+<form [formGroup]="addressForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                 <mat-label>Note</mat-label>
+                 <textarea matInput placeholder="Note" formControlName="note"></textarea>
+             </mat-form-field>
+         </div>    
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>street</mat-label>
+                <input matInput type="text" placeholder="street" formControlName="street">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>line2</mat-label>
+                <input matInput placeholder="line2 " formControlName="line2">
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>city</mat-label>
+                <input matInput type="text" placeholder="city" formControlName="city">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>state</mat-label>
+                <input matInput placeholder="state " formControlName="state">
+            </mat-form-field>
+        </div>
+        <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>postalCode</mat-label>
+            <input matInput placeholder="postalCode " formControlName="postalCode">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            
+            <mat-label>Country Name</mat-label>
+            <mat-select formControlName="countryId">
+                <mat-option *ngFor="let val of countries" [value]="val.id">{{val.countryName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+        <div class="row">
+            <mat-checkbox checked="true" formControlName="isActive">Active</mat-checkbox>
+            
+        </div>
+
+    
+
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Update': 'Save'}}</button>
+    </div>
+</form>

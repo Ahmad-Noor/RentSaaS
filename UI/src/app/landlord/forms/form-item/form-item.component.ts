@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Form } from '../types/forms.types';
+import { Form } from '../../../models/forms.types';
 
 @Component({
   selector: 'app-form-item',

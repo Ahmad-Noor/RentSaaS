@@ -1,4 +1,4 @@
-import { MaintenanceRequest } from '../types/maintenance.types';
+import { MaintenanceRequest } from '../../../models/maintenance.types';
 
 export const MOCK_REQUESTS: MaintenanceRequest[] = [
   {

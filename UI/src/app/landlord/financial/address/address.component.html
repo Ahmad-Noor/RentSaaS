@@ -1,0 +1,74 @@
+<mat-toolbar color="primary">
+    <span>Address</span>
+    <span class="example-spacer"></span>
+    <button mat-raised-button (click)="openAddEditEmpForm()">
+      ADD Address
+    </button>  
+  </mat-toolbar>  
+  
+   
+  
+  <div class="main-list">
+  
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Pizza" #input>
+    </mat-form-field>
+  
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+  
+        <ng-container  ng-hide matColumnDef="id">
+          <th mat-header-cell [style.display]="'none'"  *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell [style.display]="'none'"  *matCellDef="let row"> {{row.id}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="street">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> street </th>
+          <td mat-cell *matCellDef="let row"> {{row.street}}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="line2">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> line2 </th>
+          <td mat-cell *matCellDef="let row"> {{row.line2}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> city </th>
+          <td mat-cell *matCellDef="let row"> {{row.city}}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="createDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Date </th>
+          <td mat-cell *matCellDef="let row"> {{row.createDate | date}}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="updateDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Update Date</th>
+          <td mat-cell *matCellDef="let row"> {{row.updateDate | date}}</td>
+        </ng-container>
+  
+  
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="primary" (click)="openEditForm(row)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteEmployee(row.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+         <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+      </table>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
+  </div>

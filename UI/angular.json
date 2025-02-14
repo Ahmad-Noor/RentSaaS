@@ -29,8 +29,9 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css",
-                "node_modules/flowbite/dist/flowbite.css"
+              "node_modules/flowbite/dist/flowbite.css"
             ],
             "scripts": [
                 "node_modules/flowbite/dist/flowbite.min.js"
@@ -123,6 +124,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
             "scripts": []

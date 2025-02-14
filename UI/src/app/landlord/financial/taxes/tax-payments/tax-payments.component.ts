@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaxPaymentTableComponent } from './tax-payment-table.component';
-import { TaxPayment } from '../../types/tax.types';
+import { TaxPayment } from '../../../../models/tax.types';
 
 @Component({
   selector: 'app-tax-payments',

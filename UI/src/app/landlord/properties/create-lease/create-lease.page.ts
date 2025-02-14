@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
-import { PropertySelectorComponent } from '../property-selector/property-selector.component';
-import { LeaseService } from '../services/lease.service';
-import { CreateLeaseDTO } from '../types/lease.types';
+import { PropertySelectorComponent } from '../property-selector/property-selector.component'; 
+import { CreateLeaseDTO } from '../../../models/lease.types';
+import { LeaseService } from '../../../service/lease.service';
 
 @Component({
   selector: 'app-create-lease-page',

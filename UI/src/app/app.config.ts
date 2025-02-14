@@ -5,10 +5,11 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
      provideRouter(routes), provideClientHydration(withEventReplay()),
       provideHttpClient(),
-      { provide: 'APP_CONFIG', useValue: environment },]
+      { provide: 'APP_CONFIG', useValue: environment }, provideAnimationsAsync(),]
 };

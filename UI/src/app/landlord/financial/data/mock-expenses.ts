@@ -1,4 +1,4 @@
-import { Expense } from '../types/expense.types';
+import { Expense } from '../../../models/expense.types';
 
 export const MOCK_EXPENSES: Expense[] = [
   {

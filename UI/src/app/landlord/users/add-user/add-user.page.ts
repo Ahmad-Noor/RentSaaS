@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserFormComponent } from '../user-form/user-form.component';
-import { UserService } from '../services/user.service';
-import { CreateUserDTO } from '../types/user.types';
+import { UserService } from '../../../service/user.service';
+import { CreateUserDTO } from '../../../models/user.types';
 import { Router } from '@angular/router';
 
 @Component({

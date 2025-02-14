@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog/confirm-dialog.service';
-import { CompaniesService } from '../services/companies.service';
-import { Company } from '../types/company.types';
+import { CompaniesService } from '../../../service/companies.service';
+import { Company } from '../../../models/company.types';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
 import { platformBrowser } from '@angular/platform-browser';
