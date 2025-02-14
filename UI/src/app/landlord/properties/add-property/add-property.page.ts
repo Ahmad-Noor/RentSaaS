@@ -9,7 +9,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { PropertyService } from "../../../service/property.service";
-import { Property } from "../../../models/property.types";
+import { Property } from "../../../models/property.model";
 
 @Component({
   selector: "app-add-property-page",

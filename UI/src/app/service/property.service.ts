@@ -4,7 +4,7 @@ import { Constant } from '../constants';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Property } from '../models/property.types';
+import { Property } from '../models/property.model';
 
 @Injectable({
   providedIn: "root",

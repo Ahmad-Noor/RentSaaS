@@ -6,7 +6,7 @@ import { ActionBarComponent } from "../../../shared/components/action-bar/action
 import { ViewToggleComponent } from "../view-toggle/view-toggle.component";
 import { PropertyCardComponent } from "../property-card/property-card.component";
 import { ConfirmDialogService } from "../../../shared/services/confirm-dialog.service";
-import { Property } from "../../../models/property.types";
+import { Property } from "../../../models/property.model";
 import { PropertyService } from "../../../service/property.service";
 import { PropertyTableComponent } from "../data-table/data-table.component";
 
