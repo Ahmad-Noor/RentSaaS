@@ -18,14 +18,7 @@
       @if (view === 'list') {
       <app-property-table [properties]="properties" (onAction)="handleAction($event)" />
       }
-
-
-
-
-
-
-
-
+  
       @else {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         @for (property of properties; track property.id) {

@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router'; 
-import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
-import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
-import { PropertyCardComponent } from '../property-card/property-card.component';
-import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service'; 
-import { Property } from '../../../models/property.types';
-import { PropertyService } from '../../../service/property.service';
-import { PropertyTableComponent } from '../data-table/data-table.component';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
+import { RouterLink } from "@angular/router";
+import { ActionBarComponent } from "../../../shared/components/action-bar/action-bar.component";
+import { ViewToggleComponent } from "../view-toggle/view-toggle.component";
+import { PropertyCardComponent } from "../property-card/property-card.component";
+import { ConfirmDialogService } from "../../../shared/services/confirm-dialog.service";
+import { Property } from "../../../models/property.types";
+import { PropertyService } from "../../../service/property.service";
+import { PropertyTableComponent } from "../data-table/data-table.component";
 
 @Component({
   selector: "app-properties-list-page",
@@ -29,24 +29,29 @@ export class PropertiesListPage {
     throw new Error("Method not implemented.");
   }
   view: "list" | "grid" = "list";
-  properties!: Property[];
+  properties: Property[] = [];
   onAction: any;
 
   constructor(
     private router: Router,
     private confirmDialog: ConfirmDialogService,
     private propertyService: PropertyService
-  ) {
-    this.propertyService.getAllProperties().subscribe((response) => {
-      this.properties = response.data;
-      console.log(response.data)
+  ) {}
+
+  ngOnInit() {
+    this.loadProperties();
+  }
+  loadProperties() {
+    this.propertyService.getAllProperties().subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.properties = response.data;
+        }
+      },
+      error: (error) => {
+        console.error("Error loading properties:", error);
+      },
     });
-
-    console.log(this.properties)
-
-
-
-
   }
 
   async handleAction(action: { type: string; property: Property }) {
@@ -83,20 +88,14 @@ export class PropertiesListPage {
         });
 
         if (confirmed) {
-          // TODO: Implement property deletion
-
-          this.propertyService
-            .Delete(
-              action.property
-                .id as `${string}-${string}-${string}-${string}-${string}`
+          this.propertyService.deleteProperty(
+              action.property.id as `${string}-${string}-${string}-${string}-${string}`
             )
             .subscribe({
               next: () => {
-                this.router.navigate(["/landlord/properties"]);
-                console.log("Delete Succes Now");
+                this.router.navigate(["/landlord/properties"]); 
               },
-            });
-          console.log("Deleting property:", action.property);
+            }); 
         }
         break;
     }

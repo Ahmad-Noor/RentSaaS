@@ -22,7 +22,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReceiptItemComponent } from "./receipt-item.component";
 import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component";
 import { Expense } from "../../../../models/expense.types";
-import { Receipt } from "../../../../models/receipt.types"; 
+import { Receipt } from "../../../../models/receipt.types";
 import { ExpenseService } from "../../../../service/expense.service";
 import { PropertyService } from "../../../../service/property.service";
 
@@ -36,7 +36,7 @@ import { PropertyService } from "../../../../service/property.service";
     FormFieldComponent,
     ReceiptItemComponent,
   ],
-  templateUrl: './add.component.html',
+  templateUrl: "./add.component.html",
 })
 export class AddComponent implements OnInit {
   @Input() expense?: Expense;
@@ -116,7 +116,8 @@ export class AddComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
 
-    this._httpClient.post("https://localhost:7164/api/Expense/add", formData, {
+    this._httpClient
+      .post("https://localhost:7164/api/Expense/add", formData, {
         headers: headers,
       })
       .subscribe({
@@ -133,7 +134,7 @@ export class AddComponent implements OnInit {
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
       next: (properties) => {
-        this.properties = properties.data;
+        this.properties = properties;
       },
       error: (properties) => {},
       complete: () => {},
@@ -143,14 +144,14 @@ export class AddComponent implements OnInit {
   getFieldError(field: string): string {
     const control = this.DataForm.get(field);
     if (control?.touched && control.errors) {
-      if (control.errors['required']) {
+      if (control.errors["required"]) {
         return `${field} is required`;
       }
-      if (control.errors['min']) {
-        return `${field} must be greater than ${control.errors['min'].min}`;
+      if (control.errors["min"]) {
+        return `${field} must be greater than ${control.errors["min"].min}`;
       }
     }
-    return '';
+    return "";
   }
 
   onFilesSelected(event: any): void {

@@ -1,71 +1,42 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs'; 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UUID } from 'crypto'; 
-import { isPlatformBrowser } from '@angular/common'; 
-import { environment } from '../../environments/environment';
-import { Property, PropertyCreate } from '../models/property.types';
+import { UUID } from 'crypto';  
+import { Observable } from 'rxjs'; 
 import { Constant } from '../constants';
-
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Property } from '../models/property.types';
 
 @Injectable({
   providedIn: "root",
 })
 export class PropertyService {
 
-  baseUrl = environment.apiUrl;
+  apiUrl: string = environment.apiUrl + 'api/property';
+  headers : HttpHeaders=new HttpHeaders({
+    "X-OrganizationId": `${localStorage.getItem(Constant.OrganizationIdRentSass)}`,
+    "Authorization": `Bearer ${localStorage.getItem(Constant.token)}`,
+  }); 
 
-
-
-  private properties!: BehaviorSubject<Property[]>;
-  private headers!: HttpHeaders;
-
-  constructor(private _httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
-    this.properties = new BehaviorSubject<Property[]>([]);
-    this.initializeHeaders(); // Initialize headers here
-  }
-
-
-
+  constructor(private http: HttpClient) { }
   
-  private initializeHeaders(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.headers = new HttpHeaders({
-        "X-OrganizationId": `${localStorage.getItem(Constant.OrganizationIdRentSass)}`,
-        Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
-      });
-
-
-
-
-
-
-      console.log(this.headers);
-    } else {
-      this.headers = new HttpHeaders(); // Empty headers for non-browser platforms
-    }
+  getAllProperties(): Observable<Property[]> {
+    return this.http.get<Property[]>(`${this.apiUrl}/GetAll`, {headers: this.headers,});
   }
 
-  getAllProperties(): Observable<any> {
-    return this._httpClient.get(`${this.baseUrl}api/Property/GetAll`, {
-      headers: this.headers,
-    });
+  getPropertyById(id: number): Observable<Property> {
+    return this.http.get<Property>(`${this.apiUrl}/${id}`,{ headers: this.headers });
   }
 
-  // getProperties(): Observable<any> {
-  //   return this.properties.asObservable();
-  // }
-
-  CreateNewProperty(Property: PropertyCreate): Observable<any> {
-    return this._httpClient.post(
-      `${this.baseUrl}api/Property/Add`,
-      Property,
-      { headers: this.headers }
-    );
+  addProperty(data: Property): Observable<Property> {
+    return this.http.post<Property>(`${this.apiUrl}/Add`, data,{ headers: this.headers });
   }
 
-  Delete(id: UUID): Observable<any> {
-    return this._httpClient.delete(`${this.baseUrl}api/Property/Delete/${id}`, { headers: this.headers });
+  updateProperty(id: string, data: Property): Observable<Property> {
+    return this.http.put<Property>(this.apiUrl, data,{ headers: this.headers });
+  }
+
+  deleteProperty(id: string): Observable<Property> {
+    return this.http.delete<Property>(`${this.apiUrl}/${id}`,{ headers: this.headers });
   }
 
   private getPropertyTypeLabel(type: string): string {

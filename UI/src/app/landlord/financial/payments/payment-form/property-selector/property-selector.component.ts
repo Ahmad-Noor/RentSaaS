@@ -29,8 +29,6 @@ export class PropertySelectorComponent {
   properties: any[] = [];
 
   constructor(private propertyService: PropertyService) {
-    this.propertyService.getAllProperties().subscribe(properties => {
-      this.properties = properties.data;
-    });
+    this.propertyService.getAllProperties().subscribe(properties => {this.properties = properties;});
   }
 }

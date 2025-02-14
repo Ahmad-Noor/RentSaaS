@@ -19,14 +19,9 @@
 
     <div class="bg-white rounded-lg shadow">
       <div class="p-6">
- 
         
-
         <form [formGroup]="propertyForm" (ngSubmit)="CreateNewProperty(propertyForm)" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
-        
-        
-        
         
             @if(error!=null && error!=''){
         
@@ -40,10 +35,7 @@
                 </div>
               </div>
           
-        
             }
-        
-        
         
             <div>
               <label for="Address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
@@ -58,7 +50,6 @@
                   </div>
                 }
         
-        
                 @if(propertyForm.get('address')?.touched&&propertyForm.get('address')?.getError('minlength'))
                 {
                   <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -66,41 +57,8 @@
                   </div>
                 }
         
-
-        
             </div>
-        
-        
-        
-            <!-- <div>
-              <label for="unite" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unite</label>
-              <input type="text" id="unite"formControlName="unite"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Suite 200s" required />
-            </div> -->
-        
-          <!--
-            <div class="space-y-4">
-              <label for="Note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Note</label>
-              
-             <textarea 
-                id="note"
-                formControlName="note"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-48 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Property Type: Apartment
-            Unit Name/Number: Unit 305
-            Building Name: Oakwood Apartments
-            Street Address: 123 Main St
-            City: Springfield
-            State: Illinois (IL)
-            ZIP Code: 62701"
-                
-              ></textarea>
-      
-              
-            </div> 
-            
-          -->
+
       
           </div>
         

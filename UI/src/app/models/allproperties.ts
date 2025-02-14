@@ -1,4 +1,4 @@
-export interface Allproperty {
+export interface AllPropertIes {
     address:        string;
     unite:          null;
     leases:         null;

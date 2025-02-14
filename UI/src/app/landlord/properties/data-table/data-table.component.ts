@@ -36,12 +36,12 @@ constructor(private _X:PropertyService) { }
 
   ngOnInit(){
 
-    this.getAllProperty();
+    this.getAllProperties();
   }
 
 
 
-  getAllProperty()
+  getAllProperties()
   {
     this._X.getAllProperties().subscribe((res) => {
       console.log(res);
