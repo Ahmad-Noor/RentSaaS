@@ -9,7 +9,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { PropertyService } from "../../../service/property.service";
-import { Property } from '../../../models/property.types';
+import { Property } from "../../../models/property.types";
 
 @Component({
   selector: "app-add-property-page",
@@ -37,8 +37,8 @@ export class AddPropertyPage {
     if (form.valid) {
       this.loading = true;
 
-      const property: Property = { 
-        address: form.get("address")?.value, 
+      const property: Property = {
+        address: form.get("address")?.value,
         createdBy: "00000000-0000-0000-0000-000000000001".trim(),
       };
 

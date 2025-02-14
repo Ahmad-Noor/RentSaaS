@@ -5,13 +5,12 @@ import { MobileMenuComponent } from "../components/mobile-menu/mobile-menu.compo
 import { AuthService } from "../../auth/services/auth.service";
 import { isPlatformBrowser } from "@angular/common";
 
-
 @Component({
   selector: "app-header",
   imports: [RouterLink, NavLinkComponent, MobileMenuComponent],
   standalone: true,
   templateUrl: "./header.component.html",
-  styleUrl: "./header.componen.css",
+  styleUrl: "./header.component.css",
 })
 export class HeaderComponent implements OnInit {
   isMobileMenuOpen = false;
@@ -24,36 +23,31 @@ export class HeaderComponent implements OnInit {
     this.isMobileMenuOpen = false;
   }
 
-  islogin: any;
+  isLogin: any;
 
-  constructor(private _auth: AuthService, @Inject(PLATFORM_ID) private platformId: object) {
-
+  constructor(
+    private _auth: AuthService,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {
     if (isPlatformBrowser(platformId)) {
-
-      if (localStorage.getItem("token")!=null) {
-        this._auth.SaveData();  
+      if (localStorage.getItem("token") != null) {
+        this._auth.SaveData();
+      }
     }
   }
-}
 
   ngOnInit() {
-this._auth.userData.subscribe((resulte)=>{
-  if(resulte)
-  {
-    this.islogin=true;
-  }
-  else
-  {
-    this.islogin=false;
-  }
-})
+    this._auth.userData.subscribe((result) => {
+      if (result) {
+        this.isLogin = true;
+      } else {
+        this.isLogin = false;
+      }
+    });
   }
 
-
-logout()
-{
-  this._auth.SignOut();
-  this._auth.userData.next(null)
-}
-
+  logout() {
+    this._auth.SignOut();
+    this._auth.userData.next(null);
+  }
 }
