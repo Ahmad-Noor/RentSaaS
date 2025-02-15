@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User, CreateUserDTO } from '../models/user.types';
+import { User, CreateUserDTO } from '../models/user.model';
+import { jwtDecode } from 'jwt-decode';
+import { Constant } from '../constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+ 
   private users = new BehaviorSubject<User[]>([
     {
-      id: 1,
+      id: "00000000-0000-0000-0000-000000000001".trim(),
       firstName: 'John',
       lastName: 'Smith',
       email: 'john.smith@example.com',
@@ -17,8 +20,8 @@ export class UserService {
       permissions: {
         viewProperties: true,
         manageProperties: true,
-        viewFinancials: true,
-        manageFinancials: true,
+        viewFinancial: true,
+        manageFinancial: true,
         viewMaintenance: true,
         manageMaintenance: true
       },
@@ -34,8 +37,7 @@ export class UserService {
   createUser(data: CreateUserDTO): void {
     const currentUsers = this.users.getValue();
     const newUser: User = {
-      ...data,
-      id: Math.max(0, ...currentUsers.map(u => u.id)) + 1,
+      ...data, 
       status: 'pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -44,7 +46,7 @@ export class UserService {
     this.users.next([...currentUsers, newUser]);
   }
 
-  updateUserStatus(id: number, status: User['status']): void {
+  updateUserStatus(id: string, status: User['status']): void {
     const currentUsers = this.users.getValue();
     const updatedUsers = currentUsers.map(user => 
       user.id === id 
@@ -55,8 +57,33 @@ export class UserService {
     this.users.next(updatedUsers);
   }
 
-  deleteUser(id: number): void {
+  deleteUser(id: string): void {
     const currentUsers = this.users.getValue();
     this.users.next(currentUsers.filter(user => user.id !== id));
   }
+  public getToken(): string | undefined {  
+    const token = localStorage.getItem(Constant.token);
+    if (!token) {
+      console.warn('Token is missing');
+      return undefined;
+    }
+    return token;
+  }
+
+    public getCurrentOrganizationId(): string | undefined {  
+    const organizationId = localStorage.getItem(Constant.OrganizationIdRentSass);
+    if (!organizationId) {
+      //console.warn('organizationId is missing');
+      return undefined;
+    }
+    return organizationId;
+  }
+
+  public getCurrentUserId():string |  undefined { 
+    const jwtToken = jwtDecode<User>(
+      localStorage.getItem(Constant.token) ?? ""
+    );  
+    return jwtToken.id;
+  }
+ 
 }

@@ -86,6 +86,7 @@ public class PropertyController : ControllerBase
             return BadRequest();
         }
 
+        propertyDto.CreatedAt = DateTime.UtcNow;
         var Property = _Mapper.Map<Property>(propertyDto);
 
         try

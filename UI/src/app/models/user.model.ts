@@ -2,7 +2,7 @@ export type UserRole = 'admin' | 'manager' | 'staff' | 'readonly';
 export type UserStatus = 'active' | 'inactive' | 'pending';
 
 export interface User {
-  id: number;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -16,8 +16,8 @@ export interface User {
 export interface UserPermissions {
   viewProperties: boolean;
   manageProperties: boolean;
-  viewFinancials: boolean;
-  manageFinancials: boolean;
+  viewFinancial: boolean;
+  manageFinancial: boolean;
   viewMaintenance: boolean;
   manageMaintenance: boolean;
 }

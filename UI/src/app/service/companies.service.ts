@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import { CompanyCreate } from '../models/company-create';
 import { Constant } from '../constants';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: "root",
@@ -16,15 +17,15 @@ export class CompaniesService {
   private headers!: HttpHeaders;
   platformId=inject(PLATFORM_ID);
   constructor(
-    private _httpClient: HttpClient,
+    private _httpClient: HttpClient, private userService: UserService
   ) {
     this.initializeHeaders();
   }
 
   private initializeHeaders(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem(Constant.token);
-      const organizationId = localStorage.getItem(Constant.OrganizationIdRentSass );
+      const token = this.userService.getToken();
+      const organizationId = this.userService.getCurrentOrganizationId();
       if (token && organizationId) {
         this.headers = new HttpHeaders({
           "Content-Type": "application/json",

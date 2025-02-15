@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from "@angular/router";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { CompaniesService } from "../../../service/companies.service";
 import { CompanyCreate } from "../../../models/company-create";
+import { UserService } from "../../../service/user.service";
 
 @Component({
   selector: "app-company-form-page",
@@ -20,7 +21,9 @@ export class CompanyFormPage implements OnInit {
   constructor(
     private companiesService: CompaniesService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService
+
   ) {
     this.companyForm = new FormGroup({
       name: new FormControl(null, Validators.required),
@@ -46,7 +49,7 @@ export class CompanyFormPage implements OnInit {
 
     this.loading = true;
     const formValues = this.companyForm.value;
-    const organizationId = localStorage.getItem('organizationId');
+    const organizationId = this.userService.getCurrentOrganizationId();
 
     if (!organizationId) {
       console.error('Organization ID is missing.');

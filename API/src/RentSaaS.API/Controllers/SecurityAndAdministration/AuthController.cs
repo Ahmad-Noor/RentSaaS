@@ -55,13 +55,11 @@ public class AuthController : ControllerBase
         try
         {
             _logger.LogInformation("Create new user, Email #{Email}", Request.Email);
-
-
-
+             
             Organization organization = new Organization
             {
                 OrganizationId = Guid.NewGuid(),
-                Name = Request.FirstName + " "+ Request.LastName,
+                Name = string.Concat(Request.FirstName, Request.LastName),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = Guid.Parse("00000000-0000-0000-0000-000000000000")
@@ -76,27 +74,14 @@ public class AuthController : ControllerBase
                 ShowFullName = true,
                 Email = Request.Email,
 
+                CreatedAt = DateTime.UtcNow,
                 OrganizationId = organization.OrganizationId,
                 PasswordHash = Password.HashPassword(Request.Password),
 
                 IsActive = true,
-                UserType = Request.UserType // role of the user
+                UserType = Request.UserType  
             };
-
-            // ahmed alaa
-            //     var Organization = new Organization()
-            //     {
-            //         Name = string.Concat(Request.FirstName, Request.LastName),
-            //         IsDeleted=false
-            //     };
-            //     _rentSaaSDBContext.Organizations.Add(Organization);
-            //     _rentSaaSDBContext.SaveChanges();
-
-            //   #region Make Mapper Between this 
-
-            //   var User = _Mapper.Map<User>(Request);
-            //   User.OrganizationId = Organization.OrganizationId;
-            //     #endregion
+ 
 
             _rentSaaSDBContext.Users.Add(user);
             await _rentSaaSDBContext.SaveChangesAsync();
@@ -188,11 +173,7 @@ public class AuthController : ControllerBase
             return root.GetProperty("id_token").GetString();
         }
     }
-
-
-
-
-
+     
     private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalAuthDto model)
     {
         var settings = new GoogleJsonWebSignature.ValidationSettings
@@ -201,19 +182,7 @@ public class AuthController : ControllerBase
         };
         return await GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
+     
     private string CreateJwtToken(User user)
     {
         var keyString = _configuration["Jwt:Key"];
@@ -230,11 +199,12 @@ public class AuthController : ControllerBase
 
         var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim("id", user.Id.ToString()),
         new Claim(JwtRegisteredClaimNames.Sub, user.Email),
         new Claim(JwtRegisteredClaimNames.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim("organizationId", user.OrganizationId.ToString())
     };
 
         // 🔹 Add organization ID if it exists
