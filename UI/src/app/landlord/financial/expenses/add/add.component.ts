@@ -73,8 +73,8 @@ export class AddComponent implements OnInit {
 
     if (isPlatformBrowser(platformId)) {
       this.getAllProperties();
-      this._expenseService.getAllExpenses().subscribe((resulte) => {
-        console.log(resulte);
+      this._expenseService.getAllExpenses().subscribe((result) => {
+        console.log(result);
       });
     }
   }
@@ -116,8 +116,7 @@ export class AddComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
 
-    this._httpClient
-      .post("https://localhost:7164/api/Expense/add", formData, {
+    this._httpClient.post("https://localhost:7164/api/Expense/add", formData, {
         headers: headers,
       })
       .subscribe({

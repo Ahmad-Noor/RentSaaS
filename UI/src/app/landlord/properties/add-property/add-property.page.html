@@ -16,7 +16,7 @@
   <div class="bg-white rounded-lg shadow">
     <div class="p-6">
 
-      <form [formGroup]="propertyForm" (ngSubmit)="CreateNewProperty(propertyForm)" class="space-y-6">
+      <form [formGroup]="propertyForm" (ngSubmit)="AddProperty(propertyForm)" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
 
           @if(error!=null && error!=''){

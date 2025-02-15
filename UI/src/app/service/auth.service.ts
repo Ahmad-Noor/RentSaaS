@@ -50,7 +50,7 @@ export class AuthService {
     this.currentUser.next(userInfo);
   }
   isLoggedin(): boolean {
-    return !!this.getToken();
+    return this.getToken() != null;
   }
   getUserId() {
     if (this.userPayload)

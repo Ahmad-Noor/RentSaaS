@@ -9,25 +9,21 @@ import { jwtDecode } from "jwt-decode";
 import { isPlatformBrowser } from "@angular/common";
 import { environment } from "../../../environments/environment";
 import { Constant } from "../../constants";
+import { UserService } from "../../service/user.service";
 @Injectable({
   providedIn: "root",
 })
-
-
-
-
-
+ 
 export class AuthService {
   baseUrl: string = environment.apiUrl + "api/Auth/";
 
   userData: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor(private _HttpClient: HttpClient, private _router: Router, @Inject(PLATFORM_ID) private Checkplatform:object) {
-
-
-    if(isPlatformBrowser(this.Checkplatform))
+  constructor(private _HttpClient: HttpClient, private _router: Router, private userService: UserService, @Inject(PLATFORM_ID) private CheckPlatform:object) {
+ 
+    if(isPlatformBrowser(this.CheckPlatform))
       {
-        if(localStorage.getItem(Constant.token))
+        if(this.userService.getToken())
         {
           this.SaveData();
         }
@@ -51,9 +47,8 @@ export class AuthService {
 
   SaveData(): void {
     this.userData.next(
-      jwtDecode(JSON.stringify(localStorage.getItem(Constant.token)))
-    );
-    console.log(this.userData);
+      jwtDecode(JSON.stringify(this.userService.getToken()))
+    ); 
   }
 
   loginWithGoogle(): Observable<SocialLoginResponse> {

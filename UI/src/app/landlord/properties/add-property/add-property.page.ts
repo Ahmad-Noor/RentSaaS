@@ -9,7 +9,8 @@ import {
   Validators,
 } from "@angular/forms";
 import { PropertyService } from "../../../service/property.service";
-import { Property } from "../../../models/property.model";
+import { Property } from "../../../models/property.model"; 
+import { UserService } from "../../../service/user.service";
 
 @Component({
   selector: "app-add-property-page",
@@ -21,7 +22,8 @@ import { Property } from "../../../models/property.model";
 export class AddPropertyPage {
   constructor(
     private router: Router,
-    private _propertyServices: PropertyService
+    private _propertyServices: PropertyService,
+    private userService: UserService,
   ) {}
 
   loading = false;
@@ -32,14 +34,14 @@ export class AddPropertyPage {
       Validators.minLength(10),
     ]),
   });
-
-  CreateNewProperty(form: FormGroup) {
+  
+  AddProperty(form: FormGroup) {
     if (form.valid) {
       this.loading = true;
 
       const property: Property = {
         address: form.get("address")?.value,
-        createdBy: "00000000-0000-0000-0000-000000000001".trim(),
+        createdBy:this.userService.getCurrentUserId() ??"",
       };
 
       this._propertyServices.addProperty(property).subscribe({
