@@ -20,12 +20,11 @@ import { ExpenseFormData } from "./models/expense-form.model";
 import { initializeExpenseForm } from "./utils/form-utils";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReceiptItemComponent } from "./receipt-item.component";
-import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component";
-import { Expense } from "../../types/expense.types";
-import { Receipt } from "../../types/receipt.types";
-import { PropertyService } from "../../../properties/services/property.service";
-import { ExpenseService } from "../../services/expense.service";
-import { Constant } from "../../../../constants";
+import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component"; 
+import { Expense } from "../../../../models/expense.types";
+import { Receipt } from "../../../../models/receipt.types";
+import { PropertyService } from "../../../../service/property.service";
+import { ExpenseService } from "../../../../service/expense.service";
 
 @Component({
   selector: "app-expense-form",
@@ -74,8 +73,8 @@ export class AddComponent implements OnInit {
 
     if (isPlatformBrowser(platformId)) {
       this.getAllProperties();
-      this._expenseService.getAllExpenses().subscribe((result) => {
-        console.log(result);
+      this._expenseService.getAllExpenses().subscribe((resulte) => {
+        console.log(resulte);
       });
     }
   }
@@ -128,19 +127,6 @@ export class AddComponent implements OnInit {
         console.log("Complete");
       }
     });
-
-    this._httpClient.post("https://localhost:7164/api/Expense/add", formData, {
-        headers: headers,
-      })
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-        error: (error) => {
-          console.log(error);
-        },
-        complete: () => {},
-      });
   }
 
 
