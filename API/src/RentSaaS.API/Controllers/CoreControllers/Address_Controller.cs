@@ -13,13 +13,13 @@ namespace RentSaaS.API.Controllers.CoreControllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class AddressController : ControllerBase
+public class Address_Controller : ControllerBase
 {
     // add comment for github
-    private readonly ILogger<AddressController> _logger;   
+    private readonly ILogger<Address_Controller> _logger;   
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _Mapper;
-    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork,IMapper Mapper)
+    public Address_Controller(ILogger<Address_Controller> logger, IUnitOfWork unitOfWork,IMapper Mapper)
     {
         _logger = logger;  
         _unitOfWork = unitOfWork;
