@@ -7,10 +7,10 @@ import { PropertyActionsComponent } from '../property-actions/property-actions.c
   selector: 'app-property-card',
   standalone: true,
   imports: [CommonModule, PropertyActionsComponent],
-  templateUrl: './property-card.component.html',
-  styleUrls: ['./property-card.component.css']
+  templateUrl: './edit-property.html',
+  styleUrls: ['./edit-property.css']
 })
-export class PropertyCardComponent {
+export class Editproperty {
   @Input() property!: Property;
   @Output() onAction = new EventEmitter<{ type: string; property: Property }>();
   @Output() onFavorite = new EventEmitter<Property>();
