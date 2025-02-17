@@ -28,11 +28,16 @@
       </label>
     </div>
 
+
+
+
+
     <app-form-field label="Payment Schedule" id="paymentSchedule" [error]="getFieldError('paymentSchedule')">
       <select
         id="paymentSchedule"
         formControlName="paymentSchedule"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+        <option value="null">Select Payment Schedule</option>
         <option value="onetime">One-time</option>
         <option value="recurring">Recurring</option>
         <option value="scheduled">Scheduled</option>
@@ -40,15 +45,21 @@
     </app-form-field>
   </div>
 
+
   @if (DataForm.get('expenseType')?.value === 'property') {
     <div [formGroup]="DataForm">
+
+
+  
+
+
       <app-form-field
         label="Property"
         id="propertyId"
         [error]="getFieldError('propertyId')"
       >
         <select id="propertyId" formControlName="propertyId" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
-          <option value="" selected>Select property</option>
+          <option value="null" selected>Select property</option>
           <option *ngFor="let property of properties" [value]="property.id">
             {{ property.address }}
           </option>
@@ -56,6 +67,7 @@
       </app-form-field>
     </div>
   }
+
 
   <div class="space-y-4">
     <app-form-field 
@@ -68,7 +80,7 @@
         formControlName="category"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
       >
-        <option value="">Select category</option>
+        <option value="null">Select category</option>
         <option value="maintenance">Maintenance</option>
         <option value="utilities">Utilities</option>
         <option value="insurance">Insurance</option>
@@ -79,19 +91,9 @@
     </app-form-field>
 
     <div class="grid grid-cols-2 gap-4">
-      <app-form-field 
-        label="Amount" 
-        id="amount"
-        [error]="getFieldError('amount')"
-      >
-        <input
-          type="number"
-          id="amount"
-          formControlName="amount"
-          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          min="0"
-          step="0.01"
-        >
+      <app-form-field label="Amount" id="amount" [error]="getFieldError('amount')">
+        <input type="number" id="amount" formControlName="amount"
+          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" min="100" step="0.01">
       </app-form-field>
 
       <app-form-field 

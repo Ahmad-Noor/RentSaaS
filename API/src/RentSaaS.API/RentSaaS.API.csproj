@@ -46,6 +46,7 @@
 	<Folder Include="Controllers\SearchAndUtility\" />
 	<Folder Include="Controllers\SettingsAndConfiguration\" />
 	<Folder Include="Uploads\" />
+	<Folder Include="Uploads\Expenses\be9ca6a5-fde8-4a86-8920-6ce6990a80e1\" />
   </ItemGroup>
 
   <ItemGroup>
