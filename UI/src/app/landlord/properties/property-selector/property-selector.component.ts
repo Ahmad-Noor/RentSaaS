@@ -27,14 +27,12 @@ export class PropertySelectorComponent {
 
   loadProperties(): void {
     this.propertyService.getAllProperties().subscribe({
-      next: (properties) => {
+      next: (properties:any) => {
         console.log('API Response:', properties);
 
         // Ensure the response is an array and map to AllPropertIes
-        this.properties = Array.isArray(properties) ? properties.map((property) => ({
-          address: property.address ?? 'No Address', // Default if address is missing
-          id: property.id ?? '', // Ensure id is always a string
-        })) : [];
+        this.properties =  properties.data;
+        
 
         this.isLoading = false;
         this.cd.detectChanges(); // Force view update

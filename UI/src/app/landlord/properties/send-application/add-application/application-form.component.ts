@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component'; 
 import { PropertySelectorComponent } from '../../property-selector/property-selector.component';
+import { ApplicationService } from '../../../../service/application.service';
 
 @Component({
   selector: 'app-application-form',
@@ -16,19 +17,26 @@ export class ApplicationFormComponent {
   applicationForm: FormGroup;
   loading = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private applicationsrv:ApplicationService) {
     this.applicationForm = this.fb.group({
-      propertyId: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      message: [''],
+      propertyId: [null, Validators.required],
+      applicantEmail: [null, [Validators.required, Validators.email]],
+      phoneNumber: [null, Validators.required],
+      message: [null],
       requestBackground: [true],
       requestCredit: [true]
     });
   }
+ 
+
 
   handleSubmit(): void {
     if (this.applicationForm.valid) {
+      this.applicationsrv.addApplication(this.applicationForm.value).subscribe({
+        next:(x)=>{console.log(x)},
+        error:(v)=>{console.log(v)},
+        
+      });
       this.loading = true;
       this.submit.emit(this.applicationForm.value);
     }
