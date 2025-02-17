@@ -46,10 +46,14 @@ export class AddComponent implements OnInit {
 
   receipts: Receipt[] = [];
   error = "";
-
   expenseForm: FormGroup;
   loading = false;
   properties: any[] = [];
+  company!:Companies[];
+
+
+
+
 
   DataForm = new FormGroup({
     propertyId: new FormControl(null, [Validators.required]),
@@ -61,6 +65,7 @@ export class AddComponent implements OnInit {
     details: new FormControl(null),
     isPaid: new FormControl(true, Validators.required),
     type: new FormControl("property"),
+    CompanyId:new FormControl(null),
     receipts: new FormControl([]),
   });
 
@@ -69,7 +74,8 @@ export class AddComponent implements OnInit {
     private _propertyServices: PropertyService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private _httpClient: HttpClient,
-    private _expenseService: ExpenseService
+    private _expenseService: ExpenseService,
+    private _CompaniesService:CompaniesService
   ) {
     this.expenseForm = initializeExpenseForm(fb);
 
@@ -94,7 +100,15 @@ export class AddComponent implements OnInit {
         isPaid: this.expense.status === "paid",
       });
     }
+
+
+
+    this.getCompany()
   }
+
+
+
+
   handleSubmit(data: FormGroup): void {
     if (data.invalid) {
       this.error = "Please fill out all required fields correctly.";
@@ -109,6 +123,7 @@ export class AddComponent implements OnInit {
     formData.append("dueDate", data.get("dueDate")?.value);
     formData.append("details", data.get("details")?.value);
     formData.append("isPaid", data.get("isPaid")?.value);
+    formData.append("CompanyId", data.get("CompanyId")?.value);
     this.receipts.forEach((receipt) => {
       formData.append("ReceiptsFiles", receipt.file, receipt.name);
     });
@@ -130,6 +145,22 @@ export class AddComponent implements OnInit {
       }
     });
   }
+
+
+getCompany()
+{
+  this._CompaniesService.getCompanies().subscribe({
+    next:(resulte)=>{
+      this.company=resulte.data
+      console.log(resulte)
+    },
+    error:(resulte)=>{
+      console.log(resulte)
+    },
+
+  })
+
+}
 
 
 
