@@ -1,54 +1,52 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs'; 
-import { Application } from '../models/application.types';
+import { Application, ApplicationCreate } from '../models/application.types';
 
+ import { HttpClient, HttpHeaders } from '@angular/common/http';
+ import { UserService } from './user.service';
+import { environment } from '../../environments/environment';
+ 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApplicationService {
-  private applications = new BehaviorSubject<Application[]>([
-    {
-      id: 1,
-      propertyId: 1,
-      propertyName: 'Sunset Apartments',
-      applicantName: 'John Smith',
-      email: 'john.smith@example.com',
-      phone: '(555) 123-4567',
-      status: 'new',
-      submittedAt: '2024-01-15T10:30:00Z',
-      desiredMoveIn: '2024-02-01',
-      creditScore: 720,
-      income: 75000
-    },
-    {
-      id: 2,
-      propertyId: 2,
-      propertyName: 'Downtown Lofts',
-      applicantName: 'Sarah Johnson',
-      email: 'sarah.j@example.com',
-      phone: '(555) 987-6543',
-      status: 'reviewing',
-      submittedAt: '2024-01-14T15:45:00Z',
-      desiredMoveIn: '2024-03-01',
-      creditScore: 680,
-      income: 65000
-    }
-  ]);
+  apiUrl: string = environment.apiUrl + "api/ApplicationAndLeads";
+  headers: HttpHeaders = new HttpHeaders();
 
-  getApplications(): Observable<Application[]> {
-    return this.applications.asObservable();
+  constructor(private http: HttpClient, private userService: UserService) {
+    this.headers = new HttpHeaders({
+      "X-OrganizationId": `${userService.getCurrentOrganizationId()}`,
+      Authorization: `Bearer ${userService.getToken()}`,
+    });
   }
 
-  updateApplicationStatus(id: number, status: Application['status']): void {
-    const currentApplications = this.applications.getValue();
-    const updatedApplications = currentApplications.map(app => 
-      app.id === id ? { ...app, status } : app
-    );
-    this.applications.next(updatedApplications);
+  getAllApplications(): Observable<any> {
+    return this.http.get(`${this.apiUrl}`, {
+      headers: this.headers,
+    });
   }
 
-  deleteApplication(id: number): void {
-    const currentApplications = this.applications.getValue();
-    this.applications.next(currentApplications.filter(app => app.id !== id));
+  getApplicationById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`, {
+      headers: this.headers,
+    });
   }
+
+  addApplication(data: Application): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, data, {
+      headers: this.headers,
+    });
+  }
+
+ updateApplication(id: string, data: Application): Observable<any> {
+   return this.http.put(`${this.apiUrl}/${id}`, data, {
+     headers: this.headers,
+   });
+ }
+
+ deleteApplication(id: string): Observable<any> {
+   return this.http.delete(`${this.apiUrl}/${id}`, {
+     headers: this.headers,
+   });
+ }
 }
