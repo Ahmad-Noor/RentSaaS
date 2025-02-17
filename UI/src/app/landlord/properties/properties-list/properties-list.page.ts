@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { RouterLink } from "@angular/router";
 import { ActionBarComponent } from "../../../shared/components/action-bar/action-bar.component";
 import { ViewToggleComponent } from "../view-toggle/view-toggle.component";
-import { PropertyCardComponent } from "../property-card/property-card.component";
+import { Editproperty } from "../edit-property/edit-property";
 import { ConfirmDialogService } from "../../../shared/services/confirm-dialog.service";
 import { Property } from "../../../models/property.model";
 import { PropertyService } from "../../../service/property.service";
@@ -19,7 +19,7 @@ import { PropertyTableComponent } from "../data-table/data-table.component";
     PropertyTableComponent,
     ActionBarComponent,
     ViewToggleComponent,
-    PropertyCardComponent,
+    Editproperty,
   ],
   templateUrl: "./properties-list.page.html",
   styleUrls: ["./properties-list.page.css"],

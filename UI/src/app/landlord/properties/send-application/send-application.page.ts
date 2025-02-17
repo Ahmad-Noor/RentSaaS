@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router'; 
-import { ApplicationFormComponent } from '../application-form/application-form.component';
+import { ApplicationFormComponent } from '../advertising/add-advertising/application-form.component';
 
 @Component({
   selector: 'app-send-application-page',
