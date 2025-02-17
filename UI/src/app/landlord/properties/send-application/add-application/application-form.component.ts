@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component'; 
 import { PropertySelectorComponent } from '../../property-selector/property-selector.component';
 import { ApplicationService } from '../../../../service/application.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-application-form',
@@ -17,7 +18,7 @@ export class ApplicationFormComponent {
   applicationForm: FormGroup;
   loading = false;
 
-  constructor(private fb: FormBuilder,private applicationsrv:ApplicationService) {
+  constructor(private fb: FormBuilder,private applicationsrv:ApplicationService , private _route:Router) {
     this.applicationForm = this.fb.group({
       propertyId: [null, Validators.required],
       applicantEmail: [null, [Validators.required, Validators.email]],
@@ -33,7 +34,10 @@ export class ApplicationFormComponent {
   handleSubmit(): void {
     if (this.applicationForm.valid) {
       this.applicationsrv.addApplication(this.applicationForm.value).subscribe({
-        next:(x)=>{console.log(x)},
+        next:(x)=>{
+          console.log(x)
+            this._route.navigate(['/landlord/properties/applications'])
+        },
         error:(v)=>{console.log(v)},
         
       });

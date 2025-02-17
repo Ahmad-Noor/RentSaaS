@@ -25,6 +25,7 @@ import { Expense } from "../../../../models/expense.types";
 import { Receipt } from "../../../../models/receipt.types";
 import { PropertyService } from "../../../../service/property.service";
 import { ExpenseService } from "../../../../service/expense.service";
+import { PropertySelectorComponent } from "../../payments/payment-form/property-selector.component";
 
 @Component({
   selector: "app-expense-form",
@@ -35,6 +36,7 @@ import { ExpenseService } from "../../../../service/expense.service";
     RouterLink,
     FormFieldComponent,
     ReceiptItemComponent,
+
   ],
   templateUrl: "./add.component.html",
 })
@@ -50,12 +52,12 @@ export class AddComponent implements OnInit {
   properties: any[] = [];
 
   DataForm = new FormGroup({
-    propertyId: new FormControl("onetime", [Validators.required]),
-    paymentSchedule: new FormControl(0,[Validators.required]),
-    category: new FormControl(0,[Validators.required]),
+    propertyId: new FormControl(null, [Validators.required]),
+    paymentSchedule: new FormControl(null,[Validators.required]),
+    category: new FormControl(null,[Validators.required]),
     expenseType: new FormControl("property"),
-    amount: new FormControl(null),
-    dueDate: new FormControl(null),
+    amount: new FormControl(100,[Validators.required]),
+    dueDate: new FormControl(null,[Validators.required]),
     details: new FormControl(null),
     isPaid: new FormControl(true, Validators.required),
     type: new FormControl("property"),
@@ -137,13 +139,17 @@ export class AddComponent implements OnInit {
 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
-      next: (properties) => {
-        this.properties = properties;
+      next: (properties:any) => {
+        this.properties = properties.data;
       },
       error: (properties) => {},
       complete: () => {},
     });
   }
+
+
+
+
 
   getFieldError(field: string): string {
     const control = this.DataForm.get(field);

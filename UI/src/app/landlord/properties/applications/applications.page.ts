@@ -16,10 +16,14 @@ export class ApplicationsPage {
   @Output() onAction = new EventEmitter<{ type: string; application: Application }>();
   filteredApplications: Application[] = [];
 
+
+  applicationData!:Application[];
+
   constructor(private applicationService: ApplicationService) {
     // No need to declare applications here since it's passed through @Input()
     this.applicationService.getAllApplications().subscribe(applications => {
       console.log(applications)
+      this.applicationData=applications.data
       this.applications = applications.data;
       this.filteredApplications = applications.data;
     });
@@ -28,7 +32,7 @@ export class ApplicationsPage {
 
 
   handleSearch(term: string): void {
-    this.filteredApplications = this.applications.filter(app => 
+    this.filteredApplications = this.applicationData.filter(app => 
       app.applicantEmail.toLowerCase().includes(term.toLowerCase()) ||
       app.phoneNumber 
      );

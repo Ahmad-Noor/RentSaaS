@@ -42,7 +42,15 @@ public class ApplicationAndLeadsController : ControllerBase
             return NotFound(new ApiErrorResponses(404));
         }
         var ApplicationMapper = _Mapper.Map<List<ApplicationGetDto>>(application);
+        
         return Ok(new ApiResponse<List<ApplicationGetDto>>(true, "All Data For Application", ApplicationMapper)); ;
+ 
+    
+    
+    
+    
+    
+    
     }
 
     #endregion
