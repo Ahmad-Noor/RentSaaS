@@ -26,6 +26,8 @@ import { Receipt } from "../../../../models/receipt.types";
 import { PropertyService } from "../../../../service/property.service";
 import { ExpenseService } from "../../../../service/expense.service";
 import { PropertySelectorComponent } from "../../payments/payment-form/property-selector.component";
+import { CompaniesService } from "../../../../service/companies.service";
+import { Companies } from "../../../../models/companies";
 
 @Component({
   selector: "app-expense-form",
@@ -81,8 +83,8 @@ export class AddComponent implements OnInit {
 
     if (isPlatformBrowser(platformId)) {
       this.getAllProperties();
-      this._expenseService.getAllExpenses().subscribe((resulte) => {
-        console.log(resulte);
+      this._expenseService.getAllExpenses().subscribe((result) => {
+        console.log(result);
       });
     }
   }
@@ -150,12 +152,12 @@ export class AddComponent implements OnInit {
 getCompany()
 {
   this._CompaniesService.getCompanies().subscribe({
-    next:(resulte)=>{
-      this.company=resulte.data
-      console.log(resulte)
+    next:(result)=>{
+      this.company=result.data
+      console.log(result)
     },
-    error:(resulte)=>{
-      console.log(resulte)
+    error:(result)=>{
+      console.log(result)
     },
 
   })

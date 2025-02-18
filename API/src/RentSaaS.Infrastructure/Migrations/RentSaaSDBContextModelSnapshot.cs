@@ -387,6 +387,7 @@ namespace RentSaaS.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Category")
@@ -771,10 +772,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eb54d80a-7f8c-44fa-909c-a153271180d4"),
+                            Id = new Guid("72681f83-04b4-4c0d-8e97-ba12c8a27365"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "baf75d5e-7645-4c51-b102-f09c890bf82c",
-                            CreatedAt = new DateTime(2025, 2, 7, 20, 25, 17, 64, DateTimeKind.Utc).AddTicks(8517),
+                            ConcurrencyStamp = "d5a958d5-2c09-47fc-a908-ed0e0a86deb3",
+                            CreatedAt = new DateTime(2025, 2, 18, 4, 55, 42, 898, DateTimeKind.Utc).AddTicks(3423),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -784,7 +785,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "AMY3cMKfaOWl78Gr23syBIRgLlLn9jjUi20616O0qCB6ayx3ZyKxVwsFegz2gVvkEg==",
+                            PasswordHash = "AAvHC5BoqQvmtr0qXIabw/rh1G8fgmVgPQg6ZdSw+KGb4Bnaq8ZevThVcxAV4Iqzyg==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

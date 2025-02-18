@@ -12,8 +12,8 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    [Migration("20250207184458_Edit Advertising and Application ForeignKey")]
-    partial class EditAdvertisingandApplicationForeignKey
+    [Migration("20250218045543_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,6 +255,65 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.ToTable("Advertising");
                 });
 
+            modelBuilder.Entity("RentSaaS.Domain.Entities.ApplicationAndLeads", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicantEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("Requestbackground")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("Requestcredit")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("ApplicationAndLeads");
+                });
+
             modelBuilder.Entity("RentSaaS.Domain.Entities.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -331,6 +390,7 @@ namespace RentSaaS.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Category")
@@ -598,65 +658,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("RentSaaS.Domain.Entities.RentApplication", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApplicantEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool?>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool?>("Requestbackground")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("Requestcredit")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("RentApplications");
-                });
-
             modelBuilder.Entity("RentSaaS.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -774,10 +775,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3309f6b9-08cf-494f-83a5-363187986c72"),
+                            Id = new Guid("72681f83-04b4-4c0d-8e97-ba12c8a27365"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5462da70-a320-49bb-b1f6-d4764ffb2d7d",
-                            CreatedAt = new DateTime(2025, 2, 7, 18, 44, 58, 214, DateTimeKind.Utc).AddTicks(2491),
+                            ConcurrencyStamp = "d5a958d5-2c09-47fc-a908-ed0e0a86deb3",
+                            CreatedAt = new DateTime(2025, 2, 18, 4, 55, 42, 898, DateTimeKind.Utc).AddTicks(3423),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -787,7 +788,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "ALekzf9EEwvzYrZw7jnX8XdLuSsozMs6DgOSYIMfmV133dxTOt5/VIU89ysXCNO8Pw==",
+                            PasswordHash = "AAvHC5BoqQvmtr0qXIabw/rh1G8fgmVgPQg6ZdSw+KGb4Bnaq8ZevThVcxAV4Iqzyg==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,
@@ -800,6 +801,17 @@ namespace RentSaaS.Infrastructure.Migrations
                 {
                     b.HasOne("RentSaaS.Domain.Entities.Property", "Property")
                         .WithMany("Advertising")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("RentSaaS.Domain.Entities.ApplicationAndLeads", b =>
+                {
+                    b.HasOne("RentSaaS.Domain.Entities.Property", "Property")
+                        .WithMany("ApplicationAndLeads")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -852,17 +864,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("RentSaaS.Domain.Entities.RentApplication", b =>
-                {
-                    b.HasOne("RentSaaS.Domain.Entities.Property", "Property")
-                        .WithMany("RentApplications")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-                });
-
             modelBuilder.Entity("RentSaaS.Domain.Entities.Expense", b =>
                 {
                     b.Navigation("ExpenseFiles");
@@ -872,9 +873,9 @@ namespace RentSaaS.Infrastructure.Migrations
                 {
                     b.Navigation("Advertising");
 
-                    b.Navigation("Leases");
+                    b.Navigation("ApplicationAndLeads");
 
-                    b.Navigation("RentApplications");
+                    b.Navigation("Leases");
                 });
 #pragma warning restore 612, 618
         }

@@ -45,6 +45,8 @@ namespace RentSaaS.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ein = table.Column<long>(type: "bigint", nullable: true),
+                    type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LogoURL = table.Column<string>(type: "nvarchar(250)", nullable: true),
                     ShowLogo = table.Column<bool>(type: "bit", nullable: true),
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -207,7 +209,7 @@ namespace RentSaaS.Infrastructure.Migrations
                     LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(500)", nullable: true)
@@ -240,16 +242,79 @@ namespace RentSaaS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Advertising",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Platform = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Leads = table.Column<int>(type: "int", nullable: false),
+                    Views = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(500)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Advertising", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Advertising_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationAndLeads",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicantEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Requestbackground = table.Column<bool>(type: "bit", nullable: true),
+                    Requestcredit = table.Column<bool>(type: "bit", nullable: true),
+                    OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(500)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationAndLeads", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationAndLeads_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Expenses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ExpenseType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PaymentSchedule = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPaid = table.Column<bool>(type: "bit", nullable: true),
                     ReceiptsFiles = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -267,10 +332,16 @@ namespace RentSaaS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Expenses", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Expenses_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Expenses_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -310,15 +381,63 @@ namespace RentSaaS.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "expenseFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExpenseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(500)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_expenseFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_expenseFiles_Expenses_ExpenseId",
+                        column: x => x.ExpenseId,
+                        principalTable: "Expenses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Identity.Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "Email", "EmailConfirmed", "FirstName", "IsActive", "IsDeleted", "LastLoggedIn", "LastModifiedAt", "LastModifiedBy", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Note", "OrganizationId", "PasswordHash", "PasswordLastChanged", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicture", "ProfilePictureUpdated", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "ShowFullName", "TwoFactorEnabled", "UserName", "UserType" },
-                values: new object[] { new Guid("f074c234-add4-4da3-ac4c-605ee50ecc3f"), 0, "b325e789-54fe-49b5-b3ca-02bfbdb2f4dd", new DateTime(2025, 1, 19, 21, 20, 10, 348, DateTimeKind.Utc).AddTicks(7360), new Guid("00000000-0000-0000-0000-000000000000"), null, null, "admin@rentsaas.com", false, "Admin", true, false, null, null, null, "Admin", false, null, null, null, null, new Guid("00000000-0000-0000-0000-000000000001"), "AAzotWrdV5j4CgRYFCI/PFY41422056foz8CzzZ0F6jBm1BGkYAzKs17asj0WibAnA==", null, null, false, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, false, "admin", "Landlord" });
+                values: new object[] { new Guid("72681f83-04b4-4c0d-8e97-ba12c8a27365"), 0, "d5a958d5-2c09-47fc-a908-ed0e0a86deb3", new DateTime(2025, 2, 18, 4, 55, 42, 898, DateTimeKind.Utc).AddTicks(3423), new Guid("00000000-0000-0000-0000-000000000000"), null, null, "admin@rentsaas.com", false, "Admin", true, false, null, null, null, "Admin", false, null, null, null, null, new Guid("00000000-0000-0000-0000-000000000001"), "AAvHC5BoqQvmtr0qXIabw/rh1G8fgmVgPQg6ZdSw+KGb4Bnaq8ZevThVcxAV4Iqzyg==", null, null, false, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, false, "admin", "Landlord" });
 
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "OrganizationId", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "IsActive", "IsDeleted", "LastModifiedAt", "LastModifiedBy", "Name", "Note" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, null, true, false, null, null, "Organization 1", null });
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, null, true, null, null, null, "Organization 1", null });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertising_PropertyId",
+                table: "Advertising",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationAndLeads_PropertyId",
+                table: "ApplicationAndLeads",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_expenseFiles_ExpenseId",
+                table: "expenseFiles",
+                column: "ExpenseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expenses_CompanyId",
+                table: "Expenses",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expenses_PropertyId",
@@ -343,10 +462,13 @@ namespace RentSaaS.Infrastructure.Migrations
                 name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Companies");
+                name: "Advertising");
 
             migrationBuilder.DropTable(
-                name: "Expenses");
+                name: "ApplicationAndLeads");
+
+            migrationBuilder.DropTable(
+                name: "expenseFiles");
 
             migrationBuilder.DropTable(
                 name: "Identity.RoleClaims");
@@ -373,7 +495,13 @@ namespace RentSaaS.Infrastructure.Migrations
                 name: "leases");
 
             migrationBuilder.DropTable(
+                name: "Expenses");
+
+            migrationBuilder.DropTable(
                 name: "Organizations");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Properties");
