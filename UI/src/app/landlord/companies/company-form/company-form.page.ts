@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { CompaniesService } from "../../../service/companies.service";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"; 
 import { CompanyCreate } from "../../../models/company-create";
 import { UserService } from "../../../service/user.service";
+import { CompanyService } from "../../../service/company.service";
 
 @Component({
   selector: "app-company-form-page",
@@ -19,7 +19,7 @@ export class CompanyFormPage implements OnInit {
   companyId?: number;
 
   constructor(
-    private companiesService: CompaniesService,
+    private companyService: CompanyService,
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService
@@ -62,7 +62,7 @@ export class CompanyFormPage implements OnInit {
       organizationId: organizationId,
     };
 
-    this.companiesService.addCompany(organization).subscribe({
+    this.companyService.addCompany(organization).subscribe({
       next: (result) => {
         console.log("Company added successfully:", result);
         this.router.navigate(["/landlord/companies"]);
@@ -79,7 +79,7 @@ export class CompanyFormPage implements OnInit {
 
   // private loadCompany(id: number): void {
   //   this.loading = true;
-  //   this.companiesService.getCompany(id).subscribe({
+  //   this.companyService.getCompany(id).subscribe({
   //     next: (company) => {
   //       if (company) {
   //         this.companyForm.patchValue(company);

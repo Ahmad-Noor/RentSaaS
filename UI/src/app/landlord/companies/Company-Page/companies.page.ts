@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog/confirm-dialog.service';
-import { CompaniesService } from '../../../service/companies.service';
+import {  CompanyService } from '../../../service/company.service';
 import { Company } from '../../../models/company.types';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActionBarComponent } from '../../../shared/components/action-bar/action-bar.component';
@@ -35,7 +35,7 @@ export class CompaniesPage implements OnInit, OnChanges {
 
 
   constructor(
-    private companiesService: CompaniesService,
+    private companyService: CompanyService,
     private confirmDialog: ConfirmDialogService,
     private router: Router,
  
@@ -58,7 +58,7 @@ export class CompaniesPage implements OnInit, OnChanges {
 
 
   getData(){
-    this.companiesService.getCompanies().subscribe({
+    this.companyService.getCompanies().subscribe({
       next: companies => {
 
         this.companies = companies.data;
@@ -109,7 +109,7 @@ export class CompaniesPage implements OnInit, OnChanges {
         });
 
         if (confirmed) {
-            this.companiesService.deleteCompany(action.item.id).subscribe({
+            this.companyService.deleteCompany(action.item.id).subscribe({
               next:()=>{console.log("delete Company Is Done Succes")},
             });
         }

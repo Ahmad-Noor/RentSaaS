@@ -24,10 +24,9 @@ import { FormFieldComponent } from "../../../../shared/components/form-field/for
 import { Expense } from "../../../../models/expense.types";
 import { Receipt } from "../../../../models/receipt.types";
 import { PropertyService } from "../../../../service/property.service";
-import { ExpenseService } from "../../../../service/expense.service";
-import { PropertySelectorComponent } from "../../payments/payment-form/property-selector.component";
-import { CompaniesService } from "../../../../service/companies.service";
+import { ExpenseService } from "../../../../service/expense.service"; 
 import { Companies } from "../../../../models/companies";
+import { CompanyService } from "../../../../service/company.service";
 
 @Component({
   selector: "app-expense-form",
@@ -77,7 +76,7 @@ export class AddComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private _httpClient: HttpClient,
     private _expenseService: ExpenseService,
-    private _CompaniesService:CompaniesService
+    private _CompanyService:CompanyService
   ) {
     this.expenseForm = initializeExpenseForm(fb);
 
@@ -151,7 +150,7 @@ export class AddComponent implements OnInit {
 
 getCompany()
 {
-  this._CompaniesService.getCompanies().subscribe({
+  this._CompanyService.getCompanies().subscribe({
     next:(result)=>{
       this.company=result.data
       console.log(result)
@@ -163,13 +162,7 @@ getCompany()
   })
 
 }
-
-
-
-
-
-
-
+ 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
       next: (properties:any) => {
@@ -179,11 +172,7 @@ getCompany()
       complete: () => {},
     });
   }
-
-
-
-
-
+ 
   getFieldError(field: string): string {
     const control = this.DataForm.get(field);
     if (control?.touched && control.errors) {
