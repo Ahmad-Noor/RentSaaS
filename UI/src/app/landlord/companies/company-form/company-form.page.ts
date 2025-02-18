@@ -19,10 +19,10 @@ export class CompanyFormPage implements OnInit {
   companyId?: number;
 
   constructor(
-    private companyService: CompanyService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private userService: UserService
+    private _companyService: CompanyService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _userService: UserService
 
   ) {
     this.companyForm = new FormGroup({
@@ -33,7 +33,7 @@ export class CompanyFormPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get("id");
+    const id = this._route.snapshot.paramMap.get("id");
     if (id) {
       this.isEditMode = true;
       this.companyId = parseInt(id, 10);
@@ -47,9 +47,8 @@ export class CompanyFormPage implements OnInit {
       return;
     }
 
-    this.loading = true;
-    const formValues = this.companyForm.value;
-    const organizationId = this.userService.getCurrentOrganizationId();
+    this.loading = true; 
+    const organizationId = this._userService.getCurrentOrganizationId();
 
     if (!organizationId) {
       console.error('Organization ID is missing.');
@@ -62,10 +61,10 @@ export class CompanyFormPage implements OnInit {
       organizationId: organizationId,
     };
 
-    this.companyService.addCompany(organization).subscribe({
+    this._companyService.addCompany(organization).subscribe({
       next: (result) => {
         console.log("Company added successfully:", result);
-        this.router.navigate(["/landlord/companies"]);
+        this._router.navigate(["/landlord/companies"]);
       },
       error: (error) => {
         console.error("Error adding company:", error);

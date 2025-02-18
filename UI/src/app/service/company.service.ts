@@ -1,10 +1,10 @@
-import { inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Observable } from "rxjs";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/environment";
+import { UserService } from "./user.service";
 import { isPlatformBrowser } from "@angular/common";
 import { CompanyCreate } from "../models/company-create";
-import { UserService } from "./user.service";
+import { environment } from "../../environments/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { inject, Injectable, PLATFORM_ID } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
@@ -36,8 +36,7 @@ export class CompanyService {
   }
 
   private ensureHeadersInitialized(): void {
-    if (!this.headers) {
-      console.log("Initializing headers...");
+    if (!this.headers) { 
       this.initializeHeaders();
     } else {
       console.log("Headers already initialized.");
