@@ -11,9 +11,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   if (isPlatformBrowser(platformed)) {
     const token = localStorage.getItem(Constant.token);
-    const orgId = localStorage.getItem(Constant.OrganizationIdRentSass);
   
-    if (token && orgId) {
+    if (token) {
       return true;
     }
   }

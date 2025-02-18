@@ -77,11 +77,8 @@ export class LoginFormComponent {
   
             if (!response.token) throw new Error('Token is missing in the response.');
   
-            const jwtToken = jwtDecode(response.token);
-
             localStorage.setItem(Constant.token, response.token);
 
-            localStorage.setItem(Constant.OrganizationIdRentSass, response.organizationId || '');
             this.authService.SaveData();
   
             this.navigateBasedOnUserType(response.userType);

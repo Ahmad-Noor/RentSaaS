@@ -41,7 +41,6 @@ export class AuthService {
 
   SignOut() {
     localStorage.removeItem(Constant.token);
-    localStorage.removeItem(Constant.OrganizationIdRentSass);
     this._router.navigate(["/login"]);
   }
 

@@ -3,6 +3,7 @@ export type UserStatus = 'active' | 'inactive' | 'pending';
 
 export interface User {
   id?: string;
+  organizationId?: string;
   firstName: string;
   lastName: string;
   email: string;

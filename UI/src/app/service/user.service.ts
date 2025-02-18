@@ -71,18 +71,12 @@ export class UserService {
   }
 
     public getCurrentOrganizationId(): string | undefined {  
-    const organizationId = localStorage.getItem(Constant.OrganizationIdRentSass);
-    if (!organizationId) {
-      //console.warn('organizationId is missing');
-      return undefined;
-    }
-    return organizationId;
+    const jwtToken = jwtDecode<User>(localStorage.getItem(Constant.token) ?? "");  
+    return jwtToken.organizationId; 
   }
 
   public getCurrentUserId():string |  undefined { 
-    const jwtToken = jwtDecode<User>(
-      localStorage.getItem(Constant.token) ?? ""
-    );  
+    const jwtToken = jwtDecode<User>(localStorage.getItem(Constant.token) ?? "");  
     return jwtToken.id;
   }
  
