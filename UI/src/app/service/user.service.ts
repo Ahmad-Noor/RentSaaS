@@ -71,7 +71,7 @@ export class UserService {
   }
 
     public getCurrentOrganizationId(): string | undefined {  
-    const jwtToken = jwtDecode<User>(localStorage.getItem(Constant.token) ?? "");  
+    const jwtToken = jwtDecode<User>(localStorage.getItem(Constant.token) ?? "");   
     return jwtToken.organizationId; 
   }
 

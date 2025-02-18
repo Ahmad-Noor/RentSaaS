@@ -28,11 +28,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 //------------------------- Add CORS
-builder.Services.AddCors(o =>
+builder.Services.AddCors(c =>
 {
-    o.AddPolicy("MyPolicey", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-}
-);
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 //-------------------------Add Rate Limiter
 //TODO: Add Rate Limiter
@@ -135,7 +134,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 var app = builder.Build();
 
-
+//Enable CORS
+app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 
 app.Use(async (context, next) =>
 {

@@ -24,8 +24,7 @@ public class CompanyController : ControllerBase
         _unitOfWork = unitOfWork;
         _Mapper = Mapper;
     }
-
-    #region Create Company
+     
     [Authorize]
     [HttpPost("Add")]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
@@ -53,11 +52,7 @@ public class CompanyController : ControllerBase
             return new JsonResult($"error on creating new Company {Company.Id}") { StatusCode = 500 };
         }
     }
-
-    #endregion
-
-    #region Delete
-
+      
     [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<CompanyCreateDto>), 200)]
@@ -73,11 +68,8 @@ public class CompanyController : ControllerBase
             return Ok(new ApiResponse<CompanyGetDto>(true, "Delete Is Success"));
         }
         return NotFound(new ApiErrorResponses(404));
-    }
-    #endregion
-
-    #region Get 
-    [Authorize]
+    } 
+     
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<List<CompanyGetDto>>), 200)]
     [ProducesResponseType(typeof(ApiErrorResponses), 400)]
@@ -93,27 +85,7 @@ public class CompanyController : ControllerBase
         var CompanyMapper = _Mapper.Map<List<CompanyGetDto>>(Companies);
         return Ok(new ApiResponse<List<CompanyGetDto>>(true, "All Data For Company", CompanyMapper));
     }
-
-    #endregion
-
-    #region Get By Id
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<CompanyGetDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
-    {
-        var Companies = await _unitOfWork.CompanyRepository.GetById(id);
-        var CompanyMapper = _Mapper.Map<CompanyGetDto>(Companies);
-        if (Companies != null)
-
-        {
-            return Ok(new ApiResponse<CompanyGetDto>(true, "All Data For Company", CompanyMapper));
-        }
-        return NotFound();
-    }
-
-    #endregion
+ 
 
     //[Authorize]
     //[HttpPut("{id}")]

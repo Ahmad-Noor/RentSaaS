@@ -26,20 +26,13 @@ export class CompaniesService {
     if (isPlatformBrowser(this.platformId)) {
       const token = this.userService.getToken();
       const organizationId = this.userService.getCurrentOrganizationId();
-      if (token && organizationId) {
+     
         this.headers = new HttpHeaders({
           "Content-Type": "application/json",
-          "X-OrganizationId": organizationId,
-          Authorization: `Bearer ${token}`,
-
-        });
-
-      
-
-      } else {
-        console.error("Missing token or organizationId in localStorage.");
-        this.headers = new HttpHeaders(); // Fallback in case of missing values
-      }
+          "X-OrganizationId": organizationId || '',
+          Authorization: `Bearer ${token}`
+        }); 
+ 
     } else {
       this.headers = new HttpHeaders(); // Empty headers for non-browser platforms
     }
@@ -56,10 +49,8 @@ export class CompaniesService {
   
 
   getCompanies(): Observable<any> {
-    this.ensureHeadersInitialized();
-
-
-    console.log(this.headers)
+    this.ensureHeadersInitialized(); 
+    console.log("Header :",this.headers);
     return this._httpClient.get(`${this.baseUrl}api/Company`, { headers: this.headers });
   }
 

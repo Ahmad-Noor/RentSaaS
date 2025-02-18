@@ -206,13 +206,7 @@ public class AuthController : ControllerBase
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim("organizationId", user.OrganizationId.ToString())
     };
-
-        // 🔹 Add organization ID if it exists
-        if (!string.IsNullOrEmpty(user.OrganizationId.ToString()))
-        {
-            claims.Add(new Claim("organizationId", user.OrganizationId.ToString()));
-        }
-
+         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
