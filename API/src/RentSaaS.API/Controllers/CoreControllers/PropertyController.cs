@@ -7,6 +7,7 @@ using AutoMapper;
 using RentSaaS.API.ApiErrorResponse;
 using RentSaaS.API.ApiResponse;
 using RentSaaS.Application.DTOs.Property;
+using System.Security.Claims;
 namespace RentSaaS.API.Controllers.CoreControllers;
 
 [ApiController]
@@ -46,6 +47,9 @@ public class PropertyController : ControllerBase
 
         try
         {
+     
+            Property.CreatedBy = Guid.Parse(User.FindFirst("id")?.Value);
+
             await _unitOfWork.PropertyRepository.Add(Property);
             await _unitOfWork.SaveChangesAsync();
 
@@ -135,7 +139,9 @@ public class PropertyController : ControllerBase
         }
         var Property=await _unitOfWork.PropertyRepository.GetById(id);
         _Mapper.Map(propertyDto,Property );
+        Property.LastModifiedBy = Guid.Parse(User.FindFirst("id")?.Value);
         await _unitOfWork.PropertyRepository.Update(Property);
+
         await _unitOfWork.SaveChangesAsync();
         return NoContent();
     }
@@ -156,7 +162,10 @@ public class PropertyController : ControllerBase
         var property = await _unitOfWork.PropertyRepository.FirstOrDefaultAsync(w => w.Id == id);
         if (property != null)
         {
+            var userIdClaim = User.FindFirst("id")?.Value;
             property.IsDeleted = true;
+            property.DeletedBy = Guid.Parse(userIdClaim);
+            property.DeletedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
