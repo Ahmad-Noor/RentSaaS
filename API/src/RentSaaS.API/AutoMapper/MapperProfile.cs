@@ -20,11 +20,35 @@ namespace RentSaaS.API.AutoMapper
         {
 
 
+            #region Property
+            CreateMap<PropertyCreateDto, Property>()
+                .ForMember(source => source.CreatedAt, dist => dist.MapFrom(dtos => DateTime.UtcNow));
+
+
+
+
+
+
+            CreateMap<PropertyUpdateDto, Property>().ForMember(source=>source.LastModifiedAt,dist=>dist.MapFrom(dto=>DateTime.UtcNow));
+            CreateMap<Property, PropertyGetDto>();
+            #endregion
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             #region Auth
-     
-           
+
+
 
             CreateMap<UserRegistrationRequestDto, User>()
                 .ForMember(x=>x.PasswordHash,Dis=>Dis.MapFrom(Source => Password.HashPassword(Source.Password)));
@@ -43,11 +67,6 @@ namespace RentSaaS.API.AutoMapper
             #endregion
 
 
-            #region Property
-            CreateMap<PropertyCreateDto, Property>()/*.ReverseMap()*/;
-            CreateMap<PropertyUpdateDto, Property>();
-            CreateMap<Property, PropertyGetDto>();
-            #endregion
 
 
 

@@ -6,5 +6,14 @@ export type PropertyStatus = "Active" | "Inactive" | "Pending";
 export interface Property {
   id?: UUID;
   address: string;
-  createdBy: string;
 }
+
+
+
+
+export interface PropertyCreate
+{
+  address:        string;
+}
+
+

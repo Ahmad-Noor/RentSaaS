@@ -32,7 +32,7 @@ export class PropertyTableComponent {
   }
 
 
-constructor(private _X:PropertyService) { }
+constructor(private _PropertyService:PropertyService) { }
 
   ngOnInit(){
 
@@ -43,7 +43,7 @@ constructor(private _X:PropertyService) { }
 
   getAllProperties()
   {
-    this._X.getAllProperties().subscribe((res) => {
+    this._PropertyService.getAllProperties().subscribe((res) => {
       console.log(res);
       });
   }

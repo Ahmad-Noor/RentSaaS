@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { Injectable } from "@angular/core";
 import { UserService } from "./user.service";
-import { Property } from "../models/property.model";
+import { Property, PropertyCreate } from "../models/property.model";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
@@ -20,43 +20,41 @@ export class PropertyService {
     });
   }
 
-  getAllProperties(): Observable<Property[]> {
-    return this.http.get<Property[]>(`${this.apiUrl}/GetAll`, {
+
+
+  addProperty(data: PropertyCreate): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Add`, data, {
       headers: this.headers,
     });
   }
 
-  getPropertyById(id: number): Observable<Property> {
-    return this.http.get<Property>(`${this.apiUrl}/${id}`, {
+
+  getAllProperties(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/GetAll`, {
       headers: this.headers,
     });
   }
 
-  addProperty(data: Property): Observable<Property> {
-    return this.http.post<Property>(`${this.apiUrl}/Add`, data, {
+  getPropertyById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/GetById/${id}`, {
       headers: this.headers,
     });
   }
 
-  updateProperty(id: string, data: Property): Observable<Property> {
-    return this.http.put<Property>(this.apiUrl, data, {
+
+
+  updateProperty(id: string, data: Property): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Update/${id}`, data, {
       headers: this.headers,
     });
   }
 
-  deleteProperty(id: string): Observable<Property> {
-    return this.http.delete<Property>(`${this.apiUrl}/${id}`, {
+  deleteProperty(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, {
       headers: this.headers,
     });
   }
 
-  private getPropertyTypeLabel(type: string): string {
-    const labels: Record<string, string> = {
-      house: "Single Family",
-      condo: "Condo/Apartment",
-      townhouse: "Townhouse",
-      community: "Multi-family",
-    };
-    return labels[type] || type;
-  }
+
+  
 }
