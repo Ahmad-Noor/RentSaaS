@@ -57,26 +57,18 @@ export class PropertiesListPage {
   async handleAction(action: { type: string; property: Property }) {
     switch (action.type) {
       case "edit":
-        this.router.navigate([
-          "landlord",
-          "properties",
-          action.property.id,
-          "edit",
-        ]);
+        console.log("edite")
+        this.router.navigate(["/landlord/properties/edit",action.property.id]);
         break;
 
-      case "advertise":
-        this.router.navigate(["landlord", "properties", "advertising"]);
-        break;
+      // case "advertise":
+      //   this.router.navigate(["landlord", "properties", "advertising"]);
+      //   break;
 
-      case "maintenance":
-        this.router.navigate([
-          "landlord",
-          "properties",
-          action.property.id,
-          "maintenance",
-        ]);
-        break;
+      // case "maintenance":
+      //   console.log("maintenance")
+
+      //   break;
 
       case "delete":
         const confirmed = await this.confirmDialog.show({
@@ -88,14 +80,16 @@ export class PropertiesListPage {
         });
 
         if (confirmed) {
-          this.propertyService.deleteProperty(
-              action.property.id as `${string}-${string}-${string}-${string}-${string}`
+          this.propertyService
+            .deleteProperty(
+              action.property
+                .id as `${string}-${string}-${string}-${string}-${string}`
             )
             .subscribe({
               next: () => {
-                this.router.navigate(["/landlord/properties"]); 
+                window.location.reload();
               },
-            }); 
+            });
         }
         break;
     }

@@ -1,9 +1,8 @@
 ﻿
 namespace RentSaaS.Application.DTOs.Property;
 
-public class PropertyCreateDto : BaseEntityDto
+public class PropertyCreateDto
 {
     public  string Address { get; set; } 
-    public  string CreatedBy { get; set; } 
 
 }

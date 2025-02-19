@@ -11,32 +11,44 @@
     </tr>
   </thead>
   <tbody>
-    @for (property of properties; track property.id) {
-      <tr class="border-b hover:bg-gray-50">
-        <td class="py-3 px-4">{{ property.address }}</td>
-        <!-- <td class="py-3 px-4">{{ property.type }}</td> -->
-
-
-
-
-        
-        <!-- <td class="py-3 px-4">{{ property.isDeleted }}</td> -->
-
-        <!-- <td class="py-3 px-4">
-          <span [class]="getStatusClass(property.isDeleted)">
-            {{ property.isDeleted }}
-          </span>
-        </td> -->
-        <td class="py-3 px-4">
-          <app-property-actions 
-            [property]="property"
-            (onAction)="onAction.emit($event)"
-          />
+    @if (properties==null||properties.length<1) {
+      <tr>
+        <td colspan="2">
+          <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            <span class="font-medium">(Property Is Empty) </span> not have any property in this time , u can add New Property
+          </div>
         </td>
-
-
-
       </tr>
     }
+   
+      @for (property of properties; track property.id) {
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-3 px-4">{{ property.address }}</td>
+          <!-- <td class="py-3 px-4">{{ property.type }}</td> -->
+  
+  
+  
+  
+          
+          <!-- <td class="py-3 px-4">{{ property.isDeleted }}</td> -->
+  
+          <!-- <td class="py-3 px-4">
+            <span [class]="getStatusClass(property.isDeleted)">
+              {{ property.isDeleted }}
+            </span>
+          </td> -->
+          <td class="py-3 px-4">
+            <app-property-actions 
+              [property]="property"
+              (onAction)="onAction.emit($event)"
+            />
+          </td>
+  
+  
+  
+        </tr>
+      }
+    
+
   </tbody>
 </table>

@@ -26,6 +26,53 @@ public class PropertyController : ControllerBase
         _Mapper = Mapper;
     }
 
+
+
+    #region Add Property
+
+    [HttpPost]
+    [Route("Add")]
+    [ProducesResponseType(typeof(ApiResponse<PropertyCreateDto>), 200)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    public async Task<IActionResult> Add([FromBody] PropertyCreateDto propertyDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var Property = _Mapper.Map<Property>(propertyDto);
+
+        try
+        {
+            await _unitOfWork.PropertyRepository.Add(Property);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(new ApiResponse<PropertyCreateDto>(true, "Property Is Create Success", propertyDto));
+        }
+        catch (Exception ex)
+        {
+            return new JsonResult($"error on creating new property {Property.Id}") { StatusCode = 500 };
+        }
+    }
+
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #region GetAll
 
     [HttpGet]
@@ -72,41 +119,6 @@ public class PropertyController : ControllerBase
 
 
 
-    #region Add Property
-
-    [HttpPost]
-    [Route("Add")]
-    [ProducesResponseType(typeof(ApiResponse<PropertyCreateDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
-    public async Task<IActionResult> Add([FromBody] PropertyCreateDto propertyDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
-        propertyDto.CreatedAt = DateTime.UtcNow;
-        var Property = _Mapper.Map<Property>(propertyDto);
-
-        try
-        {
-            //_logger.LogInformation("Create new property, property name #{Id}", Property.Id);
-            await _unitOfWork.PropertyRepository.Add(Property);
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(new ApiResponse<PropertyCreateDto>(true, "Property Is Create Success", propertyDto));
-        }
-        catch (Exception ex)
-        {
-            //_logger.LogError(ex, "error on creating new property, property name #{Id}", property.Id);
-            return new JsonResult($"error on creating new property {Property.Id}") { StatusCode = 500 };
-        }
-    }
-
-    #endregion
-
-
 
     #region Update
 
@@ -121,7 +133,9 @@ public class PropertyController : ControllerBase
         {
             return BadRequest();
         }
-
+        var Property=await _unitOfWork.PropertyRepository.GetById(id);
+        _Mapper.Map(propertyDto,Property );
+        await _unitOfWork.PropertyRepository.Update(Property);
         await _unitOfWork.SaveChangesAsync();
         return NoContent();
     }

@@ -16,7 +16,7 @@
   <div class="bg-white rounded-lg shadow">
     <div class="p-6">
 
-      <form [formGroup]="propertyForm" (ngSubmit)="AddProperty(propertyForm)" class="space-y-6">
+      <form [formGroup]="propertyForm" (ngSubmit)="Submite(propertyForm)" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
 
           @if(error!=null && error!=''){
@@ -61,13 +61,29 @@
           </div> 
         </div> 
         <div class="flex justify-end gap-4">
-          <a routerLink=".." class="px-4 py-2 text-gray-700 bg-white border rounded hover:bg-gray-50">
+          <a routerLink="/landlord/properties" class="px-4 py-2 text-gray-700 bg-white border rounded hover:bg-gray-50">
             Cancel
           </a>
+
+
+
           <button type="submit" [disabled]="propertyForm.invalid || loading"
             class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
-            {{ loading ? 'Creating...' : 'Create Property' }}
+
+
+            @if (propertyId==null) {
+              {{ loading ? 'Creating...' : 'Create Property' }}
+            }
+            @else {
+              {{ loading ? 'Update...' : 'Update Property' }}
+            }
+           
           </button>
+
+
+
+
+
         </div> 
       </form> 
     </div>
