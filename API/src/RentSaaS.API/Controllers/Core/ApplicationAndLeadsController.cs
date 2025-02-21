@@ -1,29 +1,20 @@
-﻿using RentSaaS.Domain;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AutoMapper;
 using RentSaaS.API.APIResponse;
+using Microsoft.AspNetCore.Authorization;
 using RentSaaS.Application.DTOs.RentApplication;
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class ApplicationAndLeadsController : ControllerBase
+public class ApplicationAndLeadsController : BaseControllery
 {
-    // add comment for github
     private readonly ILogger<ApplicationAndLeadsController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
     {
         _logger = logger;
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
     }
 
     #region Get All
@@ -43,12 +34,7 @@ public class ApplicationAndLeadsController : ControllerBase
         var ApplicationMapper = _mapper.Map<List<ApplicationGetDto>>(application);
         
         return Ok(new APIResponse<List<ApplicationGetDto>>(true, "All Data For Application", ApplicationMapper)); ;
- 
-    
-    
-    
-    
-    
+
     
     }
 

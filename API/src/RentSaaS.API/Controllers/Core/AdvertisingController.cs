@@ -1,31 +1,21 @@
-﻿
-
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.APIResponse;
-using RentSaaS.Application.DTOs.Advertising;
-using RentSaaS.Domain;
 using RentSaaS.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using RentSaaS.Application.DTOs.Advertising;
+
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class AdvertisingController : ControllerBase
+public class AdvertisingController : BaseControllery
 {
-    // add comment for github
     private readonly ILogger<LeaseController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
     {
         _logger = logger;
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
     }
 
     #region Get All
@@ -99,8 +89,8 @@ public class AdvertisingController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new leases ");
-            return new JsonResult($"error on creating new leases") { StatusCode = 500 };
+            _logger.LogError(ex, "error on creating new Advertising ");
+            return new JsonResult($"error on creating new Advertising") { StatusCode = 500 };
         }
     }
 
