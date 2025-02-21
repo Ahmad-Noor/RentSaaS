@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace RentSaaS.API.Controllers.Core;
+namespace RentSaaS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,5 +17,5 @@ public class BaseControllery : ControllerBase
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-    } 
+    }
 }

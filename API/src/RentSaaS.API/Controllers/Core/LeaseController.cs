@@ -1,30 +1,21 @@
-﻿using RentSaaS.Domain;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
-using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AutoMapper;
 using RentSaaS.API.APIResponse;
-using RentSaaS.Application.DTOs.Advertising;
+using RentSaaS.Domain.Entities;
 using RentSaaS.Application.DTOs.Lease;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class LeaseController : ControllerBase
+public class LeaseController : BaseControllery
 {
-    // add comment for github
     private readonly ILogger<LeaseController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
         _logger = logger;
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
+
     }
 
     #region Get All
