@@ -11,101 +11,74 @@ using RentSaaS.Domain.Entities;
 using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.RentApplication;
 
-namespace RentSaaS.API.AutoMapper
+namespace RentSaaS.API.AutoMapper;
+
+public class MapperProfile :Profile
 {
-    public class MapperProfile :Profile
+
+    public MapperProfile()
     {
 
-        public MapperProfile()
-        {
+        #region Property
+        CreateMap<PropertyCreateDto, Property>()
+            .ForMember(source => source.CreatedAt, dist => dist.MapFrom(dtos => DateTime.UtcNow));
 
+        CreateMap<PropertyUpdateDto, Property>().ForMember(source=>source.LastModifiedAt,dist=>dist.MapFrom(dto=>DateTime.UtcNow));
+        CreateMap<Property, PropertyGetDto>();
+        #endregion
 
-            #region Property
-            CreateMap<PropertyCreateDto, Property>()
-                .ForMember(source => source.CreatedAt, dist => dist.MapFrom(dtos => DateTime.UtcNow));
-
-
-
-
-
-
-            CreateMap<PropertyUpdateDto, Property>().ForMember(source=>source.LastModifiedAt,dist=>dist.MapFrom(dto=>DateTime.UtcNow));
-            CreateMap<Property, PropertyGetDto>();
-            #endregion
+        #region Auth
 
 
 
+        CreateMap<UserRegistrationRequestDto, User>()
+            .ForMember(x=>x.PasswordHash,Dis=>Dis.MapFrom(Source => Password.HashPassword(Source.Password)));
+        #endregion
 
 
 
+        #region Expense 
+        CreateMap<ExpenseCreateDTO, Expense>()/*.ReverseMap()*/;
+        CreateMap<ExpenseUpdateDTO, Expense>();
+        CreateMap<Expense, GetExpenseDto>();
+        CreateMap<Expense, GetExpenseByIdDto>();
+        #endregion
 
 
 
+        #region Company
+        CreateMap<CompanyCreateDto, Company>();
+        CreateMap<Company, CompanyGetDto>();
+        #endregion
+
+
+        #region Lease
+        CreateMap<LeaseCreateDto, Lease>()/*.ReverseMap()*/;
+        CreateMap<LeaseUpdateDto, Lease>();
+        CreateMap<Lease, LeaseGetDto>();
+        #endregion
 
 
 
+        #region Address
+        CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;
+        CreateMap<AddressUpdateDto, Address>();
+        CreateMap<Address, AddressGetDto>();
+        #endregion
 
+        #region Advertizing
+        CreateMap<AdvertisingCreateDto,Advertising>()/*.ReverseMap()*/;
+        CreateMap<AddressUpdateDto, Advertising>();
+        CreateMap<Advertising, AdvertisingGetDto>();
+        #endregion
 
-            #region Auth
-
-
-
-            CreateMap<UserRegistrationRequestDto, User>()
-                .ForMember(x=>x.PasswordHash,Dis=>Dis.MapFrom(Source => Password.HashPassword(Source.Password)));
-            #endregion
-
-
-
-
-
-
-            #region Expense 
-            CreateMap<ExpenseCreateDTO, Expense>()/*.ReverseMap()*/;
-            CreateMap<ExpenseUpdateDTO, Expense>();
-            CreateMap<Expense, GetExpenseDto>();
-            CreateMap<Expense, GetExpenseByIdDto>();
-            #endregion
-
-
-
-
-
-
-
-            #region Company
-            CreateMap<CompanyCreateDto, Company>();
-            CreateMap<Company, CompanyGetDto>();
-            #endregion
-
-
-            #region Lease
-            CreateMap<LeaseCreateDto, Lease>()/*.ReverseMap()*/;
-            CreateMap<LeaseUpdateDto, Lease>();
-            CreateMap<Lease, LeaseGetDto>();
-            #endregion
-
-
-
-            #region Address
-            CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;
-            CreateMap<AddressUpdateDto, Address>();
-            CreateMap<Address, AddressGetDto>();
-            #endregion
-
-            #region Advertizing
-            CreateMap<AdvertisingCreateDto,Advertising>()/*.ReverseMap()*/;
-            CreateMap<AddressUpdateDto, Advertising>();
-            CreateMap<Advertising, AdvertisingGetDto>();
-            #endregion
-
-            #region Application&Leads
-            CreateMap<ApplicationCreateDto, ApplicationAndLeads>()/*.ReverseMap()*/;
-            CreateMap<ApplicationUpdateDto, ApplicationAndLeads>();
-            CreateMap<ApplicationAndLeads, ApplicationGetDto>();
-            #endregion
-
-        }
-
+        #region Application&Leads
+        CreateMap<ApplicationCreateDto, ApplicationAndLeads>()/*.ReverseMap()*/;
+        CreateMap<ApplicationUpdateDto, ApplicationAndLeads>();
+        CreateMap<ApplicationAndLeads, ApplicationGetDto>();
+        #endregion
 
     }
+
+
 }

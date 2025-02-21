@@ -13,6 +13,6 @@ namespace RentSaaS.Application.DTOs.Expense
         public string? Category { get; set; }
         public string? Details { get; set; }
         public bool? IsPaid { get; set; }
-        public IFormFile[]? ReceiptsFiles { get; set; }
+        public IFormFileCollection? ReceiptsFiles { get; set; }
     }
 }

@@ -20,11 +20,11 @@ import { ExpenseFormData } from "./models/expense-form.model";
 import { initializeExpenseForm } from "./utils/form-utils";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReceiptItemComponent } from "./receipt-item.component";
-import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component"; 
+import { FormFieldComponent } from "../../../../shared/components/form-field/form-field.component";
 import { Expense } from "../../../../models/expense.types";
 import { Receipt } from "../../../../models/receipt.types";
 import { PropertyService } from "../../../../service/property.service";
-import { ExpenseService } from "../../../../service/expense.service"; 
+import { ExpenseService } from "../../../../service/expense.service";
 import { Companies } from "../../../../models/companies";
 import { CompanyService } from "../../../../service/company.service";
 
@@ -37,7 +37,6 @@ import { CompanyService } from "../../../../service/company.service";
     RouterLink,
     FormFieldComponent,
     ReceiptItemComponent,
-
   ],
   templateUrl: "./add.component.html",
 })
@@ -50,23 +49,19 @@ export class AddComponent implements OnInit {
   expenseForm: FormGroup;
   loading = false;
   properties: any[] = [];
-  company!:Companies[];
-
-
-
-
+  company!: Companies[];
 
   DataForm = new FormGroup({
     propertyId: new FormControl(null, [Validators.required]),
-    paymentSchedule: new FormControl(null,[Validators.required]),
-    category: new FormControl(null,[Validators.required]),
+    paymentSchedule: new FormControl(null, [Validators.required]),
+    category: new FormControl(null, [Validators.required]),
     expenseType: new FormControl("property"),
-    amount: new FormControl(100,[Validators.required]),
-    dueDate: new FormControl(null,[Validators.required]),
+    amount: new FormControl(100, [Validators.required]),
+    dueDate: new FormControl(null, [Validators.required]),
     details: new FormControl(null),
     isPaid: new FormControl(true, Validators.required),
     type: new FormControl("property"),
-    CompanyId:new FormControl(null),
+    CompanyId: new FormControl(null),
     receipts: new FormControl([]),
   });
 
@@ -76,7 +71,7 @@ export class AddComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private _httpClient: HttpClient,
     private _expenseService: ExpenseService,
-    private _CompanyService:CompanyService
+    private _CompanyService: CompanyService
   ) {
     this.expenseForm = initializeExpenseForm(fb);
 
@@ -102,13 +97,8 @@ export class AddComponent implements OnInit {
       });
     }
 
-
-
-    this.getCompany()
+    this.getCompany();
   }
-
-
-
 
   handleSubmit(data: FormGroup): void {
     if (data.invalid) {
@@ -143,36 +133,32 @@ export class AddComponent implements OnInit {
       },
       complete: () => {
         console.log("Complete");
-      }
+      },
     });
   }
 
+  getCompany() {
+    this._CompanyService.getCompanies().subscribe({
+      next: (result) => {
+        this.company = result.data;
+        console.log(result);
+      },
+      error: (result) => {
+        console.log(result);
+      },
+    });
+  }
 
-getCompany()
-{
-  this._CompanyService.getCompanies().subscribe({
-    next:(result)=>{
-      this.company=result.data
-      console.log(result)
-    },
-    error:(result)=>{
-      console.log(result)
-    },
-
-  })
-
-}
- 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
-      next: (properties:any) => {
+      next: (properties: any) => {
         this.properties = properties.data;
       },
       error: (properties) => {},
       complete: () => {},
     });
   }
- 
+
   getFieldError(field: string): string {
     const control = this.DataForm.get(field);
     if (control?.touched && control.errors) {

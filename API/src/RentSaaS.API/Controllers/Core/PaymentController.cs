@@ -1,4 +1,4 @@
-namespace RentSaaS.API.Controllers.CoreControllers;
+namespace RentSaaS.API.Controllers.Core;
 
 public class PaymentController 
 {

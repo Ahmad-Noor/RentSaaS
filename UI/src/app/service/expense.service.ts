@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { isPlatformBrowser } from "@angular/common";
 import { Constant } from "../constants";
+import { UserService } from "./user.service";
 
 @Injectable({
   providedIn: "root",
@@ -15,27 +16,27 @@ export class ExpenseService {
   headers!: HttpHeaders;
   private expenses = new BehaviorSubject<Expense[]>(MOCK_EXPENSES);
 
-  initializationHeader(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.headers = new HttpHeaders({
-        "X-OrganizationId": `${localStorage.getItem(
-          Constant.OrganizationIdRentSass
-        )}`,
-        Authorization: `Bearer ${localStorage.getItem(Constant.token)}`,
-      });
-    } else {
-      this.headers = new HttpHeaders();
-    }
-  }
-
   constructor(
     private _httpClient: HttpClient,
+    private userService: UserService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.expenses = new BehaviorSubject<Expense[]>([]);
     this.initializationHeader();
   }
+ 
 
+  initializationHeader(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.headers = new HttpHeaders({
+        "X-OrganizationId": `${this.userService.getCurrentOrganizationId()}`,
+        Authorization: `Bearer ${this.userService.getToken()}`,
+      });
+    } else {
+      this.headers = new HttpHeaders();
+    }
+  }
+ 
   getExpenses(): Observable<Expense[]> {
     return this.expenses.asObservable();
   }

@@ -1,6 +1,6 @@
-﻿namespace RentSaaS.API.ApiResponse
+﻿namespace RentSaaS.API.APIResponse
 {
-    public class ApiResponse<T>
+    public class APIResponse<T>
     {
         public bool Success { get; set; }
         public string Message { get; set; }
@@ -8,12 +8,12 @@
 
 
 
-        public ApiResponse(bool success, string message)
+        public APIResponse(bool success, string message)
         {
             Success = success;
             Message = message;
         }
-        public ApiResponse(bool success, string message, T data)
+        public APIResponse(bool success, string message, T data)
         {
             Success = success;
             Message = message;
@@ -21,7 +21,7 @@
         }
 
         // Optionally, a constructor for simpler cases (only message):
-        public ApiResponse(string message)
+        public APIResponse(string message)
         {
             Success = true;
             Message = message;

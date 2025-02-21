@@ -8,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using RentSaaS.Domain.Entities;
 using RentSaaS.Infrastructure.Data;
-using RentSaaS.Application.DTOs;
 using RentSaaS.Application.DTOs.UserDtos;
 using AutoMapper;
 using RentSaaS.API.Helper;
@@ -26,13 +25,13 @@ public class AuthController : ControllerBase
     private readonly IConfiguration _configuration;
 
     public UserManager<User> _userManager { get; }
-    public IMapper _Mapper { get; }
+    public IMapper _mapper { get; }
 
     public AuthController(UserManager<User> userManager,ILogger<UserController> logger,IMapper Mapper,IConfiguration configuration,RentSaaSDBContext db)
     {
         _userManager = userManager;
         _logger = logger;
-        _Mapper = Mapper;
+        _mapper = Mapper;
         _configuration = configuration;
         _rentSaaSDBContext = db;
     }

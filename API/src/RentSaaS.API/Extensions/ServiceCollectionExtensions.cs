@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RentSaaS.Application.Services.Implementations;
-using RentSaaS.Application.Services.Interfaces;
+using Microsoft.Extensions.FileProviders;
+using RentSaaS.Application.Services;
 using RentSaaS.Domain;
 using RentSaaS.Infrastructure.Data;
 
@@ -21,6 +21,15 @@ namespace RentSaaS.API.Extensions
         {
             // Register domain services
             services.AddScoped<IOrganizationService, OrganizationService>();
+            services.AddScoped<IFileManagmentService, FileManagmentService>();
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            if (!Directory.Exists(wwwrootPath))
+            {
+                Directory.CreateDirectory(wwwrootPath);
+            }
+
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
 

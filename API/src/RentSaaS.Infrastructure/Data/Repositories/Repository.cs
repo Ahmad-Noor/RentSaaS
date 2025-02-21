@@ -60,6 +60,19 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         //    return true;
         //} 
     }
+    public virtual async Task<bool> AddRangeAsync(T[] entities)
+    {
+        //try
+        //{
+        await dbSet.AddRangeAsync(entities);
+        return true;
+        //}
+        //catch (Exception e)
+        //{
+        //    _logger.LogError(e, "Error adding entity");
+        //    return true;
+        //} 
+    }
     public Task<T> Update(T entity)
     {
         dbSet.Update(entity);

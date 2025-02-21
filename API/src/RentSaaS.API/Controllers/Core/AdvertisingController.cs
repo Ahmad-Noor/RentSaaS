@@ -4,13 +4,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RentSaaS.API.ApiErrorResponse;
-using RentSaaS.API.ApiResponse;
+using RentSaaS.API.APIResponse;
 using RentSaaS.Application.DTOs.Advertising;
 using RentSaaS.Domain;
 using RentSaaS.Domain.Entities;
 
-namespace RentSaaS.API.Controllers.CoreControllers;
+namespace RentSaaS.API.Controllers.Core;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,13 +19,13 @@ public class AdvertisingController : ControllerBase
     // add comment for github
     private readonly ILogger<LeaseController> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _Mapper;
+    private readonly IMapper _mapper;
 
     public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _Mapper = Mapper;
+        _mapper = Mapper;
     }
 
     #region Get All
@@ -34,18 +33,18 @@ public class AdvertisingController : ControllerBase
     [Authorize]
     [HttpGet]
     [Route("GetAll")]
-    [ProducesResponseType(typeof(ApiResponse<List<AdvertisingGetDto>>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    [ProducesResponseType(typeof(APIResponse<List<AdvertisingGetDto>>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
         var advertising = await _unitOfWork.AdvertisingRepository.GetAll();
         if (advertising == null)
         {
-            return NotFound(new ApiErrorResponses(404));
+            return NotFound(new APIErrorResponse(404));
         }
-        var AdvertisingMapper = _Mapper.Map<List<AdvertisingGetDto>>(advertising);
-        return Ok(new ApiResponse<List<AdvertisingGetDto>>(true, "All Data For Advertising",AdvertisingMapper)); 
+        var AdvertisingMapper = _mapper.Map<List<AdvertisingGetDto>>(advertising);
+        return Ok(new APIResponse<List<AdvertisingGetDto>>(true, "All Data For Advertising",AdvertisingMapper)); 
     }
 
     #endregion
@@ -56,18 +55,18 @@ public class AdvertisingController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("{id:Guid}")]
-    [ProducesResponseType(typeof(ApiResponse<AdvertisingGetDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingGetDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var advertising = await _unitOfWork.AdvertisingRepository.GetById(id);
-        var AdvertisingMapper = _Mapper.Map<AdvertisingGetDto>(advertising);
+        var AdvertisingMapper = _mapper.Map<AdvertisingGetDto>(advertising);
         if (advertising != null)
         {
-            return Ok(new ApiResponse<AdvertisingGetDto>(true, "All Data For Advertising", AdvertisingMapper));
+            return Ok(new APIResponse<AdvertisingGetDto>(true, "All Data For Advertising", AdvertisingMapper));
         }
-        return NotFound(new ApiErrorResponses(404));
+        return NotFound(new APIErrorResponse(404));
     }
 
 
@@ -78,9 +77,9 @@ public class AdvertisingController : ControllerBase
 
     [HttpPost]
     [Route("Add")]
-    [ProducesResponseType(typeof(ApiResponse<AdvertisingCreateDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> Add([FromBody] AdvertisingCreateDto advertisingDto)
     {
         if (!ModelState.IsValid)
@@ -88,7 +87,7 @@ public class AdvertisingController : ControllerBase
             return BadRequest();
         }
 
-        var Advertising = _Mapper.Map<Advertising>(advertisingDto);
+        var Advertising = _mapper.Map<Advertising>(advertisingDto);
 
         try
         {
@@ -96,7 +95,7 @@ public class AdvertisingController : ControllerBase
             await _unitOfWork.AdvertisingRepository.Add(Advertising);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new ApiResponse<AdvertisingCreateDto>(true, "Advertising Is Create Success",advertisingDto));
+            return Ok(new APIResponse<AdvertisingCreateDto>(true, "Advertising Is Create Success",advertisingDto));
         }
         catch (Exception ex)
         {
@@ -112,9 +111,9 @@ public class AdvertisingController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<AdvertisingUpdateDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 404)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingUpdateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 404)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
     public async Task<IActionResult> Update(Guid id, AdvertisingUpdateDto advertisingDto)
     {
         if (id != advertisingDto.Id)
@@ -133,9 +132,9 @@ public class AdvertisingController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<AdvertisingCreateDto>), 200)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 400)]
-    [ProducesResponseType(typeof(ApiErrorResponses), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var advertising = await _unitOfWork.AdvertisingRepository.FirstOrDefaultAsync(w => w.Id == id);
@@ -143,10 +142,10 @@ public class AdvertisingController : ControllerBase
         {
             advertising.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
-          //  return Ok(new ApiResponse<AdvertisingCreateDto>(true, "Delete Is Success"));
+          //  return Ok(new APIResponse<AdvertisingCreateDto>(true, "Delete Is Success"));
             return NoContent();
         }
-        return NotFound(new ApiErrorResponses(404));
+        return NotFound(new APIErrorResponse(404));
     }
 
     #endregion
