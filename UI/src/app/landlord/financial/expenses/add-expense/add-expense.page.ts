@@ -1,13 +1,7 @@
-import { RouterLink, Router, ActivatedRoute } from '@angular/router'; 
-import { ExpenseService } from '../../../../service/expense.service'; 
-import { ExpenseFormData } from '../../../../models/expense-form.types';
-import { 
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  Component,
-} from "@angular/core";
+import { RouterLink, Router, ActivatedRoute } from "@angular/router";
+import { ExpenseService } from "../../../../service/expense.service";
+import { ExpenseFormData } from "../../../../models/expense-form.types";
+import { EventEmitter, Input, Output, OnInit, Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   FormBuilder,
@@ -15,88 +9,89 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from "@angular/forms"; 
+} from "@angular/forms";
 import { Expense } from "../../../../models/expense.types";
 import { Receipt } from "../../../../models/receipt.types";
-import { PropertyService } from "../../../../service/property.service"; 
+import { PropertyService } from "../../../../service/property.service";
 import { Companies } from "../../../../models/companies";
 import { CompanyService } from "../../../../service/company.service";
-import { ReceiptItemComponent } from './receipt-item.component';
+import { ReceiptItemComponent } from "./receipt-item.component";
 
- 
 @Component({
-  selector: 'app-add-expense-page',
+  selector: "app-add-expense-page",
   standalone: true,
-  imports: [RouterLink, 
-            CommonModule,
-            ReactiveFormsModule,  
-            ReceiptItemComponent],
-  templateUrl: './add-expense.page.html',
-  styleUrls: ['./add-expense.page.css']
+  imports: [
+    RouterLink,
+    CommonModule,
+    ReactiveFormsModule,
+    ReceiptItemComponent,
+  ],
+  templateUrl: "./add-expense.page.html",
+  styleUrls: ["./add-expense.page.css"],
 })
-export class AddExpensePage implements OnInit  {
+export class AddExpensePage implements OnInit {
   expenseForm: FormGroup;
   @Input() expense?: Expense;
   @Output() save = new EventEmitter<ExpenseFormData>();
 
   receipts: Receipt[] = [];
-  error = ""; 
+  error = "";
   loading = false;
   properties: any[] = [];
   company!: Companies[];
- 
-  constructor(  private _fss: FormBuilder,
+
+  constructor(
+    private _fss: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private expenseService: ExpenseService, 
-    private _propertyServices: PropertyService, 
+    private expenseService: ExpenseService,
+    private _propertyServices: PropertyService,
     private _expenseService: ExpenseService,
-    private _CompanyService: CompanyService , 
-   ) { 
+    private _CompanyService: CompanyService
+  ) {
+    this.getAllProperties();
 
-      this.getAllProperties(); 
-
-      this.expenseForm = this._fss.group({
-        id: 0,
-        propertyId: new FormControl(null, [Validators.required]),
-        paymentSchedule: new FormControl(null, [Validators.required]),
-        category: new FormControl(null, [Validators.required]),
-        expenseType: new FormControl("property"),
-        amount: new FormControl(100, [Validators.required]),
-        dueDate: new FormControl(null, [Validators.required]),
-        details: new FormControl(null),
-        isPaid: new FormControl(true, Validators.required),
-        type: new FormControl("property"),
-        CompanyId: new FormControl(null),
-        receipts: new FormControl([]),
-      });
-    } 
+    this.expenseForm = this._fss.group({
+      id: "",
+      propertyId: new FormControl(null, [Validators.required]),
+      paymentSchedule: new FormControl(null, [Validators.required]),
+      category: new FormControl(null, [Validators.required]),
+      expenseType: new FormControl("property"),
+      amount: new FormControl(100, [Validators.required]),
+      dueDate: new FormControl(null, [Validators.required]),
+      details: new FormControl(null),
+      isPaid: new FormControl(true, Validators.required),
+      type: new FormControl("property"),
+      CompanyId: new FormControl(null),
+      receipts: new FormControl([]),
+    });
+  }
   ngOnInit() {
     //this.expenseForm.patchValue(this.data);
- 
     this.getCompany();
   }
-  
+
   onFormSubmit(): void {
-   
     if (this.expenseForm.valid) {
       // if (this.data) {
       //   this._expenseService
       //     .updateExpense(this.data.id, this.expenseForm.value)
       //     .subscribe({
       //       next: (val: any) => {
-      //         // this._coreService.openSnackBar('Address detail updated!'); 
-      //         console.log('Address detail updated!'); 
+      //         // this._coreService.openSnackBar('Address detail updated!');
+      //         console.log('Address detail updated!');
       //       },
       //       error: (err: any) => {
       //         console.error(err);
       //       },
       //     });
       // } else {
-        this._expenseService.addExpense(this.expenseForm.value as Expense).subscribe({
+      this._expenseService
+        .addExpense(this.expenseForm.value as Expense)
+        .subscribe({
           next: (val: any) => {
-            // this._coreService.openSnackBar('Expense added successfully'); 
-            console.log('Expense added successfully'); 
+            // this._coreService.openSnackBar('Expense added successfully');
+            console.log("Expense added successfully");
           },
           error: (err: any) => {
             console.error(err);
@@ -106,26 +101,28 @@ export class AddExpensePage implements OnInit  {
       // };
     }
 
-  
-    this.router.navigate(['..'], { relativeTo: this.route });
+    this.router.navigate([".."], { relativeTo: this.route });
   }
-
 
   getCompany() {
     this._CompanyService.getCompanies().subscribe({
-      next: (result) => {this.company = result.data;       },
-      error: (result) => {       },
+      next: (result) => {
+        this.company = result.data;
+      },
+      error: (result) => {},
     });
   }
 
   getAllProperties() {
     this._propertyServices.getAllProperties().subscribe({
-      next: (properties: any) => {        this.properties = properties.data;      },
+      next: (properties: any) => {
+        this.properties = properties.data;
+      },
       error: (properties) => {},
       complete: () => {},
     });
   }
-  
+
   onFilesSelected(event: any): void {
     const files = Array.from((event.target as HTMLInputElement).files || []);
 
@@ -142,12 +139,12 @@ export class AddExpensePage implements OnInit  {
       }
 
       const receipt: Receipt = {
-        id: crypto.randomUUID(),
-        file,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      };
+                                id: crypto.randomUUID(),
+                                file,
+                                name: file.name,
+                                size: file.size,
+                                type: file.type,
+                              };
 
       this.receipts.push(receipt);
     });
@@ -159,8 +156,6 @@ export class AddExpensePage implements OnInit  {
     this.receipts = this.receipts.filter((r) => r.id !== receipt.id);
     this.error = "";
   }
-
-
 }
 
 function validateReceipt(file: File): { isValid: boolean; error?: string } {
@@ -177,4 +172,3 @@ function validateReceipt(file: File): { isValid: boolean; error?: string } {
 
   return { isValid: true };
 }
- 

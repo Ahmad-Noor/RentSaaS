@@ -20,8 +20,10 @@ import { PropertySelectorComponent } from '../../properties/property-selector/pr
     <form [formGroup]="requestForm" (ngSubmit)="handleSubmit()" class="space-y-6">
       <app-property-selector [formGroup]="requestForm" />
 
-      <app-form-field label="Issue Type" id="issueType">
-        <select
+
+      <div>
+    <label id="issueType" class="block text-sm font-medium text-gray-700">{{ "Issue Type" }}</label>
+    <select
           id="issueType"
           formControlName="issueType"
           class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
@@ -34,10 +36,13 @@ import { PropertySelectorComponent } from '../../properties/property-selector/pr
           <option value="structural">Structural</option>
           <option value="other">Other</option>
         </select>
-      </app-form-field>
+    <p *ngIf="null" class="mt-1 text-sm text-red-600">{{ null }}</p>
+  </div>
 
-      <app-form-field label="Priority" id="priority">
-        <select
+ 
+  <div>
+    <label id="priority" class="block text-sm font-medium text-gray-700">{{ "priority" }}</label>
+    <select
           id="priority"
           formControlName="priority"
           class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
@@ -48,7 +53,10 @@ import { PropertySelectorComponent } from '../../properties/property-selector/pr
           <option value="high">High</option>
           <option value="emergency">Emergency</option>
         </select>
-      </app-form-field>
+  <!-- <p *ngIf="getFieldError('propertyId')" class="mt-1 text-sm text-red-600">{{ error }}</p> -->
+  </div>
+
+ 
 
       <app-form-field label="Description" id="description">
         <textarea

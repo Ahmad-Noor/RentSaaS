@@ -15,5 +15,12 @@ export interface Expense {
   vendor?: string;
   type?: ExpenseType;
   reference?: string;
-}
+  isPaid?: boolean;
+  receipts?: File[];
+  details?: string;
+  
  
+  //expenseType: 'recurring' | 'onetime' | 'scheduled'; 
+
+
+}
