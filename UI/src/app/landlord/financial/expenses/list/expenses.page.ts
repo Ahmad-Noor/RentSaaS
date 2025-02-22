@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
-import { ExpenseService } from "../../../../service/expense.service";
 import { Expense } from "../../../../models/expense.types";
+import { ExpenseService } from "../../../../service/expense.service";
 import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog/confirm-dialog.service";
 
 @Component({
@@ -12,7 +12,7 @@ import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog
   templateUrl: "./expenses.page.html",
   styleUrls: ["./expenses.page.css"],
 })
-export class ExpensesPage {
+export class ExpensesPage  implements OnInit  {
   expenses: any[] = [];
   filteredExpenses: any[] = [];
   @Output() onAction = new EventEmitter<{ type: string; expense: Expense }>();
@@ -22,21 +22,21 @@ export class ExpensesPage {
     private router: Router,
     private expenseService: ExpenseService,
     private confirmDialog: ConfirmDialogService
-  ) {
-    this.expenseService.getExpenses().subscribe((expenses) => {
-      this.expenses = expenses;
-      this.filteredExpenses = expenses; // Initialize with all expenses
-    });
+  ) {  }
+  ngOnInit(): void {
+    this.getExpensesList();
+  }
 
+  getExpensesList() {
     this.expenseService.getAllExpenses().subscribe({
       next: (expenses) => {
         console.log(expenses);
         this.expenses = expenses;
         this.filteredExpenses = expenses;
       },
-    });
+    }); 
   }
-
+ 
   getStatusClass(status: string): string {
     const baseClasses = "px-2 py-1 rounded-full text-sm capitalize";
     const statusClasses: Record<string, string> = {
