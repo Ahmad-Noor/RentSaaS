@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable } from 'rxjs';
 import { APIResponse } from '../models/api-response.types';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
@@ -14,17 +14,20 @@ export class LeaseService {
   apiUrl: string = `${environment.apiUrl}api/Lease`;
   headers!: HttpHeaders;
 
-constructor(private http: HttpClient, private userService: UserService) {
-  this.headers = new HttpHeaders({
-    "X-OrganizationId": `${this.userService.getCurrentOrganizationId()}`,
-    Authorization: `Bearer ${this.userService.getToken()}`,
-  });
-}
+  constructor(private http: HttpClient, private userService: UserService) {}
+
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'X-OrganizationId': `${this.userService.getCurrentOrganizationId()}`,
+      'Authorization': `Bearer ${this.userService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
+  }
 
 
   getLeases(): Observable<Lease[]> {
     return this.http
-      .get<APIResponse<Lease[]>>(this.apiUrl, { headers: this.headers })
+      .get<APIResponse<Lease[]>>(this.apiUrl, { headers: this.getHeaders()})
       .pipe(
         map(response => response.data)
       );
@@ -32,24 +35,28 @@ constructor(private http: HttpClient, private userService: UserService) {
 
 
   getLeaseById(id: string): Observable<Lease> {
-    return this.http.get<Lease>(`${this.apiUrl}/${id}`, {headers: this.headers});
+    return this.http.get<Lease>(`${this.apiUrl}/${id}`, {headers: this.getHeaders()});
   }
 
 
-  addLease(data: Lease): Observable<Lease>  {
-    console.log(data);
-    console.log(this.apiUrl);
-    console.log(this.headers);
-    return this.http.post<Lease>(this.apiUrl, data, {headers: this.headers});
+  addLease(data: Lease): Observable<APIResponse<Lease>> {
+    return this.http.post<APIResponse<Lease>>(this.apiUrl, data, {
+      headers: this.getHeaders()
+    }).pipe(
+      catchError(error => {
+        console.error('Lease creation error:', error);
+        throw error;
+      })
+    );
   }
 
   updateLease(id: string, data: Lease): Observable<Lease> {
-    return this.http.put<Lease>(`${this.apiUrl}/${id}`, data, {headers: this.headers});
+    return this.http.put<Lease>(`${this.apiUrl}/${id}`, data, {headers: this.getHeaders()});
 
   }
 
   deleteLease(id: string): Observable<Lease> {
-    return this.http.delete<Lease>(`${this.apiUrl}/${id}`, {headers: this.headers});
+    return this.http.delete<Lease>(`${this.apiUrl}/${id}`, {headers: this.getHeaders()});
 
   }
 }

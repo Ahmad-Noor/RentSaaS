@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
 import { Lease } from '../../../../models/lease.types';
 import { LeaseService } from '../../../../service/lease.service';
@@ -8,7 +8,7 @@ import { LeaseService } from '../../../../service/lease.service';
 @Component({
   selector: 'app-lease-page',
   standalone: true,
-  imports: [CommonModule, SearchBarComponent],
+  imports: [CommonModule, SearchBarComponent,RouterModule],
   templateUrl: './lease.page.html'
 })
 export class LeasePage {
@@ -72,7 +72,9 @@ export class LeasePage {
       signed: 'bg-green-100 text-green-800',
       expired: 'bg-red-100 text-red-800'
     };
-    return `${baseClasses} ${statusClasses[status] || 'bg-gray-100 text-gray-800'}`;
+    return `${baseClasses} ${
+      statusClasses[status] || "bg-gray-100 text-gray-800"
+    }`;  
   }
 
   trackByLeaseId(index: number, lease: Lease): string {

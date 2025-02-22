@@ -30,21 +30,26 @@ export class CreateLeasePage {
 
   constructor(
     private fb: FormBuilder,
-    private _propertyServices: PropertyService, 
+    private _propertyServices: PropertyService,
     private router: Router,
     private route: ActivatedRoute,
     private leaseService: LeaseService
   ) {
-
-    this.getAllProperties(); 
+    this.getAllProperties();
 
     this.leaseForm = this.fb.group({
-      propertyId:  new FormControl(null, [Validators.required]),
-      tenantName:  new FormControl(null, [Validators.required]),
-      leaseType:  new FormControl(null, [Validators.required]),
-      startDate:  new FormControl(null, [Validators.required]),
-      endDate:  new FormControl(null, [Validators.required]),
-      monthlyRent: new FormControl(null, [Validators.required, Validators.min(0)]) 
+      propertyId: ['', Validators.required],
+      tenantName: ['', Validators.required],
+      leaseType: ['', Validators.required], // Changed from 'type'
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required],
+      monthlyRent: ['', [Validators.required, Validators.min(0)]]
+    });
+  }
+
+  ngOnInit() {
+    this.leaseForm.patchValue({
+      type: this.lease?.leaseType || ''  // Ensure type has a default value
     });
   }
 
@@ -55,15 +60,7 @@ export class CreateLeasePage {
       complete: () => {},
     });
   }
-  ngOnInit() {
-    this.leaseForm.patchValue({
-      type: this.lease?.leaseType || ''  // Ensure type has a default value
-    });
-  }
-  
 
-
-  
   onFormSubmit(): void {
     if (this.leaseForm.valid) {
       const leaseData: Lease = {
@@ -87,22 +84,30 @@ export class CreateLeasePage {
     }
   }
 
-  
-   
   handleSubmit(): void {
     if (this.leaseForm.valid) {
       this.loading = true;
       const leaseData: Lease = {
-        propertyId: String(this.leaseForm.value.propertyId),
+        propertyId: this.leaseForm.value.propertyId,
         tenantName: this.leaseForm.value.tenantName,
-        leaseType: this.leaseForm.value.type,
+        leaseType: this.leaseForm.value.leaseType, // Changed from 'type'
         startDate: this.leaseForm.value.startDate,
         endDate: this.leaseForm.value.endDate,
-        // monthlyRent: Number(this.leaseForm.value.monthlyRent)
+        //monthlyRent: Number(this.leaseForm.value.monthlyRent)
       };
 
-      this.leaseService.addLease(leaseData);
-      this.router.navigate(['..'], { relativeTo: this.route });
+      this.leaseService.addLease(leaseData).subscribe({
+        next: (response) => {
+          console.log('Lease created successfully', response);
+          this.loading = false;
+          this.router.navigate(['..'], { relativeTo: this.route });
+        },
+        error: (error) => {
+          console.error('Error creating lease:', error);
+          this.loading = false;
+          this.error = 'Failed to create lease';
+        }
+      });
     }
   }
 }

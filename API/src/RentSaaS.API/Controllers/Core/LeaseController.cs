@@ -19,7 +19,6 @@ public class LeaseController : BaseControllery
     }
 
 
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(APIResponse<List<LeaseGetDto>>), 200)]
     [ProducesResponseType(typeof(APIErrorResponse), 400)]
@@ -36,9 +35,7 @@ public class LeaseController : BaseControllery
     }
 
 
-    [HttpGet]
-    [Authorize]
-    [Route("{id:Guid}")]
+    [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(APIResponse<LeaseGetDto>), 200)]
     [ProducesResponseType(typeof(APIErrorResponse), 400)]
     [ProducesResponseType(typeof(APIErrorResponse), 500)]

@@ -16,7 +16,7 @@ import { UserService } from "../../../service/user.service";
   standalone: true,
   imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: "./add-property.page.html",
-  styleUrls: ["./add-property.page.css"],
+  // styleUrls: ["./add-property.page.css"],
 })
 export class AddPropertyPage implements OnInit {
   propertyId: string | null = null;
