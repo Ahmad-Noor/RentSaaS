@@ -16,7 +16,7 @@ public class BaseControllery : ControllerBase
     public const string DefaultErrorMessage = "An unexpected error occurred while processing your request.";
     public BaseControllery(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 }
