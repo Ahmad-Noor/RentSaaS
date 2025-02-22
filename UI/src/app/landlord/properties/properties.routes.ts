@@ -49,11 +49,11 @@ export default [
   },
   {
     path: "lease",
-    loadComponent: () => import("./lease/lease.page").then((m) => m.LeasePage),
+    loadComponent: () => import("./lease/list/lease.page").then((m) => m.LeasePage),
   },
   {
     path: "lease/create",
     loadComponent: () =>
-      import("./create-lease/create-lease.page").then((m) => m.CreateLeasePage),
+      import("./lease/create-lease/create-lease.page").then((m) => m.CreateLeasePage),
   },
 ] as Routes;
