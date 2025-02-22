@@ -1,10 +1,10 @@
 import { Observable} from "rxjs";
-import { UserService } from "./user.service";
+import { map } from 'rxjs/operators'; 
 import { Injectable } from "@angular/core";
+import { UserService } from "./user.service";
 import { Expense } from "../models/expense.types";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { map } from 'rxjs/operators'; 
 import { APIResponse } from "../models/api-response.types";
 
 @Injectable({
@@ -21,10 +21,6 @@ export class ExpenseService {
     });
   }
 
-  // getAllExpenses(): Observable<Expense[]> {
-  //   return this.http.get<Expense[]>(this.apiUrl, {headers: this.headers});
-  // }
-
   getAllExpenses(): Observable<Expense[]> {
     return this.http
       .get<APIResponse<Expense[]>>(this.apiUrl, { headers: this.headers })
@@ -37,7 +33,6 @@ export class ExpenseService {
   }
 
   addExpense(data: Expense): Observable<Expense> {
-    console.log(data);
     return this.http.post<Expense>(this.apiUrl, data, {headers: this.headers});
   }
  
