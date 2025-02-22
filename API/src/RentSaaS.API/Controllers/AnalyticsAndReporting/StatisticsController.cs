@@ -8,7 +8,7 @@ namespace RentSaaS.API.Controllers.AnalyticsAndReporting
         private readonly ILogger<StatisticsController> _logger;
         public StatisticsController(ILogger<StatisticsController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Class implementation

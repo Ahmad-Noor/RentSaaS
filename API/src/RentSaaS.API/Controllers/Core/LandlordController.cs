@@ -9,7 +9,7 @@ public class LandlordController  :BaseControllery
     private readonly ILogger<LandlordController> _logger;
     public LandlordController(ILogger<LandlordController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     }
 

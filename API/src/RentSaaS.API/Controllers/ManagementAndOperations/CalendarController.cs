@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.ManagementAndOperations
         private readonly ILogger<CalendarController> _logger;
         public CalendarController(ILogger<CalendarController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

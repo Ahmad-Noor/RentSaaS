@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class PropertyRepository : Repository<Property>, IPropertyRepository
 {
-    public PropertyRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public PropertyRepository(RentSaaSDBContext dbContext, ILogger<PropertyRepository> logger) : base(dbContext, logger)
     {
     }
 }

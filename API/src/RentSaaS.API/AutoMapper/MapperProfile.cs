@@ -39,7 +39,7 @@ public class MapperProfile :Profile
 
         #region Expense 
         CreateMap<ExpenseCreateDTO, Expense>()/*.ReverseMap()*/;
-        CreateMap<ExpenseUpdateDTO, Expense>();
+        CreateMap<ExpenseUpdateDTO, Expense>().ForMember(dest => dest.Id, opt => opt.Ignore()); 
         CreateMap<Expense, GetExpenseDto>();
         CreateMap<Expense, GetExpenseByIdDto>();
         #endregion

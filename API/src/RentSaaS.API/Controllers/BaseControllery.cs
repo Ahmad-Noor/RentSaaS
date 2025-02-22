@@ -13,6 +13,7 @@ public class BaseControllery : ControllerBase
 {
     public readonly IUnitOfWork _unitOfWork;
     public readonly IMapper _mapper;
+    public const string DefaultErrorMessage = "An unexpected error occurred while processing your request.";
     public BaseControllery(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;

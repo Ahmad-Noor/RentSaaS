@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.SupportAndHelp
         private readonly ILogger<TicketController> _logger;
         public TicketController(ILogger<TicketController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

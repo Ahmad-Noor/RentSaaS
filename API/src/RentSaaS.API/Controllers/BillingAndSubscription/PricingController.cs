@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.BillingAndSubscription
         private readonly ILogger<PricingController> _logger;
         public PricingController(ILogger<PricingController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

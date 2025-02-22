@@ -10,6 +10,8 @@ namespace RentSaaS.Domain.Entities
         public string ?FileName { get; set; }
 
         public Expense ?Expense { get; set; }
+        public DateTime UploadedAt { get; set; }
+        public long FileSize { get; set; }
     }
 
 }

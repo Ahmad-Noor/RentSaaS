@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
     public AuthController(UserManager<User> userManager,ILogger<UserController> logger,IMapper Mapper,IConfiguration configuration,RentSaaSDBContext db)
     {
         _userManager = userManager;
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = Mapper;
         _configuration = configuration;
         _rentSaaSDBContext = db;

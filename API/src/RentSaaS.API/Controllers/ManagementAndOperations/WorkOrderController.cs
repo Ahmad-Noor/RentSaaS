@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.ManagementAndOperations
         private readonly ILogger<WorkOrderController> _logger;
         public WorkOrderController(ILogger<WorkOrderController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

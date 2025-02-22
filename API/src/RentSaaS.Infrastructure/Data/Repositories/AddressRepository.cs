@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class AddressRepository : Repository<Address>, IAddressRepository
 {
-    public AddressRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public AddressRepository(RentSaaSDBContext dbContext, ILogger<AddressRepository> logger) : base(dbContext, logger)
     {
     }
 }

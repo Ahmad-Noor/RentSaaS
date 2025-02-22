@@ -2,12 +2,15 @@ using Serilog;
 using System.Text;
 using RentSaaS.API.Extensions;
 using RentSaaS.Domain.Entities;
-using RentSaaS.Infrastructure.Data;  
+using RentSaaS.Infrastructure.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using RentSaaS.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<FileUploadSettings>(builder.Configuration.GetSection("FileUploadSettings"));
 
 //---------------- JWT Configuration
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -23,7 +23,7 @@ public class UserController : ControllerBase
 
     public UserController(ILogger<UserController> logger, IConfiguration configuration, RentSaaSDBContext rentSaaSDBContext)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = configuration; 
         _rentSaaSDBContext = rentSaaSDBContext;
     }

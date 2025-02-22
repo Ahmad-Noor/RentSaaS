@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class CompanyRepository : Repository<Company>, ICompanyRepository
 {
-    public CompanyRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public CompanyRepository(RentSaaSDBContext dbContext, ILogger<CompanyRepository> logger) : base(dbContext, logger)
     {
     }
 }

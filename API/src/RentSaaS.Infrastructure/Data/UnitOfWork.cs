@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore; 
 using RentSaaS.Domain.Interfaces.Repositories;
 using RentSaaS.Infrastructure.Data.Repositories;
-namespace RentSaaS.Infrastructure.Data;
 
+namespace RentSaaS.Infrastructure.Data;
 public class UnitOfWork : IUnitOfWork, IAsyncDisposable
 {
     private readonly RentSaaSDBContext _dbContext;
@@ -25,14 +25,14 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _logger = loggerFactory.CreateLogger("logs");
         _dbContext = dbContext;
          
-        AddressRepository = new AddressRepository(dbContext, _logger);
-        CompanyRepository = new CompanyRepository(dbContext, _logger);
-        PropertyRepository = new PropertyRepository(dbContext, _logger);
-        ExpenseRepository = new ExpenseRepository(dbContext, _logger); 
-        LeaseRepository = new LeaseRepository(dbContext, _logger);
-        ExpenseFileRepository = new ExpenseFileRepository(dbContext, _logger); 
-        AdvertisingRepository=new AdvertisingRepository(dbContext, _logger);
-        ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, _logger);
+        AddressRepository = new AddressRepository(dbContext, loggerFactory.CreateLogger<AddressRepository>());
+        CompanyRepository = new CompanyRepository(dbContext, loggerFactory.CreateLogger<CompanyRepository>());
+        PropertyRepository = new PropertyRepository(dbContext, loggerFactory.CreateLogger<PropertyRepository>());
+        ExpenseRepository = new ExpenseRepository(dbContext, loggerFactory.CreateLogger<ExpenseRepository>());
+        LeaseRepository = new LeaseRepository(dbContext, loggerFactory.CreateLogger<LeaseRepository>());
+        ExpenseFileRepository = new ExpenseFileRepository(dbContext, loggerFactory.CreateLogger<ExpenseFileRepository>());
+        AdvertisingRepository =new AdvertisingRepository(dbContext, loggerFactory.CreateLogger<AdvertisingRepository>());
+        ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, loggerFactory.CreateLogger<ApplicationAndLeadsRepository>());
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity

@@ -1,20 +1,29 @@
-﻿using AutoMapper;
-using RentSaaS.Domain;
+﻿using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using RentSaaS.API.APIResponse;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
+using RentSaaS.API.APIResponse;
 using RentSaaS.Application.DTOs.RentApplication;
 
 namespace RentSaaS.API.Controllers.Core;
 
-public class ApplicationAndLeadsController : BaseControllery
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class ApplicationAndLeadsController : ControllerBase
 {
+    // add comment for github
     private readonly ILogger<ApplicationAndLeadsController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
+    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _unitOfWork = unitOfWork;
+        _mapper = Mapper;
     }
 
     #region Get All
@@ -26,15 +35,20 @@ public class ApplicationAndLeadsController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetAll();
+        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetAllAsync();
         if (application == null)
         {
             return NotFound(new APIErrorResponse(404));
         }
         var ApplicationMapper = _mapper.Map<List<ApplicationGetDto>>(application);
         
-        return Ok(new APIResponse<List<ApplicationGetDto>>(true, "All Data For Application", ApplicationMapper)); ;
-
+        return Ok(new APIResponse<List<ApplicationGetDto>>(ApplicationMapper, "All Data For Application")); ;
+ 
+    
+    
+    
+    
+    
     
     }
 
@@ -51,11 +65,11 @@ public class ApplicationAndLeadsController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetById(id);
+        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetByIdAsync(id);
         var ApplicationMapper = _mapper.Map<ApplicationGetDto>(application);
         if (application != null)
         {
-            return Ok(new APIResponse<ApplicationGetDto>(true, "All Data For Application", ApplicationMapper));
+            return Ok(new APIResponse<ApplicationGetDto>(ApplicationMapper, "All Data For Application"));
         }
         return NotFound(new APIErrorResponse(404));
     }
@@ -82,10 +96,10 @@ public class ApplicationAndLeadsController : BaseControllery
         try
         {
             _logger.LogInformation("Create new application");
-            await _unitOfWork.ApplicationAndLeadsRepository.Add(Application);
+            await _unitOfWork.ApplicationAndLeadsRepository.AddAsync(Application);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<ApplicationCreateDto>(true, "Application Is Create Success", applicationDto));
+            return Ok(new APIResponse<ApplicationCreateDto>(applicationDto, "Application Is Create Success"));
         }
         catch (Exception ex)
         {

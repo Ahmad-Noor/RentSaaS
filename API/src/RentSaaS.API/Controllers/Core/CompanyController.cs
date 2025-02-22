@@ -13,7 +13,7 @@ public class CompanyController : BaseControllery
 
     public CompanyController(ILogger<CompanyController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     [Authorize]
@@ -32,10 +32,10 @@ public class CompanyController : BaseControllery
         {
 
             var Company = _mapper.Map<Company>(CompanyDto);
-            var resulte = await _unitOfWork.CompanyRepository.Add(Company);
+            var resulte = await _unitOfWork.CompanyRepository.AddAsync(Company);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<CompanyCreateDto>(true, "Company Is Create Success", CompanyDto));
+            return Ok(new APIResponse<CompanyCreateDto>(CompanyDto, "Company Is Create Success"));
         }
         catch (Exception)
         {
@@ -55,7 +55,7 @@ public class CompanyController : BaseControllery
         {
             company.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
-            return Ok(new APIResponse<CompanyGetDto>(true, "Delete Is Success"));
+            return Ok(new APIResponse<string>(null, "Delete Is Success"));
         }
         return NotFound(new APIErrorResponse(404));
     }
@@ -66,14 +66,14 @@ public class CompanyController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var Companies = await _unitOfWork.CompanyRepository.GetAll();
+        var Companies = await _unitOfWork.CompanyRepository.GetAllAsync();
         if (Companies == null)
         {
             return NotFound(new APIErrorResponse(404));
         }
 
         var CompanyMapper = _mapper.Map<List<CompanyGetDto>>(Companies);
-        return Ok(new APIResponse<List<CompanyGetDto>>(true, "All Data For Company", CompanyMapper));
+        return Ok(new APIResponse<List<CompanyGetDto>>(CompanyMapper, "All Data For Company" ));
     }
 
 

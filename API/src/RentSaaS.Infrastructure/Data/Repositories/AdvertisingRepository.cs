@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class AdvertisingRepository : Repository<Advertising>, IAdvertisingRepository
 {
-    public AdvertisingRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public AdvertisingRepository(RentSaaSDBContext dbContext, ILogger<AdvertisingRepository> logger) : base(dbContext, logger)
     {
     }
 }

@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.Integration
         private readonly ILogger<WebhookController> _logger;
         public WebhookController(ILogger<WebhookController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

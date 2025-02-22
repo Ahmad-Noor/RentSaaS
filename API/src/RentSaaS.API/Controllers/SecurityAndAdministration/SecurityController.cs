@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.SecurityAndAdministration
         private readonly ILogger<SecurityController> _logger;
         public SecurityController(ILogger<SecurityController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Class implementation

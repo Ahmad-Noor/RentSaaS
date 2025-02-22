@@ -22,7 +22,7 @@ public abstract class BaseApiController : ControllerBase
         IUnitOfWork unitOfWork,
         IMapper mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }

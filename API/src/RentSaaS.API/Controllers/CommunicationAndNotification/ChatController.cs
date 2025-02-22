@@ -9,7 +9,7 @@ namespace RentSaaS.API.Controllers.CoreControllers
         private readonly ILogger<ChatController> _logger;
         public ChatController(ILogger<ChatController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Class implementation

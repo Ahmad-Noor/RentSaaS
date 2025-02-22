@@ -10,7 +10,7 @@ namespace YourNamespace.Controllers.Utility
         private readonly ILogger<ImportController> _logger;
         public ImportController(ILogger<ImportController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+           _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
         // Your code here

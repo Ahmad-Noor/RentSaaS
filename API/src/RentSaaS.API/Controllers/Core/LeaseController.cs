@@ -1,21 +1,30 @@
-﻿using AutoMapper;
-using RentSaaS.Domain;
+﻿using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
-using RentSaaS.API.APIResponse;
 using RentSaaS.Domain.Entities;
-using RentSaaS.Application.DTOs.Lease;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
+using RentSaaS.API.APIResponse;
+using RentSaaS.Application.DTOs.Advertising;
+using RentSaaS.Application.DTOs.Lease;
 
 namespace RentSaaS.API.Controllers.Core;
 
-public class LeaseController : BaseControllery
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class LeaseController : ControllerBase
 {
+    // add comment for github
     private readonly ILogger<LeaseController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
-        _logger = logger;
-
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _unitOfWork = unitOfWork;
+        _mapper = Mapper;
     }
 
     #region Get All
@@ -27,13 +36,13 @@ public class LeaseController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var leases = await _unitOfWork.LeaseRepository.GetAll();
+        var leases = await _unitOfWork.LeaseRepository.GetAllAsync();
         if (leases == null)
         {
             return NotFound(new APIErrorResponse(404));
         }
         var LeaseMapper = _mapper.Map<List<LeaseGetDto>>(leases);
-        return Ok(new APIResponse<List<LeaseGetDto>>(true, "All Data For Lease", LeaseMapper)); ;
+        return Ok(new APIResponse<List<LeaseGetDto>>(LeaseMapper, "All Data For Lease")); ;
     }
 
     #endregion
@@ -49,11 +58,11 @@ public class LeaseController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var leases = await _unitOfWork.LeaseRepository.GetById(id);
+        var leases = await _unitOfWork.LeaseRepository.GetByIdAsync(id);
         var LeaseMapper = _mapper.Map<LeaseGetDto>(leases);
         if (leases != null)
         {
-            return Ok(new APIResponse<LeaseGetDto>(true, "All Data For Lease", LeaseMapper));
+            return Ok(new APIResponse<LeaseGetDto>(LeaseMapper, "All Data For Lease"));
         }
         return NotFound(new APIErrorResponse(404));
     }
@@ -80,10 +89,10 @@ public class LeaseController : BaseControllery
         try
         {
             _logger.LogInformation("Create new leases");
-            await _unitOfWork.LeaseRepository.Add(Lease);
+            await _unitOfWork.LeaseRepository.AddAsync(Lease);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<LeaseCreateDto>(true, "Lease Is Create Success", leasesDto));
+            return Ok(new APIResponse<LeaseCreateDto>(leasesDto, "Lease Is Create Success"));
         }
         catch (Exception ex)
         {

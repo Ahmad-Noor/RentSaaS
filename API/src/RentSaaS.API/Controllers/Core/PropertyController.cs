@@ -12,7 +12,7 @@ public class PropertyController : BaseControllery
 
     public PropertyController(ILogger<PropertyController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
      
     [HttpPost]
@@ -33,10 +33,10 @@ public class PropertyController : BaseControllery
 
             property.CreatedBy = Guid.Parse(User.FindFirst("id")?.Value);
 
-            await _unitOfWork.PropertyRepository.Add(property);
+            await _unitOfWork.PropertyRepository.AddAsync(property);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<PropertyCreateDto>(true, "Property Is Create Success", propertyDto));
+            return Ok(new APIResponse<PropertyCreateDto>(propertyDto, "Property Is Create Success"));
         }
         catch (Exception ex)
         {
@@ -53,14 +53,14 @@ public class PropertyController : BaseControllery
     {
         try
         {
-            var properties = await _unitOfWork.PropertyRepository.GetAll();
+            var properties = await _unitOfWork.PropertyRepository.GetAllAsync();
             if (properties == null)
             {
                 return NotFound(new APIErrorResponse(404));
             }
 
             var PropertyMapper = _mapper.Map<List<PropertyGetDto>>(properties);
-            return Ok(new APIResponse<List<PropertyGetDto>>(true, "All Data For Property", PropertyMapper));
+            return Ok(new APIResponse<List<PropertyGetDto>>(PropertyMapper, "All Data For Property"));
         }
         catch (Exception ex)
         {
@@ -76,11 +76,11 @@ public class PropertyController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var property = await _unitOfWork.PropertyRepository.GetById(id);
+        var property = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
         var PropertyMapper = _mapper.Map<PropertyGetDto>(property);
         if (property != null)
         {
-            return Ok(new APIResponse<PropertyGetDto>(true, "All Data For Property", PropertyMapper));
+            return Ok(new APIResponse<PropertyGetDto>(PropertyMapper, "All Data For Property"));
         }
         return NotFound();
     }
@@ -96,10 +96,10 @@ public class PropertyController : BaseControllery
         {
             return BadRequest();
         }
-        var Property = await _unitOfWork.PropertyRepository.GetById(id);
+        var Property = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
         _mapper.Map(propertyDto, Property);
         Property.LastModifiedBy = Guid.Parse(User.FindFirst("id")?.Value);
-        await _unitOfWork.PropertyRepository.Update(Property);
+        await _unitOfWork.PropertyRepository.UpdateAsync(Property);
 
         await _unitOfWork.SaveChangesAsync();
         return NoContent();

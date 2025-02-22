@@ -9,7 +9,7 @@ public class PaymentController :BaseControllery
     private readonly ILogger<PaymentController> _logger;
     public PaymentController(ILogger<PaymentController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     }
     // Implementation here

@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class LeaseRepository : Repository<Lease>, ILeaseRepository
 {
-    public LeaseRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public LeaseRepository(RentSaaSDBContext dbContext, ILogger<LeaseRepository> logger) : base(dbContext, logger)
     {
     }
 }

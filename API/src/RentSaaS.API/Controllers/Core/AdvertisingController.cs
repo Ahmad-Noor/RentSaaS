@@ -1,21 +1,31 @@
-﻿using AutoMapper;
-using RentSaaS.Domain;
+﻿
+
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.APIResponse;
-using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using RentSaaS.Application.DTOs.Advertising;
-
+using RentSaaS.Domain;
+using RentSaaS.Domain.Entities;
 
 namespace RentSaaS.API.Controllers.Core;
 
-public class AdvertisingController : BaseControllery
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class AdvertisingController : ControllerBase
 {
+    // add comment for github
     private readonly ILogger<LeaseController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
+    public AdvertisingController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
-        _logger = logger;
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _unitOfWork = unitOfWork;
+        _mapper = Mapper;
     }
 
     #region Get All
@@ -28,13 +38,13 @@ public class AdvertisingController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var advertising = await _unitOfWork.AdvertisingRepository.GetAll();
+        var advertising = await _unitOfWork.AdvertisingRepository.GetAllAsync();
         if (advertising == null)
         {
             return NotFound(new APIErrorResponse(404));
         }
         var AdvertisingMapper = _mapper.Map<List<AdvertisingGetDto>>(advertising);
-        return Ok(new APIResponse<List<AdvertisingGetDto>>(true, "All Data For Advertising",AdvertisingMapper)); 
+        return Ok(new APIResponse<List<AdvertisingGetDto>>(AdvertisingMapper, "All Data For Advertising")); 
     }
 
     #endregion
@@ -50,11 +60,11 @@ public class AdvertisingController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var advertising = await _unitOfWork.AdvertisingRepository.GetById(id);
+        var advertising = await _unitOfWork.AdvertisingRepository.GetByIdAsync(id);
         var AdvertisingMapper = _mapper.Map<AdvertisingGetDto>(advertising);
         if (advertising != null)
         {
-            return Ok(new APIResponse<AdvertisingGetDto>(true, "All Data For Advertising", AdvertisingMapper));
+            return Ok(new APIResponse<AdvertisingGetDto>(AdvertisingMapper, "All Data For Advertising"));
         }
         return NotFound(new APIErrorResponse(404));
     }
@@ -82,15 +92,15 @@ public class AdvertisingController : BaseControllery
         try
         {
             _logger.LogInformation("Create new Advertising");
-            await _unitOfWork.AdvertisingRepository.Add(Advertising);
+            await _unitOfWork.AdvertisingRepository.AddAsync(Advertising);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<AdvertisingCreateDto>(true, "Advertising Is Create Success",advertisingDto));
+            return Ok(new APIResponse<AdvertisingCreateDto>( advertisingDto, "Advertising Is Create Success"));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new Advertising ");
-            return new JsonResult($"error on creating new Advertising") { StatusCode = 500 };
+            _logger.LogError(ex, "error on creating new leases ");
+            return new JsonResult($"error on creating new leases") { StatusCode = 500 };
         }
     }
 

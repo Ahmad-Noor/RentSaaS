@@ -14,12 +14,12 @@ public abstract class BaseEntity : IEntity
     public Guid CreatedBy { get; set; }
     public DateTime? LastModifiedAt { get; set; }
     public Guid? LastModifiedBy { get; set; }
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
     public DateTime? DeletedAt { get; set; }
     public Guid? DeletedBy { get; set; }
 
     [Column(TypeName = "nvarchar(500)")]
-    public string? Note { get; set; } 
+    public string? Note { get; set; }
 
     public BaseEntity()
     {

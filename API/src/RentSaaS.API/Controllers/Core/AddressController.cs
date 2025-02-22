@@ -1,37 +1,44 @@
-﻿using AutoMapper;
-using RentSaaS.Domain;
-using RentSaaS.API.APIResponse;
+﻿using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using RentSaaS.Application.DTOs.Address;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
+using RentSaaS.API.APIResponse;
+using RentSaaS.Application.DTOs.Address;
 
 namespace RentSaaS.API.Controllers.Core;
 
-public class AddressController : BaseControllery
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class AddressController : ControllerBase
 {
+    // add comment for github
     private readonly ILogger<AddressController> _logger;
-    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
     {
-        _logger = logger;
-
+       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _unitOfWork = unitOfWork;
+        _mapper = Mapper;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(APIResponse<List<AddressGetDto>>), 200)]
     [ProducesResponseType(typeof(APIErrorResponse), 400)]
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var countries = await _unitOfWork.AddressRepository.GetAll();
+        var countries = await _unitOfWork.AddressRepository.GetAllAsync();
         if (countries == null)
         {
             return NotFound(new APIErrorResponse(404));
         }
         var CountryMapper = _mapper.Map<List<AddressGetDto>>(countries);
-        return Ok(new APIResponse<List<AddressGetDto>>(true, "All Data For Country", CountryMapper));
+        return Ok(new APIResponse<List<AddressGetDto>>(CountryMapper, "All Data For Country"));
     }
 
     [HttpGet]
@@ -42,15 +49,14 @@ public class AddressController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var address = await _unitOfWork.AddressRepository.GetById(id);
+        var address = await _unitOfWork.AddressRepository.GetByIdAsync(id);
         var CountryMapper = _mapper.Map<AddressGetDto>(address);
         if (address != null)
         {
-            return Ok(new APIResponse<AddressGetDto>(true, "All Data For Country", CountryMapper));
+            return Ok(new APIResponse<AddressGetDto>(CountryMapper, "All Data For Country" ));
         }
         return NotFound();
     }
-
     [HttpPost]
     [ProducesResponseType(typeof(APIResponse<AddressCreateDto>), 200)]
     [ProducesResponseType(typeof(APIErrorResponse), 400)]
@@ -67,10 +73,10 @@ public class AddressController : BaseControllery
         try
         {
             _logger.LogInformation("Create new address, address street #{AddresStreet}", address.Street);
-            await _unitOfWork.AddressRepository.Add(address);
+            await _unitOfWork.AddressRepository.AddAsync(address);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<AddressCreateDto>(true, "Address Is Create Success", addressDto));
+            return Ok(new APIResponse<AddressCreateDto>(addressDto, "Address Is Create Success"));
         }
         catch (Exception ex)
         {

@@ -6,7 +6,7 @@ namespace RentSaaS.Infrastructure.Data.Repositories;
 
 public class ExpenseRepository : Repository<Expense>, IExpenseRepository
 {
-    public ExpenseRepository(RentSaaSDBContext dbContext, ILogger logger) : base(dbContext, logger)
+    public ExpenseRepository(RentSaaSDBContext dbContext, ILogger<ExpenseRepository> logger) : base(dbContext, logger)
     {
     }
 }

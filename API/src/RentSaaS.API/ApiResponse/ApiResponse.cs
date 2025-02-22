@@ -1,31 +1,27 @@
-﻿namespace RentSaaS.API.APIResponse
+﻿using RentSaaS.API.Models;
+
+namespace RentSaaS.API.APIResponse;
+
+public class APIResponse<T>
 {
-    public class APIResponse<T>
+    public bool Success { get; set; }
+    public string Message { get; set; }
+    public T Data { get; set; }
+    public int StatusCode { get; set; }
+    public DateTime Timestamp { get; set; }
+    public PaginationInfo Pagination { get; set; }
+
+    public APIResponse()
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public T? Data { get; set; }
+        Timestamp = DateTime.UtcNow;
+    }
 
-
-
-        public APIResponse(bool success, string message)
-        {
-            Success = success;
-            Message = message;
-        }
-        public APIResponse(bool success, string message, T data)
-        {
-            Success = success;
-            Message = message;
-            Data = data;
-        }
-
-        // Optionally, a constructor for simpler cases (only message):
-        public APIResponse(string message)
-        {
-            Success = true;
-            Message = message;
-            Data = default(T);
-        }
+    public APIResponse(T data, string message = null, int statusCode = 200)
+    {
+        Success = true;
+        Message = message ?? "Operation completed successfully";
+        Data = data;
+        StatusCode = statusCode;
+        Timestamp = DateTime.UtcNow;
     }
 }
