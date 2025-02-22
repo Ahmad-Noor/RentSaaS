@@ -1,28 +1,22 @@
-﻿using RentSaaS.Domain;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AutoMapper;
 using RentSaaS.API.APIResponse;
 using RentSaaS.Application.DTOs.Address;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class AddressController : ControllerBase
+
+public class AddressController : BaseControllery
 {
-    // add comment for github
+
     private readonly ILogger<AddressController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+
+    public AddressController(ILogger<AddressController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     //[Authorize]

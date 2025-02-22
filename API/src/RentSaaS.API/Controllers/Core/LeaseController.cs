@@ -1,33 +1,23 @@
-﻿using RentSaaS.Domain;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AutoMapper;
 using RentSaaS.API.APIResponse;
-using RentSaaS.Application.DTOs.Advertising;
 using RentSaaS.Application.DTOs.Lease;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class LeaseController : ControllerBase
+public class LeaseController : BaseControllery
 {
-    // add comment for github
+ 
     private readonly ILogger<LeaseController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    #region Get All
 
     [Authorize]
     [HttpGet]
@@ -45,10 +35,6 @@ public class LeaseController : ControllerBase
         return Ok(new APIResponse<List<LeaseGetDto>>(LeaseMapper, "All Data For Lease")); ;
     }
 
-    #endregion
-
-
-    #region Get By Id
 
     [HttpGet]
     [Authorize]
@@ -66,12 +52,6 @@ public class LeaseController : ControllerBase
         }
         return NotFound(new APIErrorResponse(404));
     }
-
-
-    #endregion
-
-
-    #region Create Lease
 
     [HttpPost]
     [ProducesResponseType(typeof(APIResponse<LeaseCreateDto>), 200)]
@@ -101,10 +81,6 @@ public class LeaseController : ControllerBase
         }
     }
 
-    #endregion
-
-
-    #region Update
 
     [Authorize]
     [HttpPut("{id}")]
@@ -122,10 +98,6 @@ public class LeaseController : ControllerBase
         return NoContent();
     }
 
-    #endregion
-
-
-    #region Delete
 
     [Authorize]
     [HttpDelete("{id}")]
@@ -144,6 +116,4 @@ public class LeaseController : ControllerBase
         }
         return NotFound(new APIErrorResponse(404));
     }
-
-    #endregion
 }
