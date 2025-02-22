@@ -1,32 +1,23 @@
-﻿using RentSaaS.Domain;
+﻿using AutoMapper;
+using RentSaaS.Domain;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AutoMapper;
 using RentSaaS.API.APIResponse;
+using Microsoft.AspNetCore.Authorization;
 using RentSaaS.Application.DTOs.RentApplication;
 
 namespace RentSaaS.API.Controllers.Core;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class ApplicationAndLeadsController : ControllerBase
+public class ApplicationAndLeadsController : BaseControllery
 {
-    // add comment for github
-    private readonly ILogger<ApplicationAndLeadsController> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper Mapper)
+    private readonly ILogger<ApplicationAndLeadsController> _logger;
+
+    public ApplicationAndLeadsController(ILogger<ApplicationAndLeadsController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _unitOfWork = unitOfWork;
-        _mapper = Mapper;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    #region Get All
 
     [Authorize]
     [HttpGet]
@@ -45,17 +36,7 @@ public class ApplicationAndLeadsController : ControllerBase
         return Ok(new APIResponse<List<ApplicationGetDto>>(ApplicationMapper, "All Data For Application")); ;
  
     
-    
-    
-    
-    
-    
     }
-
-    #endregion
-
-
-    #region Get By Id
 
     [HttpGet]
     [Authorize]
@@ -74,11 +55,6 @@ public class ApplicationAndLeadsController : ControllerBase
         return NotFound(new APIErrorResponse(404));
     }
 
-
-    #endregion
-
-
-    #region Create Lease
 
     [HttpPost]
     [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), 200)]
@@ -108,11 +84,6 @@ public class ApplicationAndLeadsController : ControllerBase
         }
     }
 
-    #endregion
-
-
-    #region Update
-
     [Authorize]
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(APIResponse<ApplicationUpdateDto>), 200)]
@@ -128,11 +99,6 @@ public class ApplicationAndLeadsController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
         return NoContent();
     }
-
-    #endregion
-
-
-    #region Delete
 
     [Authorize]
     [HttpDelete("{id}")]
@@ -152,5 +118,4 @@ public class ApplicationAndLeadsController : ControllerBase
         return NotFound(new APIErrorResponse(404));
     }
 
-    #endregion
 }
