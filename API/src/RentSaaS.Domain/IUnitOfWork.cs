@@ -10,6 +10,10 @@ public interface IUnitOfWork : IAsyncDisposable
     IExpenseFileRepository ExpenseFileRepository { get; set; } 
     IAdvertisingRepository AdvertisingRepository { get; set; }
     IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
+
+    IRecordPaymentRepository RecordPaymentRepository { get; set; }
+
+    IRecordPaymentFile RecordPaymentFileRepository { get; set; }
     Task<int> SaveChangesAsync();
     void Rollback(); 
 }
