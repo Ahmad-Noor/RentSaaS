@@ -128,4 +128,7 @@ public class RentSaaSDBContext : DbContext
 
     public DbSet<ApplicationAndLeads> ApplicationAndLeads { get; set; }
 
+    public DbSet<RecordPayment> RecordPayments { get; set; }
+    public DbSet<RecordPaymentFile> RecordPaymentFiles { get; set; }
+
 }
