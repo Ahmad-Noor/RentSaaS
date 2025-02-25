@@ -21,15 +21,19 @@ export class ApplicationService {
     });
   }
 
-
-
   getAllApplications(): Observable<Application[]> {
-      return this.http
-        .get<APIResponse<Application[]>>(this.apiUrl, { headers: this.headers })
-        .pipe(
-          map(response => response.data)
-        );
-    }
+    return this.http.get<APIResponse<Application[]>>(this.apiUrl, { headers: this.headers }).pipe(
+      map(response => response.data ?? [])  
+    );
+  }
+
+  // getAllApplications(): Observable<Application[]> {
+  //     return this.http
+  //       .get<APIResponse<Application[]>>(this.apiUrl, { headers: this.headers })
+  //       .pipe(
+  //         map(response => response.data)
+  //       );
+  //   }
 
   getApplicationById(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, {

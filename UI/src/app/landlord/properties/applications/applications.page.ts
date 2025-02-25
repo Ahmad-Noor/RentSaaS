@@ -19,15 +19,14 @@ export class ApplicationsPage {
 
   applicationData!:Application[];
 
-  constructor(private applicationService: ApplicationService) {
-    // No need to declare applications here since it's passed through @Input()
-    this.applicationService.getAllApplications().subscribe(applications => {
-      console.log(applications)
-      this.applicationData=applications.data
-      this.applications = applications.data;
-      this.filteredApplications = applications.data;
-    });
-  }
+ constructor(private applicationService: ApplicationService) {
+  this.applicationService.getAllApplications().subscribe(applications => {
+    console.log(applications); // تأكد من شكل البيانات في الكونسول
+    this.applicationData = applications;
+    this.applications = applications;
+    this.filteredApplications = applications;
+  });
+}
 
 
 
