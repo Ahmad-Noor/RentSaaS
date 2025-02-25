@@ -77,6 +77,7 @@ public class ExpenseController : BaseControllery
             return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
+
     [HttpPost]
     [ProducesResponseType(typeof(APIResponse<ExpenseCreateDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
