@@ -11,7 +11,11 @@
         formControlName="applicantEmail"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
         placeholder="tenant@example.com"
+        required
       >
+      <div *ngIf="applicationForm.get('applicantEmail')?.invalid && applicationForm.get('applicantEmail')?.touched" class="text-red-500 text-sm">
+        ❌ Please enter a valid email address.
+      </div>
     </app-form-field>
 
     <app-form-field label="Phone Number" id="phone">
@@ -20,8 +24,13 @@
         id="phone"
         formControlName="phoneNumber"
         class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-        placeholder="(555) 123-4567"
+        placeholder="+1 555-123-4567"
+        pattern="^\+?[0-9]{10,15}$"
+        required
       >
+      <div *ngIf="applicationForm.get('phoneNumber')?.invalid && applicationForm.get('phoneNumber')?.touched" class="text-red-500 text-sm">
+        ❌ Please enter a valid phone number (e.g., +15551234567).
+      </div>
     </app-form-field>
   </div>
 
