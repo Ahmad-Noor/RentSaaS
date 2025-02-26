@@ -11,6 +11,8 @@ using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.DTOs.RentApplication;
 using RentSaaS.Application.DTOs.RecordPayment;
 using RentSaaS.Application.DTOs.Maintenace;
+using RentSaaS.Application.DTOs.Tenant;
+using RentSaaS.Application.DTOs.Tenant;
 
 namespace RentSaaS.API.AutoMapper;
 
@@ -88,11 +90,12 @@ public class MapperProfile :Profile
 
         #endregion
 
-        #region Maintenance
-        CreateMap<MaintenanceCreateDTO, Maintenance>()/*.ReverseMap()*/;
-        CreateMap<MaintenanceUpdateDTO, Maintenance>().ForMember(dest => dest.Id, opt => opt.Ignore());
-        CreateMap<Maintenance, GetMaintenanceDto>();
-        CreateMap<Maintenance, GetMaintenaceByIdDto>();
+
+        #region Tenant
+        CreateMap<TenantCreateDto, Tenant>()/*.ReverseMap()*/;
+        CreateMap<TenantUpdateDto, Tenant>().ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<Tenant, TenantGetDto>();
+        CreateMap<Tenant, TenantGetByIdDto>();
 
         #endregion
     }

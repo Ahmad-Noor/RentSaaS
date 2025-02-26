@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250225091915_AddTenants")]
+    partial class AddTenants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -570,113 +573,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.ToTable("leases");
                 });
 
-            modelBuilder.Entity("RentSaaS.Domain.Entities.Maintenance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("IssueType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Priority")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("Maintenance");
-                });
-
-            modelBuilder.Entity("RentSaaS.Domain.Entities.MaintenancePhoto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MaintenanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PhotoName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("PhotoSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaintenanceId");
-
-                    b.ToTable("MaintenancePhoto");
-                });
-
             modelBuilder.Entity("RentSaaS.Domain.Entities.Organization", b =>
                 {
                     b.Property<Guid>("OrganizationId")
@@ -1063,11 +959,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fc0c35ff-aa94-4728-9a75-738eb208f43c"),
+                            Id = new Guid("c5d71b6f-e7d8-45e5-82b8-57ff53691d28"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "353abfd8-65bb-4054-a122-3fcffdca8e4d",
-                            CreatedAt = new DateTime(2025, 2, 25, 11, 22, 21, 597, DateTimeKind.Utc).AddTicks(2822),
-             
+                            ConcurrencyStamp = "87c536f1-ef70-450f-b8f3-fa762584fb38",
+                            CreatedAt = new DateTime(2025, 2, 25, 9, 19, 13, 457, DateTimeKind.Utc).AddTicks(3091),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -1157,28 +1052,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("RentSaaS.Domain.Entities.Maintenance", b =>
-                {
-                    b.HasOne("RentSaaS.Domain.Entities.Property", "Property")
-                        .WithMany()
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("RentSaaS.Domain.Entities.MaintenancePhoto", b =>
-                {
-                    b.HasOne("RentSaaS.Domain.Entities.Maintenance", "Maintenance")
-                        .WithMany("MaintenancePhoto")
-                        .HasForeignKey("MaintenanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Maintenance");
-                });
-
             modelBuilder.Entity("RentSaaS.Domain.Entities.RecordPayment", b =>
                 {
                     b.HasOne("RentSaaS.Domain.Entities.Property", "Property")
@@ -1212,11 +1085,6 @@ namespace RentSaaS.Infrastructure.Migrations
             modelBuilder.Entity("RentSaaS.Domain.Entities.Expense", b =>
                 {
                     b.Navigation("ExpenseFiles");
-                });
-
-            modelBuilder.Entity("RentSaaS.Domain.Entities.Maintenance", b =>
-                {
-                    b.Navigation("MaintenancePhoto");
                 });
 
             modelBuilder.Entity("RentSaaS.Domain.Entities.Property", b =>
