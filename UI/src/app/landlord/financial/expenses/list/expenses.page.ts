@@ -115,14 +115,14 @@ export class ExpensesPage  implements OnInit  {
       );
     }
   }
-
-
-  handleEditAction(data: Expense) {
+ 
+  handleEditAction(expense: Expense) { 
     this.router.navigate(['add'], {
       relativeTo: this.route,
-      state: { expense: data }
+      state: { expense }
     });
   }
+ 
   handleDeleteAction(data: Expense) {
     const isConfirmed = confirm('Are you sure you want to delete this expense?');
     
