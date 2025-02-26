@@ -26,6 +26,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IMaintenanceRepository MaintenanceRepository { get; set; }
     public IMaintenancePhotoRepository MaintenancePhotoRepository { get; set; }
 
+    public ITenantRepository tenantRepository { get; set; }
+
 
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
@@ -46,6 +48,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         MaintenanceRepository=new MaintenanceRepository(dbContext, loggerFactory.CreateLogger<MaintenanceRepository>());
         MaintenancePhotoRepository=new MaintenancePhotoRepository(dbContext, loggerFactory.CreateLogger<MaintenancePhotoRepository>());
 
+        tenantRepository = new TenantRepository(dbContext, loggerFactory.CreateLogger<TenantRepository>());
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity

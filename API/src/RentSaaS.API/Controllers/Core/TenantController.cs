@@ -3,454 +3,124 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RentSaaS.API.APIResponse;
 using RentSaaS.API.Controllers;
+using RentSaaS.API.Controllers.Core;
 using RentSaaS.API.DTOs;
+using RentSaaS.Application.DTOs.Advertising;
+using RentSaaS.Application.DTOs.Tenant;
 using RentSaaS.Domain;
+using RentSaaS.Domain.Entities;
 
-[ApiController]
-[Route("api/v1/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class TenantController : BaseApiController
+public class TenantController : BaseControllery
 {
-    //private readonly ITenantService _tenantService;
-    //private readonly IBackgroundCheckService _backgroundCheckService;
+
+    private readonly ILogger<TenantController> _logger;
 
 
-    // test comment for PR merge
-    public TenantController(
-        ILogger<TenantController> logger,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
-        //,
-        //ITenantService tenantService,
-        //IBackgroundCheckService backgroundCheckService
-        
-        )
-        : base(logger, unitOfWork, mapper)
+    public TenantController(ILogger<TenantController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        //_tenantService = tenantService;
-        //_backgroundCheckService = backgroundCheckService;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    //[HttpGet]
-    //[Authorize(Roles = "Landlord,Admin")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<TenantDto>))]
-    //public async Task<ActionResult<PaginatedResponse<TenantDto>>> GetAll(
-    //    [FromQuery] TenantFilterDto filter,
-    //    [FromQuery] int pageNumber = 1,
-    //    [FromQuery] int pageSize = 10)
-    //{
-    //    try
-    //    {
-    //        var tenants = await _tenantService.GetTenantsAsync(
-    //            CurrentUserId,
-    //            filter,
-    //            pageNumber,
-    //            pageSize);
+    [Authorize]
+    [HttpGet]
+    [Route("GetAll")]
+    [ProducesResponseType(typeof(APIResponse<List<TenantGetDto>>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    public async Task<IActionResult> GetAll()
+    {
+        var tenents = await _unitOfWork.tenantRepository.GetAllAsync();
 
-    //        return Ok(tenants);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenants");
-    //        return StatusCode(500, "An error occurred while retrieving tenants");
-    //    }
-    //}
+        if (tenents == null)
+        {
+            return NotFound(new APIErrorResponse(404));
+        }
+        var tenantMapper = _mapper.Map<List<TenantGetDto>>(tenents);
+        return Ok(new APIResponse<List<TenantGetDto>>(tenantMapper, "All Data For tenant"));
+    }
 
-    //[HttpGet("{id:guid}")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TenantDetailDto))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<TenantDetailDto>> GetById(Guid id)
-    //{
-    //    try
-    //    {
-    //        var tenant = await _tenantService.GetTenantByIdAsync(id, CurrentUserId);
-    //        if (tenant == null)
-    //        {
-    //            return NotFound($"Tenant with ID {id} not found");
-    //        }
 
-    //        return Ok(tenant);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant {TenantId}", id);
-    //        return StatusCode(500, "An error occurred while retrieving the tenant");
-    //    }
-    //}
 
-    //[HttpPost]
-    //[Authorize(Roles = "Landlord,Admin")]
-    //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TenantDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //public async Task<ActionResult<TenantDto>> Create([FromBody] TenantCreateDto createDto)
-    //{
-    //    try
-    //    {
-    //        var tenant = await _tenantService.CreateTenantAsync(
-    //            CurrentUserId,
-    //            createDto);
+    [HttpGet]
+    [Authorize]
+    [Route("{id:Guid}")]
+    [ProducesResponseType(typeof(APIResponse<TenantGetDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        var tenants = await _unitOfWork.tenantRepository.GetByIdAsync(id);
+        var tenantMapper = _mapper.Map<TenantGetDto>(tenants);
+        if (tenants != null)
+        {
+            return Ok(new APIResponse<TenantGetDto>(tenantMapper, "All Data For tenant"));
+        }
+        return NotFound(new APIErrorResponse(404));
+    }
 
-    //        return CreatedAtAction(
-    //            nameof(GetById),
-    //            new { id = tenant.Id },
-    //            tenant);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error creating tenant");
-    //        return StatusCode(500, "An error occurred while creating the tenant");
-    //    }
-    //}
+    [HttpPost]
+    [Route("Add")]
+    [ProducesResponseType(typeof(APIResponse<TenantCreateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    public async Task<IActionResult> Add([FromBody] TenantCreateDto tenantCreateDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
 
-    //[HttpPut("{id:guid}")]
-    //[ProducesResponseType(StatusCodes.Status204NoContent)]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<IActionResult> Update(
-    //    Guid id,
-    //    [FromBody] TenantUpdateDto updateDto)
-    //{
-    //    try
-    //    {
-    //        await _tenantService.UpdateTenantAsync(
-    //            id,
-    //            updateDto,
-    //            CurrentUserId);
+        var tenanting = _mapper.Map<Tenant>(tenantCreateDto);
 
-    //        return NoContent();
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error updating tenant");
-    //        return StatusCode(500, "An error occurred while updating the tenant");
-    //    }
-    //}
+        try
+        {
+            _logger.LogInformation("Create new Advertising");
+            await _unitOfWork.tenantRepository.AddAsync(tenanting);
+            await _unitOfWork.SaveChangesAsync();
 
-    //[HttpPost("{id:guid}/background-check")]
-    //[Authorize(Roles = "Landlord,Admin")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BackgroundCheckResultDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<BackgroundCheckResultDto>> InitiateBackgroundCheck(
-    //    Guid id,
-    //    [FromBody] BackgroundCheckRequestDto requestDto)
-    //{
-    //    try
-    //    {
-    //        var result = await _backgroundCheckService.InitiateBackgroundCheckAsync(
-    //            id,
-    //            requestDto,
-    //            CurrentUserId);
+            return Ok(new APIResponse<TenantCreateDto>(tenantCreateDto, "tenanting Is Create Success"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "error on creating new leases ");
+            return new JsonResult($"error on creating new leases") { StatusCode = 500 };
+        }
+    }
 
-    //        return Ok(result);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error initiating background check");
-    //        return StatusCode(500, "An error occurred while initiating the background check");
-    //    }
-    //}
+    [Authorize]
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(APIResponse<TenantUpdateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 404)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    public async Task<IActionResult> Update(Guid id, TenantUpdateDto tenantUpdateDto)
+    {
+        if (id != tenantUpdateDto.Id)
+        {
+            return BadRequest();
+        }
+        
+        await _unitOfWork.SaveChangesAsync();
+        return NoContent();
+    }
 
-    //[HttpGet("{id:guid}/rental-history")]
-    //[Authorize(Roles = "Landlord,Admin")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RentalHistoryDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<List<RentalHistoryDto>>> GetRentalHistory(Guid id)
-    //{
-    //    try
-    //    {
-    //        var history = await _tenantService.GetTenantRentalHistoryAsync(id, CurrentUserId);
-    //        return Ok(history);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant rental history");
-    //        return StatusCode(500, "An error occurred while retrieving rental history");
-    //    }
-    //}
+    [Authorize]
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(APIResponse<TenantCreateDto>), 200)]
+    [ProducesResponseType(typeof(APIErrorResponse), 400)]
+    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    public async Task<IActionResult> DeleteAsync(Guid id)
+    {
+        var tenanting = await _unitOfWork.tenantRepository.FirstOrDefaultAsync(w => w.Id == id);
+        if (tenanting != null)
+        {
+            tenanting.IsDeleted = true;
+            await _unitOfWork.SaveChangesAsync();
+            //  return Ok(new APIResponse<AdvertisingCreateDto>(true, "Delete Is Success"));
+            return NoContent();
+        }
+        return NotFound(new APIErrorResponse(404));
+    }
 
-    //[HttpGet("{id:guid}/payment-history")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<PaymentHistoryDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<PaginatedResponse<PaymentHistoryDto>>> GetPaymentHistory(
-    //    Guid id,
-    //    [FromQuery] PaymentHistoryFilterDto filter,
-    //    [FromQuery] int pageNumber = 1,
-    //    [FromQuery] int pageSize = 10)
-    //{
-    //    try
-    //    {
-    //        var payments = await _tenantService.GetTenantPaymentHistoryAsync(
-    //            id,
-    //            filter,
-    //            pageNumber,
-    //            pageSize,
-    //            CurrentUserId);
-
-    //        return Ok(payments);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant payment history");
-    //        return StatusCode(500, "An error occurred while retrieving payment history");
-    //    }
-    //}
-
-    //[HttpGet("{id:guid}/documents")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TenantDocumentDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<List<TenantDocumentDto>>> GetDocuments(Guid id)
-    //{
-    //    try
-    //    {
-    //        var documents = await _tenantService.GetTenantDocumentsAsync(id, CurrentUserId);
-    //        return Ok(documents);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant documents");
-    //        return StatusCode(500, "An error occurred while retrieving documents");
-    //    }
-    //}
-
-    //[HttpPost("{id:guid}/documents")]
-    //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TenantDocumentDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<TenantDocumentDto>> UploadDocument(
-    //    Guid id,
-    //    [FromForm] TenantDocumentUploadDto uploadDto)
-    //{
-    //    try
-    //    {
-    //        var document = await _tenantService.UploadTenantDocumentAsync(
-    //            id,
-    //            uploadDto,
-    //            CurrentUserId);
-
-    //        return CreatedAtAction(
-    //            nameof(GetDocuments),
-    //            new { id },
-    //            document);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error uploading tenant document");
-    //        return StatusCode(500, "An error occurred while uploading document");
-    //    }
-    //}
-
-    //[HttpGet("{id:guid}/maintenance-requests")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<MaintenanceRequestDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<PaginatedResponse<MaintenanceRequestDto>>> GetMaintenanceRequests(
-    //    Guid id,
-    //    [FromQuery] MaintenanceRequestFilterDto filter,
-    //    [FromQuery] int pageNumber = 1,
-    //    [FromQuery] int pageSize = 10)
-    //{
-    //    try
-    //    {
-    //        var requests = await _tenantService.GetTenantMaintenanceRequestsAsync(
-    //            id,
-    //            filter,
-    //            pageNumber,
-    //            pageSize,
-    //            CurrentUserId);
-
-    //        return Ok(requests);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant maintenance requests");
-    //        return StatusCode(500, "An error occurred while retrieving maintenance requests");
-    //    }
-    //}
-
-    //[HttpGet("{id:guid}/lease-agreements")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LeaseAgreementDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<List<LeaseAgreementDto>>> GetLeaseAgreements(Guid id)
-    //{
-    //    try
-    //    {
-    //        var leases = await _tenantService.GetTenantLeaseAgreementsAsync(id, CurrentUserId);
-    //        return Ok(leases);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant lease agreements");
-    //        return StatusCode(500, "An error occurred while retrieving lease agreements");
-    //    }
-    //}
-
-    //[HttpPost("{id:guid}/verify-income")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IncomeVerificationResultDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<IncomeVerificationResultDto>> VerifyIncome(
-    //    Guid id,
-    //    [FromBody] IncomeVerificationRequestDto requestDto)
-    //{
-    //    try
-    //    {
-    //        var result = await _tenantService.VerifyTenantIncomeAsync(
-    //            id,
-    //            requestDto,
-    //            CurrentUserId);
-
-    //        return Ok(result);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error verifying tenant income");
-    //        return StatusCode(500, "An error occurred while verifying income");
-    //    }
-    //}
-
-    //[HttpPost("{id:guid}/credit-check")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreditCheckResultDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<CreditCheckResultDto>> InitiateCreditCheck(
-    //    Guid id,
-    //    [FromBody] CreditCheckRequestDto requestDto)
-    //{
-    //    try
-    //    {
-    //        var result = await _tenantService.InitiateCreditCheckAsync(
-    //            id,
-    //            requestDto,
-    //            CurrentUserId);
-
-    //        return Ok(result);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error initiating credit check");
-    //        return StatusCode(500, "An error occurred while initiating credit check");
-    //    }
-    //}
-
-    //[HttpGet("{id:guid}/references")]
-    //[Authorize(Roles = "Landlord,Admin")]
-    //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TenantReferenceDto>))]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<List<TenantReferenceDto>>> GetReferences(Guid id)
-    //{
-    //    try
-    //    {
-    //        var references = await _tenantService.GetTenantReferencesAsync(id, CurrentUserId);
-    //        return Ok(references);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error retrieving tenant references");
-    //        return StatusCode(500, "An error occurred while retrieving references");
-    //    }
-    //}
-
-    //[HttpPost("{id:guid}/references")]
-    //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TenantReferenceDto))]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<ActionResult<TenantReferenceDto>> AddReference(
-    //    Guid id,
-    //    [FromBody] TenantReferenceCreateDto createDto)
-    //{
-    //    try
-    //    {
-    //        var reference = await _tenantService.AddTenantReferenceAsync(
-    //            id,
-    //            createDto,
-    //            CurrentUserId);
-
-    //        return CreatedAtAction(
-    //            nameof(GetReferences),
-    //            new { id },
-    //            reference);
-    //    }
-    //    catch (NotFoundException ex)
-    //    {
-    //        return NotFound(ex.Message);
-    //    }
-    //    catch (ValidationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error adding tenant reference");
-    //        return StatusCode(500, "An error occurred while adding reference");
-    //    }
-    //}
 }
