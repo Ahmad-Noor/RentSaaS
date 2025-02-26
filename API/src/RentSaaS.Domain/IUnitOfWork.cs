@@ -10,6 +10,9 @@ public interface IUnitOfWork : IAsyncDisposable
     IExpenseFileRepository ExpenseFileRepository { get; set; } 
     IAdvertisingRepository AdvertisingRepository { get; set; }
     IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
+    ITenantRepository TenantRepository { get; set; }
+    IMaintenanceRepository MaintenanceRepository { get; set; }
+    IMaintenancePhotoRepository MaintenancePhotoRepository { get; set; }
 
     IRecordPaymentRepository RecordPaymentRepository { get; set; }
 

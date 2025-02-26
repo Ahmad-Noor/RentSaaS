@@ -31,7 +31,7 @@ public class TenantController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetAll()
     {
-        var tenents = await _unitOfWork.tenantRepository.GetAllAsync();
+        var tenents = await _unitOfWork.TenantRepository.GetAllAsync();
 
         if (tenents == null)
         {
@@ -51,7 +51,7 @@ public class TenantController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var tenants = await _unitOfWork.tenantRepository.GetByIdAsync(id);
+        var tenants = await _unitOfWork.TenantRepository.GetByIdAsync(id);
         var tenantMapper = _mapper.Map<TenantGetDto>(tenants);
         if (tenants != null)
         {
@@ -77,7 +77,7 @@ public class TenantController : BaseControllery
         try
         {
             _logger.LogInformation("Create new Advertising");
-            await _unitOfWork.tenantRepository.AddAsync(tenanting);
+            await _unitOfWork.TenantRepository.AddAsync(tenanting);
             await _unitOfWork.SaveChangesAsync();
 
             return Ok(new APIResponse<TenantCreateDto>(tenantCreateDto, "tenanting Is Create Success"));
@@ -112,7 +112,7 @@ public class TenantController : BaseControllery
     [ProducesResponseType(typeof(APIErrorResponse), 500)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var tenanting = await _unitOfWork.tenantRepository.FirstOrDefaultAsync(w => w.Id == id);
+        var tenanting = await _unitOfWork.TenantRepository.FirstOrDefaultAsync(w => w.Id == id);
         if (tenanting != null)
         {
             tenanting.IsDeleted = true;

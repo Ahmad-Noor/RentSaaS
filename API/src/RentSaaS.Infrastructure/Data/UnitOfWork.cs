@@ -26,8 +26,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IMaintenanceRepository MaintenanceRepository { get; set; }
     public IMaintenancePhotoRepository MaintenancePhotoRepository { get; set; }
 
-    public ITenantRepository tenantRepository { get; set; }
-    public ITenantRepository tenantRepository { get; set; }
+    public ITenantRepository TenantRepository { get; set; }
 
 
 

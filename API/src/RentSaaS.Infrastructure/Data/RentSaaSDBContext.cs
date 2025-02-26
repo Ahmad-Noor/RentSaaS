@@ -135,8 +135,5 @@ public class RentSaaSDBContext : DbContext
     public DbSet<Tenant> Tenants { get; set; }
 
 
-    public DbSet<Tenant> Tenants { get; set; }
-
-
 
 }
