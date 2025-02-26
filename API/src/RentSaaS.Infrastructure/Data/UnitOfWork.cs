@@ -24,6 +24,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
     public IRecordPaymentFile RecordPaymentFileRepository { get; set; }
 
+    public ITenantRepository tenantRepository { get; set; }
+
 
 
     public UnitOfWork(RentSaaSDBContext dbContext, ILoggerFactory loggerFactory)
@@ -41,6 +43,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, loggerFactory.CreateLogger<ApplicationAndLeadsRepository>());
         RecordPaymentRepository = new RecordPaymentRepository(dbContext,loggerFactory.CreateLogger<RecordPaymentRepository>());
         RecordPaymentFileRepository = new RecordPaymentFileRepository(dbContext, loggerFactory.CreateLogger<RecordPaymentFileRepository>());
+        tenantRepository = new TenantRepository(dbContext, loggerFactory.CreateLogger<TenantRepository>());
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity
