@@ -27,7 +27,7 @@ import { ReceiptItemComponent } from "./receipt-item.component";
     ReceiptItemComponent,
   ],
   templateUrl: "./add-expense.page.html",
-  styleUrls: ["./add-expense.page.css"],
+  // styleUrls: ["./add-expense.page.css"],
 })
 export class AddExpensePage implements OnInit {
   expenseForm: FormGroup;
