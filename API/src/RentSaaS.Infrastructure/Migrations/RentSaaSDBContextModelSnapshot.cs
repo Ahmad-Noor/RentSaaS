@@ -1064,15 +1064,10 @@ namespace RentSaaS.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("fc0c35ff-aa94-4728-9a75-738eb208f43c"),
-                            Id = new Guid("c5d71b6f-e7d8-45e5-82b8-57ff53691d28"),
-                            Id = new Guid("c5d71b6f-e7d8-45e5-82b8-57ff53691d28"),
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "353abfd8-65bb-4054-a122-3fcffdca8e4d",
                             CreatedAt = new DateTime(2025, 2, 25, 11, 22, 21, 597, DateTimeKind.Utc).AddTicks(2822),
-                            ConcurrencyStamp = "87c536f1-ef70-450f-b8f3-fa762584fb38",
-                            CreatedAt = new DateTime(2025, 2, 25, 9, 19, 13, 457, DateTimeKind.Utc).AddTicks(3091),
-                            ConcurrencyStamp = "87c536f1-ef70-450f-b8f3-fa762584fb38",
-                            CreatedAt = new DateTime(2025, 2, 25, 9, 19, 13, 457, DateTimeKind.Utc).AddTicks(3091),
+             
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
