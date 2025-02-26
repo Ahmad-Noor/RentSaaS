@@ -143,7 +143,7 @@ public class MaintenanceRequestController : BaseControllery
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating maintenance with ID: {ExpenseId}", id);
+            _logger.LogError(ex, "Error updating maintenance with ID: {MaintenanceId}", id);
             return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
