@@ -35,17 +35,15 @@ export class ExpenseService {
     return this.http.get<Expense>(`${this.apiUrl}/${id}`, {headers: this.headers});
   }
 
-  addExpense(data: Expense): Observable<Expense> {
-    let headers = this.headers;
-    console.log("this.headers", headers);
-    return this.http.post<Expense>(this.apiUrl, data, {headers: this.headers});
+  addExpense(expenseData: FormData): Observable<any> { 
+    return this.http.post<any>(this.apiUrl, expenseData, {headers: this.headers});
   }
  
-  updateExpense(id: string, data: Expense): Observable<Expense> {
-    return this.http.put<Expense>(`${this.apiUrl}/${id}`, data, {headers: this.headers});
+  updateExpense(expenseId: string, expenseData: FormData): Observable<Expense> {
+    return this.http.put<Expense>(`${this.apiUrl}/${expenseId}`, expenseData, {headers: this.headers});
   }
 
-  deleteExpense(id: string): Observable<Expense> {
-    return this.http.delete<Expense>(`${this.apiUrl}/${id}`, {headers: this.headers});
+  deleteExpense(expenseId: string): Observable<Expense> {
+    return this.http.delete<Expense>(`${this.apiUrl}/${expenseId}`, {headers: this.headers});
   }
 }
