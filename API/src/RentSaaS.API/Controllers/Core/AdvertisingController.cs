@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RentSaaS.Domain;
+using RentSaaS.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.APIResponse;
 using RentSaaS.Domain.Entities;
@@ -10,7 +11,7 @@ namespace RentSaaS.API.Controllers.Core;
 
 public class AdvertisingController : BaseControllery
 {
-    
+
     private readonly ILogger<AdvertisingController> _logger;
 
     public AdvertisingController(ILogger<AdvertisingController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
@@ -21,99 +22,148 @@ public class AdvertisingController : BaseControllery
 
     [Authorize]
     [HttpGet]
-    [Route("GetAll")]
-    [ProducesResponseType(typeof(APIResponse<List<AdvertisingGetDto>>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(typeof(APIResponse<List<AdvertisingGetDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var advertising = await _unitOfWork.AdvertisingRepository.GetAllAsync();
-        if (advertising == null)
+        try
         {
-            return NotFound(new APIErrorResponse(404));
+            var query = _unitOfWork.AdvertisingRepository.AsQueryable().Where(e => !e.IsDeleted).OrderByDescending(e => e.CreatedAt);
+
+            var (items, pagination) = await query.ToPaginatedListAsync(page, pageSize);
+
+            var mappedItems = _mapper.Map<List<AdvertisingGetDto>>(items);
+
+            return Ok(new APIResponse<List<AdvertisingGetDto>>(mappedItems, "Advertising retrieved successfully")
+            {
+                Pagination = pagination
+            });
         }
-        var AdvertisingMapper = _mapper.Map<List<AdvertisingGetDto>>(advertising);
-        return Ok(new APIResponse<List<AdvertisingGetDto>>(AdvertisingMapper, "All Data For Advertising")); 
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while getting all advertising");
+            return StatusCode(500, new APIErrorResponse(500, "An unexpected error occurred"));
+        }
     }
 
 
     [HttpGet]
     [Authorize]
     [Route("{id:Guid}")]
-    [ProducesResponseType(typeof(APIResponse<AdvertisingGetDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingGetDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var advertising = await _unitOfWork.AdvertisingRepository.GetByIdAsync(id);
-        var AdvertisingMapper = _mapper.Map<AdvertisingGetDto>(advertising);
-        if (advertising != null)
+        try
         {
-            return Ok(new APIResponse<AdvertisingGetDto>(AdvertisingMapper, "All Data For Advertising"));
+            var advertising = await _unitOfWork.AdvertisingRepository.GetByIdAsync(id);
+            if (advertising == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Advertising with ID {id} not found"));
+            }
+
+            var mappedAdvertising = _mapper.Map<AdvertisingGetDto>(advertising);
+            return Ok(new APIResponse<AdvertisingGetDto>(mappedAdvertising, "Advertising retrieved successfully"));
         }
-        return NotFound(new APIErrorResponse(404));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving advertising with ID: {AdvertisingId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
     [HttpPost]
     [Route("Add")]
-    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Add([FromBody] AdvertisingCreateDto advertisingDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
-        var Advertising = _mapper.Map<Advertising>(advertisingDto);
-
         try
         {
-            _logger.LogInformation("Create new Advertising");
-            await _unitOfWork.AdvertisingRepository.AddAsync(Advertising);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid advertising data"));
+            }
+            var advertising = _mapper.Map<Advertising>(advertisingDto);
+
+            await _unitOfWork.AdvertisingRepository.AddAsync(advertising);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<AdvertisingCreateDto>( advertisingDto, "Advertising Is Create Success"));
+
+            var createdAdvertising = _mapper.Map<AdvertisingGetDto>(advertising);
+            return CreatedAtAction(nameof(GetById), new { id = advertising.Id },
+                new APIResponse<AdvertisingGetDto>(createdAdvertising, "advertising created successfully"));
+
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new leases ");
-            return new JsonResult($"error on creating new leases") { StatusCode = 500 };
+
+            _logger.LogError(ex, "Error creating advertising");
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
 
     [Authorize]
-    [HttpPut("{id}")]
-    [ProducesResponseType(typeof(APIResponse<AdvertisingUpdateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 404)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    public async Task<IActionResult> Update(Guid id, AdvertisingUpdateDto advertisingDto)
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingUpdateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] AdvertisingUpdateDto advertisingDto)
     {
-        if (id != advertisingDto.Id)
+        try
         {
-            return BadRequest();
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid update data"));
+            }
 
-        await _unitOfWork.SaveChangesAsync();
-        return NoContent();
+            var existingAdvertising = await _unitOfWork.AdvertisingRepository.GetByIdAsync(id);
+            if (existingAdvertising == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Advertising with ID {id} not found"));
+            }
+
+            _mapper.Map(advertisingDto, existingAdvertising);
+            await _unitOfWork.AdvertisingRepository.UpdateAsync(existingAdvertising);
+            await _unitOfWork.SaveChangesAsync();
+
+            var updatedAdvertising = _mapper.Map<AdvertisingGetDto>(existingAdvertising);
+            return Ok(new APIResponse<AdvertisingGetDto>(updatedAdvertising, "Advertising updated successfully"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating advertising with ID: {AdvertisingId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
     [Authorize]
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var advertising = await _unitOfWork.AdvertisingRepository.FirstOrDefaultAsync(w => w.Id == id);
-        if (advertising != null)
+        try
         {
+            var advertising = await _unitOfWork.AdvertisingRepository.GetByIdAsync(id);
+            if (advertising == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Advertising with ID {id} not found"));
+            }
+
             advertising.IsDeleted = true;
+            advertising.DeletedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
-          //  return Ok(new APIResponse<AdvertisingCreateDto>(true, "Delete Is Success"));
-            return NoContent();
+
+            return Ok(new APIResponse<string>(null, $"Advertising successfully deleted"));
         }
-        return NotFound(new APIErrorResponse(404));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting advertising with ID: {AdvertisingId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 }

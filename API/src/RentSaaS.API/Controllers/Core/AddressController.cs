@@ -105,11 +105,10 @@ public class AddressController : BaseControllery
     }
 
     [Authorize]
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(APIResponse<AddressUpdateDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update([FromRoute]Guid id,[FromBody] AddressUpdateDto addressDto)
+    public async Task<IActionResult> Update([FromRoute] Guid id,[FromBody] AddressUpdateDto addressDto)
     {
         try
         {
