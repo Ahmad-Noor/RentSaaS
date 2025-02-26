@@ -1,5 +1,5 @@
 export const Constant = {
-  token: "RentSass_TokenUser",
+  token: "token",
   OrganizationIdRentSass: "organizationId",
   X_organizationId:'X-OrganizationId',
 

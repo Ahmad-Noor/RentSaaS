@@ -21,14 +21,12 @@ export class CompanyService {
   }
 
   private initializeHeaders(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const token = this.userService.getToken();
-      const organizationId = this.userService.getCurrentOrganizationId();
-
+    if (isPlatformBrowser(this.platformId)) { 
+      
       this.headers = new HttpHeaders({
         "Content-Type": "application/json",
-        "X-OrganizationId": organizationId || "",
-        Authorization: `Bearer ${token}`,
+        "X-OrganizationId": this.userService.getCurrentOrganizationId() || "",
+        Authorization: `Bearer ${this.userService.getToken()}`,
       });
     } else {
       this.headers = new HttpHeaders(); // Empty headers for non-browser platforms

@@ -1,3 +1,5 @@
+import { Receipt } from "./receipt.types";
+
 export type ExpenseCategory = 'maintenance' | 'utilities' | 'insurance' | 'taxes' | 'mortgage' | 'acquisition';
 export type ExpenseStatus = 'paid' | 'pending' | 'overdue';
 export type ExpenseType = 'property' | 'general';
@@ -16,9 +18,14 @@ export interface Expense {
   type?: ExpenseType;
   reference?: string;
   isPaid?: boolean;
-  receipts?: File[];
+  receipts?: Receipt[];
   details?: string;
+ 
+  paymentSchedule: string;
+   
+  expenseType: string;
   
+  CompanyId?: string; 
  
   //expenseType: 'recurring' | 'onetime' | 'scheduled'; 
 

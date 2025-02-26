@@ -12,14 +12,17 @@ import { APIResponse } from "../models/api-response.types";
 })
 export class ExpenseService {
   apiUrl: string = `${environment.apiUrl}api/expense`;
-    headers!: HttpHeaders;
+  private headers!: HttpHeaders;
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(private http: HttpClient, private _userService: UserService) {
     this.headers = new HttpHeaders({
-      "X-OrganizationId": `${this.userService.getCurrentOrganizationId()}`,
-      Authorization: `Bearer ${this.userService.getToken()}`,
+      "Content-Type": "application/json",
+      "X-OrganizationId": this._userService.getCurrentOrganizationId() || "",
+      Authorization: `Bearer ${this._userService.getToken()}`,
     });
-  }
+   }
+
+ 
 
   getAllExpenses(): Observable<Expense[]> {
     return this.http
@@ -33,6 +36,8 @@ export class ExpenseService {
   }
 
   addExpense(data: Expense): Observable<Expense> {
+    let headers = this.headers;
+    console.log("this.headers", headers);
     return this.http.post<Expense>(this.apiUrl, data, {headers: this.headers});
   }
  

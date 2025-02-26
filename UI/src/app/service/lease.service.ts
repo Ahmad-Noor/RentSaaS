@@ -11,8 +11,7 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class LeaseService {
-  apiUrl: string = `${environment.apiUrl}api/Lease`;
-  headers!: HttpHeaders;
+  apiUrl: string = `${environment.apiUrl}api/Lease`; 
 
   constructor(private http: HttpClient, private userService: UserService) {}
 

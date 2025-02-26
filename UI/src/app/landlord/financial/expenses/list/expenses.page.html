@@ -47,10 +47,10 @@
             </td>
             <td class="py-3 px-4">
               <div class="flex gap-2">
-                <button  class="text-gray-600 hover:text-red-600" (click)="handleAction({ type: 'edit',  expense})">
+                <button  class="text-gray-600 hover:text-red-600" (click)="handleEditAction( expense)">
                   <span class="material-icons text-sm">edit</span>
                 </button>
-                <button class="p-1 text-gray-600 hover:text-red-600" (click)="handleAction({ type: 'delete', expense })">
+                <button class="p-1 text-gray-600 hover:text-red-600" (click)="handleDeleteAction( expense )">
                   <span class="material-icons text-sm">delete</span>
                 </button>
               </div>

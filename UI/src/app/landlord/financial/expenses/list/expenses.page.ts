@@ -1,16 +1,15 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterLink, Router } from "@angular/router";
+import { RouterLink, Router, ActivatedRoute } from "@angular/router";
 import { Expense } from "../../../../models/expense.types";
 import { ExpenseService } from "../../../../service/expense.service";
 import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog/confirm-dialog.service";
-
 @Component({
   selector: "app-expenses-page",
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: "./expenses.page.html",
-  styleUrls: ["./expenses.page.css"],
+  // styleUrls: ["./expenses.page.css"],
 })
 export class ExpensesPage  implements OnInit  {
   expenses: any[] = [];
@@ -20,6 +19,7 @@ export class ExpensesPage  implements OnInit  {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private expenseService: ExpenseService,
     private confirmDialog: ConfirmDialogService
   ) {  }
@@ -115,4 +115,27 @@ export class ExpensesPage  implements OnInit  {
       );
     }
   }
+
+
+  handleEditAction(data: Expense) {
+    this.router.navigate(['add'], {
+      relativeTo: this.route,
+      state: { expense: data }
+    });
+  }
+  handleDeleteAction(data: Expense) {
+    const isConfirmed = confirm('Are you sure you want to delete this expense?');
+    
+    if (isConfirmed) {
+        this.expenseService.deleteExpense(data.id).subscribe({
+            next: () => {
+                console.log('Expense deleted successfully'); 
+            },
+            error: (error) => {
+                console.error('Error deleting expense:', error); 
+            }
+        });
+    }
+}
+
 }
