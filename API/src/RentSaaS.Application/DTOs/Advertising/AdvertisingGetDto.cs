@@ -3,9 +3,7 @@
     public class AdvertisingGetDto
     {
         public Guid Id { get; set; }
-
-        public string Platform { get; set; } = null!;
-
+        public string? Platform { get; set; }
         public int Leads { get; set; }
         public int Views { get; set; }
 

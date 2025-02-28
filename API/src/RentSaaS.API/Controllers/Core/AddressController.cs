@@ -73,16 +73,15 @@ public class AddressController : BaseControllery
         }
     }
     [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<AddressCreateDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(APIResponse<AddressCreateDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] AddressCreateDto addressDto)
     {       
         try
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new APIErrorResponse(400, "Invalid expense data"));
+                return BadRequest(new APIErrorResponse(400, "Invalid address data"));
             }
             var address = _mapper.Map<Address>(addressDto);
 

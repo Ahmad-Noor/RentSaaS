@@ -1,17 +1,17 @@
-﻿using AutoMapper;
-using Common;
+﻿using Common;
+using AutoMapper;
+using RentSaaS.Domain.Entities;
+using RentSaaS.Application.DTOs.Lease;
 using RentSaaS.Application.Dtos.Company;
 using RentSaaS.Application.DTOs.Address;
 using RentSaaS.Application.DTOs.Expense;
-using RentSaaS.Application.DTOs.Advertising;
 using RentSaaS.Application.DTOs.Property;
 using RentSaaS.Application.DTOs.UserDtos;
-using RentSaaS.Domain.Entities;
-using RentSaaS.Application.DTOs.Lease;
-using RentSaaS.Application.DTOs.RentApplication;
-using RentSaaS.Application.DTOs.RecordPayment;
 using RentSaaS.Application.DTOs.Maintenace;
-using RentSaaS.Application.DTOs.Tenant;
+using RentSaaS.Application.DTOs.Advertising;
+using RentSaaS.Application.DTOs.RecordPayment;
+using RentSaaS.Application.DTOs.ApplicationAndLeads;
+
 using RentSaaS.Application.DTOs.Tenant;
 
 namespace RentSaaS.API.AutoMapper;
@@ -23,10 +23,8 @@ public class MapperProfile :Profile
     {
 
         #region Property
-        CreateMap<PropertyCreateDto, Property>()
-            .ForMember(source => source.CreatedAt, dist => dist.MapFrom(dtos => DateTime.UtcNow));
-
-        CreateMap<PropertyUpdateDto, Property>().ForMember(source=>source.LastModifiedAt,dist=>dist.MapFrom(dto=>DateTime.UtcNow));
+        CreateMap<PropertyCreateDto, Property>();
+        CreateMap<PropertyUpdateDto, Property>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Property, PropertyGetDto>();
         #endregion
 
@@ -57,7 +55,7 @@ public class MapperProfile :Profile
 
         #region Lease
         CreateMap<LeaseCreateDto, Lease>()/*.ReverseMap()*/;
-        CreateMap<LeaseUpdateDto, Lease>();
+        CreateMap<LeaseUpdateDto, Lease>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
         CreateMap<Lease, LeaseGetDto>();
         #endregion
 
@@ -65,19 +63,19 @@ public class MapperProfile :Profile
 
         #region Address
         CreateMap<AddressCreateDto, Address>()/*.ReverseMap()*/;
-        CreateMap<AddressUpdateDto, Address>();
+        CreateMap<AddressUpdateDto, Address>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
         CreateMap<Address, AddressGetDto>();
         #endregion
 
         #region Advertizing
         CreateMap<AdvertisingCreateDto,Advertising>()/*.ReverseMap()*/;
-        CreateMap<AddressUpdateDto, Advertising>();
+        CreateMap<AdvertisingUpdateDto, Advertising>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
         CreateMap<Advertising, AdvertisingGetDto>();
         #endregion
 
         #region Application&Leads
         CreateMap<ApplicationCreateDto, ApplicationAndLeads>()/*.ReverseMap()*/;
-        CreateMap<ApplicationUpdateDto, ApplicationAndLeads>();
+        CreateMap<ApplicationUpdateDto, ApplicationAndLeads>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
         CreateMap<ApplicationAndLeads, ApplicationGetDto>();
         #endregion
 
@@ -97,6 +95,13 @@ public class MapperProfile :Profile
         CreateMap<Tenant, TenantGetDto>();
         CreateMap<Tenant, TenantGetByIdDto>();
 
+        #endregion
+
+        #region Maintenance 
+        CreateMap<MaintenanceCreateDTO, Maintenance>()/*.ReverseMap()*/;
+        CreateMap<MaintenanceUpdateDTO, Maintenance>().ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<Maintenance, GetMaintenanceDto>();
+        CreateMap<Maintenance, GetMaintenaceByIdDto>();
         #endregion
     }
 

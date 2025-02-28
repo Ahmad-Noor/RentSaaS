@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using RentSaaS.API.APIResponse;
 using Microsoft.AspNetCore.Authorization;
-using RentSaaS.Application.DTOs.RentApplication;
+using RentSaaS.Application.DTOs.ApplicationAndLeads;
+using RentSaaS.API.Extensions;
 
 namespace RentSaaS.API.Controllers.Core;
 
@@ -21,101 +22,147 @@ public class ApplicationAndLeadsController : BaseControllery
 
     [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(APIResponse<List<ApplicationGetDto>>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(typeof(APIResponse<List<ApplicationGetDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetAllAsync();
-        if (application == null)
+        try
         {
-            return NotFound(new APIErrorResponse(404));
+            var query = _unitOfWork.ApplicationAndLeadsRepository.AsQueryable().Where(e => !e.IsDeleted).OrderByDescending(e => e.CreatedAt);
+
+            var (items, pagination) = await query.ToPaginatedListAsync(page, pageSize);
+
+            var mappedItems = _mapper.Map<List<ApplicationGetDto>>(items);
+
+            return Ok(new APIResponse<List<ApplicationGetDto>>(mappedItems, "Application retrieved successfully")
+            {
+                Pagination = pagination
+            });
         }
-        var ApplicationMapper = _mapper.Map<List<ApplicationGetDto>>(application);
-        
-        return Ok(new APIResponse<List<ApplicationGetDto>>(ApplicationMapper, "All Data For Application")); ;
- 
-    
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while getting all application");
+            return StatusCode(500, new APIErrorResponse(500, "An unexpected error occurred"));
+        }
     }
 
     [HttpGet]
     [Authorize]
     [Route("{id:Guid}")]
-    [ProducesResponseType(typeof(APIResponse<ApplicationGetDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [ProducesResponseType(typeof(APIResponse<ApplicationGetDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var application = await _unitOfWork.ApplicationAndLeadsRepository.GetByIdAsync(id);
-        var ApplicationMapper = _mapper.Map<ApplicationGetDto>(application);
-        if (application != null)
+        try
         {
-            return Ok(new APIResponse<ApplicationGetDto>(ApplicationMapper, "All Data For Application"));
+            var application = await _unitOfWork.ApplicationAndLeadsRepository.GetByIdAsync(id);
+            if (application == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Application with ID {id} not found"));
+            }
+
+            var mappedApplication = _mapper.Map<ApplicationGetDto>(application);
+            return Ok(new APIResponse<ApplicationGetDto>(mappedApplication, "Application retrieved successfully"));
         }
-        return NotFound(new APIErrorResponse(404));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving application with ID: {ApplicationId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
 
     [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] ApplicationCreateDto applicationDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
-        var Application = _mapper.Map<ApplicationAndLeads>(applicationDto);
-
         try
         {
-            _logger.LogInformation("Create new application");
-            await _unitOfWork.ApplicationAndLeadsRepository.AddAsync(Application);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid Application data"));
+            }
+            var application = _mapper.Map<ApplicationAndLeads>(applicationDto);
+
+            await _unitOfWork.ApplicationAndLeadsRepository.AddAsync(application);
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new APIResponse<ApplicationCreateDto>(applicationDto, "Application Is Create Success"));
+
+            var createdApplication = _mapper.Map<ApplicationGetDto>(applicationDto);
+            return CreatedAtAction(nameof(GetById), new { id = application.Id },
+                new APIResponse<ApplicationGetDto>(createdApplication, "application created successfully"));
+
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new application ");
-            return new JsonResult($"error on creating new application") { StatusCode = 500 };
+
+            _logger.LogError(ex, "Error creating application");
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
 
     [Authorize]
-    [HttpPut("{id}")]
-    [ProducesResponseType(typeof(APIResponse<ApplicationUpdateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 404)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    public async Task<IActionResult> Update(Guid id, ApplicationUpdateDto applicationDto)
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(APIResponse<ApplicationUpdateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ApplicationUpdateDto applicationDto)
     {
-        if (id != applicationDto.Id)
+        try
         {
-            return BadRequest();
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid update data"));
+            }
 
-        await _unitOfWork.SaveChangesAsync();
-        return NoContent();
+            var existingApplication = await _unitOfWork.ApplicationAndLeadsRepository.GetByIdAsync(id);
+            if (existingApplication == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Application with ID {id} not found"));
+            }
+
+            _mapper.Map(applicationDto, existingApplication);
+            await _unitOfWork.ApplicationAndLeadsRepository.UpdateAsync(existingApplication);
+            await _unitOfWork.SaveChangesAsync();
+
+            var updatedApplication = _mapper.Map<ApplicationGetDto>(existingApplication);
+            return Ok(new APIResponse<ApplicationGetDto>(updatedApplication, "Application updated successfully"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating application with ID: {ApplicationId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var application = await _unitOfWork.ApplicationAndLeadsRepository.FirstOrDefaultAsync(w => w.Id == id);
-        if (application != null)
+        try
         {
+            var application = await _unitOfWork.ApplicationAndLeadsRepository.GetByIdAsync(id);
+            if (application == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Application with ID {id} not found"));
+            }
+
             application.IsDeleted = true;
+            application.DeletedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
-            //return Ok(new APIResponse<LeaseCreateDto>(true, "Delete Is Success"));
-            return NoContent();
+
+            return Ok(new APIResponse<string>(null, $"Application successfully deleted"));
         }
-        return NotFound(new APIErrorResponse(404));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting advertising with ID: {AdvertisingId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
 }

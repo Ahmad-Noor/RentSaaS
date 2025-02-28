@@ -13,7 +13,7 @@ namespace RentSaaS.Domain.Entities
     {
         [ForeignKey("Property")]
         public Guid PropertyId { get; set; }
-        public string ApplicantEmail { get; set; }
+        public string? ApplicantEmail { get; set; }
         public int PhoneNumber {  get; set; }
         public string? Message {  get; set; }
 

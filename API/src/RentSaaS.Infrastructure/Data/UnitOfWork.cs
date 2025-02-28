@@ -46,6 +46,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, loggerFactory.CreateLogger<ApplicationAndLeadsRepository>());
         RecordPaymentRepository = new RecordPaymentRepository(dbContext,loggerFactory.CreateLogger<RecordPaymentRepository>());
         RecordPaymentFileRepository = new RecordPaymentFileRepository(dbContext, loggerFactory.CreateLogger<RecordPaymentFileRepository>());
+        MaintenanceRepository=new MaintenanceRepository(dbContext, loggerFactory.CreateLogger<MaintenanceRepository>());
+        MaintenancePhotoRepository=new MaintenancePhotoRepository(dbContext, loggerFactory.CreateLogger<MaintenancePhotoRepository>());
     }
 
     //public IRepository<T> AsyncRepository<T>() where T : IEntity
