@@ -1,9 +1,4 @@
-﻿using RentSaaS.Application.DTOs.Advertising;
-using RentSaaS.Application.DTOs.RentApplication;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace RentSaaS.Application.DTOs.RentApplication
+﻿namespace RentSaaS.Application.DTOs.ApplicationAndLeads
 {
     public class ApplicationUpdateDto : ApplicationCreateDto
     {

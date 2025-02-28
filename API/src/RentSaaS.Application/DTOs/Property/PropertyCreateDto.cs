@@ -3,6 +3,6 @@ namespace RentSaaS.Application.DTOs.Property;
 
 public class PropertyCreateDto
 {
-    public  string Address { get; set; } 
+    public  string? Address { get; set; } 
 
 }

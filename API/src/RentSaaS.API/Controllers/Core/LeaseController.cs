@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RentSaaS.Domain;
+using RentSaaS.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.Domain.Entities;
 using RentSaaS.API.APIResponse;
@@ -18,99 +19,148 @@ public class LeaseController : BaseControllery
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-
+    [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(APIResponse<List<LeaseGetDto>>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(typeof(APIResponse<List<LeaseGetDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var leases = await _unitOfWork.LeaseRepository.GetAllAsync();
-        if (leases == null)
-        {
-            return NotFound(new APIErrorResponse(404));
-        }
-        var LeaseMapper = _mapper.Map<List<LeaseGetDto>>(leases);
-        return Ok(new APIResponse<List<LeaseGetDto>>(LeaseMapper, "All Data For Lease")); ;
-    }
-
-
-    [HttpGet("{id:Guid}")]
-    [ProducesResponseType(typeof(APIResponse<LeaseGetDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
-    {
-        var leases = await _unitOfWork.LeaseRepository.GetByIdAsync(id);
-        var LeaseMapper = _mapper.Map<LeaseGetDto>(leases);
-        if (leases != null)
-        {
-            return Ok(new APIResponse<LeaseGetDto>(LeaseMapper, "All Data For Lease"));
-        }
-        return NotFound(new APIErrorResponse(404));
-    }
-
-    [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<LeaseCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
-    public async Task<IActionResult> Add([FromBody] LeaseCreateDto leasesDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
-        var Lease = _mapper.Map<Lease>(leasesDto);
-
         try
         {
-            _logger.LogInformation("Create new leases");
-            await _unitOfWork.LeaseRepository.AddAsync(Lease);
-            await _unitOfWork.SaveChangesAsync();
+            var query = _unitOfWork.LeaseRepository.AsQueryable().Where(e => !e.IsDeleted).OrderByDescending(e => e.CreatedAt);
 
-            return Ok(new APIResponse<LeaseCreateDto>(leasesDto, "Lease Is Create Success"));
+            var (items, pagination) = await query.ToPaginatedListAsync(page, pageSize);
+
+            var mappedItems = _mapper.Map<List<LeaseGetDto>>(items);
+
+            return Ok(new APIResponse<List<LeaseGetDto>>(mappedItems, "Lease retrieved successfully")
+            {
+                Pagination = pagination
+            });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "error on creating new leases ");
-            return new JsonResult($"error on creating new leases") { StatusCode = 500 };
+            _logger.LogError(ex, "Error occurred while getting all lease");
+            return StatusCode(500, new APIErrorResponse(500, "An unexpected error occurred"));
         }
     }
 
-
     [Authorize]
-    [HttpPut("{id}")]
-    [ProducesResponseType(typeof(APIResponse<LeaseUpdateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 404)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    public async Task<IActionResult> Update(Guid id, LeaseUpdateDto leasesDto)
+    [HttpGet("{id:Guid}")]
+    [ProducesResponseType(typeof(APIResponse<LeaseGetDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        if (id != leasesDto.Id)
+        try
         {
-            return BadRequest();
-        }
+            var lease = await _unitOfWork.LeaseRepository.GetByIdAsync(id);
+            if (lease == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Lease with ID {id} not found"));
+            }
 
-        await _unitOfWork.SaveChangesAsync();
-        return NoContent();
+            var mappedLease = _mapper.Map<LeaseGetDto>(lease);
+            return Ok(new APIResponse<LeaseGetDto>(mappedLease, "Lease retrieved successfully"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving lease with ID: {LeaseId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(APIResponse<LeaseCreateDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Add([FromBody] LeaseCreateDto leasesDto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid lease data"));
+            }
+            var lease = _mapper.Map<Lease>(leasesDto);
+
+            await _unitOfWork.LeaseRepository.AddAsync(lease);
+            await _unitOfWork.SaveChangesAsync();
+
+
+            var createdLease = _mapper.Map<LeaseGetDto>(lease);
+            return CreatedAtAction(nameof(GetById), new { id = lease.Id },
+                new APIResponse<LeaseGetDto>(createdLease, "Lease created successfully"));
+
+        }
+        catch (Exception ex)
+        {
+
+            _logger.LogError(ex, "Error creating lease");
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 
 
     [Authorize]
-    [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(APIResponse<LeaseCreateDto>), 200)]
-    [ProducesResponseType(typeof(APIErrorResponse), 400)]
-    [ProducesResponseType(typeof(APIErrorResponse), 500)]
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(APIResponse<LeaseUpdateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update([FromRoute] Guid id,[FromBody] LeaseUpdateDto leasesDto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new APIErrorResponse(400, "Invalid update data"));
+            }
+
+            var existingLease = await _unitOfWork.LeaseRepository.GetByIdAsync(id);
+            if (existingLease == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Lease with ID {id} not found"));
+            }
+
+            _mapper.Map(leasesDto, existingLease);
+            await _unitOfWork.LeaseRepository.UpdateAsync(existingLease);
+            await _unitOfWork.SaveChangesAsync();
+
+            var updatedLease = _mapper.Map<LeaseGetDto>(existingLease);
+            return Ok(new APIResponse<LeaseGetDto>(updatedLease, "Lease updated successfully"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating lease with ID: {LeaseId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
+    }
+
+
+    [Authorize]
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(APIResponse<LeaseCreateDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        var leases = await _unitOfWork.LeaseRepository.FirstOrDefaultAsync(w => w.Id == id);
-        if (leases != null)
+        try
         {
-            leases.IsDeleted = true;
+            var lease = await _unitOfWork.LeaseRepository.GetByIdAsync(id);
+            if (lease == null)
+            {
+                return NotFound(new APIErrorResponse(404, $"Lease with ID {id} not found"));
+            }
+
+            lease.IsDeleted = true;
+            lease.DeletedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
-            //return Ok(new APIResponse<LeaseCreateDto>(true, "Delete Is Success"));
-            return NoContent();
+
+            return Ok(new APIResponse<string>(null, $"Lease successfully deleted"));
         }
-        return NotFound(new APIErrorResponse(404));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting lease with ID: {LeaseId}", id);
+            return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
+        }
     }
 }

@@ -6,6 +6,7 @@ using RentSaaS.API.APIResponse;
 using RentSaaS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using RentSaaS.Application.DTOs.Advertising;
+using RentSaaS.Application.DTOs.Expense;
 
 namespace RentSaaS.API.Controllers.Core;
 
@@ -75,10 +76,8 @@ public class AdvertisingController : BaseControllery
     }
 
     [HttpPost]
-    [Route("Add")]
-    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] AdvertisingCreateDto advertisingDto)
     {
         try
@@ -140,7 +139,7 @@ public class AdvertisingController : BaseControllery
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(APIResponse<AdvertisingCreateDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status500InternalServerError)]
