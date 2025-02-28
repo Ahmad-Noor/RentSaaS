@@ -64,61 +64,70 @@ export class AddExpensePage implements OnInit {
       receipts: new FormControl([]),
     });
   }
-  // ngOnInit() {
-  //   this.getCompany();
-
-  //   const expenseData = history.state.expense;
-  //   if (expenseData) {
-  //     // Patch form values with the expense data so that the form is pre-populated for editing
-  //     this.expenseForm.patchValue(expenseData);
-  //   }
-  // }
   ngOnInit(): void {
     this.getCompany();
     this.getAllProperties();
   
-    // Retrieve the passed expense from the router state
     const expenseData = history.state.expense;
     if (expenseData) {
-      // Convert the dueDate to ISO format "YYYY-MM-DD" if necessary.
       if (expenseData.dueDate) {
         expenseData.dueDate = new Date(expenseData.dueDate)
           .toISOString()
           .substring(0, 10);
       }
-      // Patch form values with the expense data so that the form is pre-populated for editing
       this.expenseForm.patchValue(expenseData);
     }
   }
   onFormSubmit(): void {
     if (this.expenseForm.valid) {
       const expenseData = this.expenseForm.value;
+      
+      if (expenseData.dueDate) {
+        const date = new Date(expenseData.dueDate);
+        if (!isNaN(date.getTime())) {
+          expenseData.dueDate = date.toISOString().split('T')[0];
+        }
+      }
+      
+      const files = this.receipts.map(receipt => receipt.file);
+      
       if (expenseData.id) {
-        // If an ID is present, assume editing and update the expense
         this._expenseService
-          .updateExpense(expenseData.id, expenseData)
+          .updateExpense(expenseData.id, expenseData, files)
           .subscribe({
             next: (val: any) => {
               console.log("Expense updated successfully");
+              this.router.navigate([".."], { relativeTo: this.route });
             },
             error: (err: any) => {
               console.error("Error updating expense", err);
+              // Add error handling here to display to user
             },
           });
       } else {
-        // Otherwise, add a new expense
-        this._expenseService.addExpense(expenseData as Expense).subscribe({
+        // For adding new expense
+        this._expenseService.addExpense(expenseData, files).subscribe({
           next: (val: any) => {
-            console.log("Expense added successfully");
+            console.log("Expense added successfully", val);
+            this.router.navigate([".."], { relativeTo: this.route });
           },
           error: (err: any) => {
             console.error("Error adding expense", err);
+            if (err.error && err.error.message) {
+              this.error = err.error.message;
+            } else {
+              this.error = "Failed to add expense. Please try again.";
+            }
           },
         });
       }
+    } else {
+      // Mark all form controls as touched to show validation errors
+      Object.keys(this.expenseForm.controls).forEach(key => {
+        const control = this.expenseForm.get(key);
+        control?.markAsTouched();
+      });
     }
-
-    this.router.navigate([".."], { relativeTo: this.route });
   }
   getCompany() {
     this._CompanyService.getCompanies().subscribe({

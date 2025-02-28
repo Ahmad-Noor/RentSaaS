@@ -164,11 +164,13 @@
 
             <!-- Render receipts only once -->
             <div *ngIf="receipts.length > 0" class="space-y-2">
-              <app-receipt-item
-                *ngFor="let receipt of receipts; trackBy: trackByReceiptId"
-                [receipt]="receipt"
-                (remove)="removeReceipt(receipt)"
-              ></app-receipt-item>
+              <div *ngIf="receipts.length > 0" class="space-y-2">
+                <app-receipt-item
+                  *ngFor="let receipt of receipts; let i = index"
+                  [receipt]="receipt"
+                  (remove)="removeReceipt(receipt)"
+                ></app-receipt-item>
+              </div>
             </div>
           </div>
 

@@ -15,6 +15,7 @@ public class ExpenseController : BaseControllery
 {
     private readonly ILogger<ExpenseController> _logger;
     private readonly IFileManagmentService _fileManagementService;
+    private readonly IOrganizationService _organizationService;
     private readonly FileUploadSettings _fileUploadSettings;
 
     public ExpenseController(
@@ -22,11 +23,13 @@ public class ExpenseController : BaseControllery
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IFileManagmentService fileManagementService,
-        IOptions<FileUploadSettings> fileUploadSettings) : base(unitOfWork, mapper)
+        IOptions<FileUploadSettings> fileUploadSettings,
+        IOrganizationService organizationService) : base(unitOfWork, mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fileManagementService = fileManagementService ?? throw new ArgumentNullException(nameof(fileManagementService));
         _fileUploadSettings = fileUploadSettings.Value ?? throw new ArgumentNullException(nameof(fileUploadSettings));
+        _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService)) ;
     }
 
     [HttpGet]
@@ -79,9 +82,10 @@ public class ExpenseController : BaseControllery
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<ExpenseCreateDTO>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add([FromBody] ExpenseCreateDTO expenseCreateDto)
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(APIResponse<GetExpenseByIdDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Add([FromForm] ExpenseCreateDTO expenseCreateDto)
     {
         try
         {
@@ -95,7 +99,7 @@ public class ExpenseController : BaseControllery
 
             if (expenseCreateDto.ReceiptsFiles?.Any() == true)
             {
-                var (IsSuccess, ErrorMessage) = await UploadFiles(expense.Id, expense.OrganizationId, expenseCreateDto.ReceiptsFiles);
+                var (IsSuccess, ErrorMessage) = await UploadFiles(expense.Id,  expenseCreateDto.ReceiptsFiles);
                 if (!IsSuccess)
                 {
                     return BadRequest(new APIErrorResponse(400, ErrorMessage));
@@ -117,9 +121,10 @@ public class ExpenseController : BaseControllery
 
 
     [HttpPut("{id:guid}")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(APIResponse<ExpenseUpdateDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ExpenseUpdateDTO expenseUpdateDto)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] ExpenseUpdateDTO expenseUpdateDto)
     {
         try
         {
@@ -173,7 +178,7 @@ public class ExpenseController : BaseControllery
             return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
-    private async Task<(bool IsSuccess, string ErrorMessage)> UploadFiles(Guid expenseId, Guid organizationId, IFormFileCollection files)
+    private async Task<(bool IsSuccess, string ErrorMessage)> UploadFiles(Guid expenseId, IFormFileCollection files)
     {
         try
         {
@@ -196,7 +201,7 @@ public class ExpenseController : BaseControllery
                 }
             }
 
-            var source = Path.Combine(organizationId.ToString(), "Expenses", expenseId.ToString());
+            var source = Path.Combine("Organizations",_organizationService.GetCurrentOrganization().OrganizationId.ToString(), "Expenses", expenseId.ToString());
             var filePaths = await _fileManagementService.AddFileAsync(files, source);
 
             var expenseFiles = filePaths.Select(filePath => new ExpenseFile
