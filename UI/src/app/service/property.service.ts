@@ -30,7 +30,7 @@ export class PropertyService {
 
 
   getAllProperties(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/GetAll`, {
+    return this.http.get(`${this.apiUrl}`, {
       headers: this.headers,
     });
   }

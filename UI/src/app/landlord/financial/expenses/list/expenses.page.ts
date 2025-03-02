@@ -4,39 +4,65 @@ import { RouterLink, Router, ActivatedRoute } from "@angular/router";
 import { Expense } from "../../../../models/expense.types";
 import { ExpenseService } from "../../../../service/expense.service";
 import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog/confirm-dialog.service";
+
 @Component({
   selector: "app-expenses-page",
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: "./expenses.page.html",
-  // styleUrls: ["./expenses.page.css"],
 })
-export class ExpensesPage  implements OnInit  {
-  expenses: any[] = [];
-  filteredExpenses: any[] = [];
+export class ExpensesPage implements OnInit {
+  expenses: Expense[] = [];
+  filteredExpenses: Expense[] = [];
   @Output() onAction = new EventEmitter<{ type: string; expense: Expense }>();
-  dataSource: any;
-
+  
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private expenseService: ExpenseService,
     private confirmDialog: ConfirmDialogService
-  ) {  }
+  ) {}
+  
   ngOnInit(): void {
-    this.getExpensesList();
+    this.loadExpenses();
   }
 
-  getExpensesList() {
+  loadExpenses() {
     this.expenseService.getAllExpenses().subscribe({
       next: (expenses) => {
-        console.log(expenses);
-        this.expenses = expenses;
-        this.filteredExpenses = expenses;
+        this.expenses = this.processExpenses(expenses);
+        this.filteredExpenses = [...this.expenses];
       },
-    }); 
+      error: (error) => {
+        console.error('Failed to load expenses:', error);
+      }
+    });
   }
- 
+  
+  // Process expense data to ensure consistent format
+  processExpenses(expenses: any[]): Expense[] {
+    return expenses.map(expense => {
+      // Derive status from isPaid and dueDate
+      const status = this.determineExpenseStatus(expense);
+      
+      return {
+        ...expense,
+        status: status
+      };
+    });
+  }
+  
+  determineExpenseStatus(expense: any): string {
+    if (expense.isPaid) {
+      return 'paid';
+    }
+    
+    const dueDate = new Date(expense.dueDate);
+    const today = new Date();
+    
+    return dueDate < today ? 'overdue' : 'pending';
+  }
+
   getStatusClass(status: string): string {
     const baseClasses = "px-2 py-1 rounded-full text-sm capitalize";
     const statusClasses: Record<string, string> = {
@@ -46,96 +72,53 @@ export class ExpensesPage  implements OnInit  {
     };
 
     return `${baseClasses} ${
-      statusClasses[status] || "bg-gray-100 text-gray-800"
+      statusClasses[status.toLowerCase()] || "bg-gray-100 text-gray-800"
     }`;
   }
 
   handleSearch(event: Event): void {
-    const inputElement = event.target as HTMLInputElement; // Cast to HTMLInputElement
-    const term = inputElement.value;
+    const inputElement = event.target as HTMLInputElement;
+    const term = inputElement.value.toLowerCase();
+    
+    if (!term) {
+      this.filteredExpenses = [...this.expenses];
+      return;
+    }
+    
     this.filteredExpenses = this.expenses.filter(
       (expense) =>
-        expense.description.toLowerCase().includes(term.toLowerCase()) ||
-        expense.category.toLowerCase().includes(term.toLowerCase())
+        (expense.details && expense.details.toLowerCase().includes(term)) ||
+        (expense.category && expense.category.toLowerCase().includes(term))
     );
   }
 
-  async handleAction(action: {
-    type: string;
-    expense: Expense;
-  }): Promise<void> {
-    switch (action.type) {
-      case "edit":
-        this.editExpense(action.expense);
-        break;
-
-      case "delete":
-        this.deleteExpense(action.expense);
-        break;
-    }
+  handleEditAction(expense: Expense) {
+    this.router.navigate(['add'], {
+      relativeTo: this.route,
+      state: { expense }
+    });
   }
-
-  // Implement the editExpense method
-  editExpense(expense: Expense): void {
-    this.router.navigate([
-      "landlord",
-      "financial",
-      "expenses",
-      expense.id,
-      "edit",
-    ]);
-  }
-
-  // Implement the deleteExpense method
-  async deleteExpense(expense: Expense): Promise<void> {
-    const confirmed = await this.confirmDialog.show({
+  
+  async handleDeleteAction(expense: Expense) {
+    const isConfirmed = await this.confirmDialog.show({
       title: "Delete Expense",
       message: "Are you sure you want to delete this expense?",
       confirmText: "Delete",
       cancelText: "Cancel",
       type: "danger",
     });
-    if (confirmed) {
-      await this.expenseService.deleteExpense(expense.id);
-      // After deletion, update the filtered expenses
-      this.filteredExpenses = this.filteredExpenses.filter(
-        (exp) => exp.id !== expense.id
-      );
-    }
-  }
-
-  // Implement the filterData method
-  filterData(value: string, filterType: string): void {
-    if (filterType === "description") {
-      this.filteredExpenses = this.expenses.filter((expense) =>
-        expense.description.toLowerCase().includes(value.toLowerCase())
-      );
-    } else if (filterType === "category") {
-      this.filteredExpenses = this.expenses.filter((expense) =>expense.category.toLowerCase().includes(value.toLowerCase())
-      );
-    }
-  }
- 
-  handleEditAction(expense: Expense) { 
-    this.router.navigate(['add'], {
-      relativeTo: this.route,
-      state: { expense }
-    });
-  }
- 
-  handleDeleteAction(data: Expense) {
-    const isConfirmed = confirm('Are you sure you want to delete this expense?');
     
     if (isConfirmed) {
-        this.expenseService.deleteExpense(data.id).subscribe({
-            next: () => {
-                console.log('Expense deleted successfully'); 
-            },
-            error: (error) => {
-                console.error('Error deleting expense:', error); 
-            }
-        });
+      this.expenseService.deleteExpense(expense.id).subscribe({
+        next: () => {
+          // Remove expense from both arrays to update UI
+          this.expenses = this.expenses.filter(e => e.id !== expense.id);
+          this.filteredExpenses = this.filteredExpenses.filter(e => e.id !== expense.id);
+        },
+        error: (error) => {
+          console.error('Error deleting expense:', error);
+        }
+      });
     }
-}
-
+  }
 }
