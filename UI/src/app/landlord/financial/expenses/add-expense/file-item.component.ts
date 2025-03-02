@@ -123,13 +123,20 @@ export class FileItemComponent implements OnInit {
     return typeof this.fileWithMetadata.type === 'string' && this.fileWithMetadata.type.includes('image') || 
            (typeof this.fileWithMetadata.name === 'string' && /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(this.fileWithMetadata.name));
   }
-  
   ngOnInit() {
-    this.createImagePreview();
+    // First check if we have a URL (for files from server)
+    if (this.fileWithMetadata.url) {
+      if (this.isImage) {
+        this.imagePreviewUrl = this.fileWithMetadata.url;
+      }
+    } else {
+      // Only try to create preview from file if there's no URL
+      this.createImagePreview();
+    }
   }
   
   createImagePreview() {
-    if (this.isImage && this.fileWithMetadata.file instanceof File) {
+    if (this.isImage && this.fileWithMetadata.file instanceof File && this.fileWithMetadata.file.size > 0) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreviewUrl = e.target.result;
@@ -156,47 +163,47 @@ export class FileItemComponent implements OnInit {
   }
   
   openPdfPreview(): void {
-    if (this.fileWithMetadata.file instanceof File) {
-      // For newly uploaded files (File objects)
+    // First check if we have a URL (for files from server)
+    if (this.fileWithMetadata.url) {
+      this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.fileWithMetadata.url);
+      this.showFilePreview = true;
+    } 
+    // Then try to use the file if available and not empty
+    else if (this.fileWithMetadata.file instanceof File && this.fileWithMetadata.file.size > 0) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(e.target.result);
         this.showFilePreview = true;
       };
       reader.readAsDataURL(this.fileWithMetadata.file);
-    } else if (this.fileWithMetadata.url) {
-      // For files from server that have URLs
-      console.log('Opening PDF preview:', this.fileWithMetadata.url);
-      this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.fileWithMetadata.url);
-      this.showFilePreview = true;
     } else {
-      console.error('Cannot preview PDF: No file or URL available');
+      console.error('Cannot preview PDF: No valid file or URL available');
       alert('Cannot preview this PDF. Try downloading it instead.');
     }
   }
   
   openImagePreview(): void {
-    if (this.imagePreviewUrl) {
-      // If we already created the image preview URL
+    // Use URL if available
+    if (this.fileWithMetadata.url) {
+      this.imageModalUrl = this.fileWithMetadata.url;
+      this.showFilePreview = true;
+    }
+    // Use cached preview if available 
+    else if (this.imagePreviewUrl) {
       this.imageModalUrl = this.imagePreviewUrl;
       this.showFilePreview = true;
-    } else if (this.fileWithMetadata.file instanceof File) {
-      // For newly uploaded files (File objects)
+    }
+    // Try to read from file if available and not empty
+    else if (this.fileWithMetadata.file instanceof File && this.fileWithMetadata.file.size > 0) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imageModalUrl = e.target.result;
-        this.imagePreviewUrl = e.target.result; // Also store for thumbnail
+        this.imagePreviewUrl = e.target.result;
         this.showFilePreview = true;
       };
       reader.readAsDataURL(this.fileWithMetadata.file);
-    } else if (this.fileWithMetadata.url) {
-      // For files from server that have URLs
-      console.log('Opening PDF preview:', this.fileWithMetadata.url);
-
-      this.imageModalUrl = this.fileWithMetadata.url;
-      this.showFilePreview = true;
     } else {
-      console.error('Cannot preview image: No file or URL available');
+      console.error('Cannot preview image: No valid file or URL available');
       alert('Cannot preview this image. Try downloading it instead.');
     }
   }

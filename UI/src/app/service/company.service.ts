@@ -36,9 +36,7 @@ export class CompanyService {
   private ensureHeadersInitialized(): void {
     if (!this.headers) { 
       this.initializeHeaders();
-    } else {
-      console.log("Headers already initialized.");
-    }
+    }  
   }
 
   getCompanies(): Observable<any> {

@@ -93,7 +93,6 @@ export class ExpenseAddEditPage implements OnInit {
             file: new File([], file.fileName),
             url: file.url,
           }));
-          console.log("Files", this.files);
         }
       },
       error: (err) => {
@@ -134,7 +133,6 @@ export class ExpenseAddEditPage implements OnInit {
         // For adding new expense
         this._expenseService.addExpense(expenseData, files).subscribe({
           next: (val: any) => {
-            console.log("Expense added successfully", val);
             this.router.navigate([".."], { relativeTo: this.route });
           },
           error: (err: any) => {
