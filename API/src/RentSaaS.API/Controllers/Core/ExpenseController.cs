@@ -8,6 +8,7 @@ using RentSaaS.Domain.Entities;
 using Microsoft.Extensions.Options;
 using RentSaaS.Application.Services;
 using RentSaaS.Application.DTOs.Expense;
+using System.Linq;
 
 namespace RentSaaS.API.Controllers.Core;
 
@@ -65,14 +66,27 @@ public class ExpenseController : BaseControllery
     {
         try
         {
+            // Retrieve the expense
             var expense = await _unitOfWork.ExpenseRepository.GetByIdAsync(id);
             if (expense == null)
             {
                 return NotFound(new APIErrorResponse(404, $"Expense with ID {id} not found"));
             }
 
+            // Retrieve the associated files
+            var expenseFiles = await _unitOfWork.ExpenseFileRepository.FindAsync(f => f.ExpenseId == id);
+
+            // Map the expense and files to the DTO
             var mappedExpense = _mapper.Map<GetExpenseByIdDto>(expense);
-            return Ok(new APIResponse<GetExpenseByIdDto>(mappedExpense, "Expense retrieved successfully"));
+            mappedExpense.Files = expenseFiles.Select(f => new ExpenseFileDto
+                                                {
+                                                    Id = f.Id,
+                                                    FileName = f.FileName,
+                                                    FileSize = f.FileSize,
+                                                    UploadedAt = f.UploadedAt
+                                                }).ToList();
+
+            return Ok(mappedExpense);
         }
         catch (Exception ex)
         {
@@ -97,9 +111,9 @@ public class ExpenseController : BaseControllery
             var expense = _mapper.Map<Expense>(expenseCreateDto);
             await _unitOfWork.ExpenseRepository.AddAsync(expense);
 
-            if (expenseCreateDto.ReceiptsFiles?.Any() == true)
+            if (expenseCreateDto.Files?.Any() == true)
             {
-                var (IsSuccess, ErrorMessage) = await UploadFiles(expense.Id,  expenseCreateDto.ReceiptsFiles);
+                var (IsSuccess, ErrorMessage) = await UploadFiles(expense.Id,  expenseCreateDto.Files);
                 if (!IsSuccess)
                 {
                     return BadRequest(new APIErrorResponse(400, ErrorMessage));
@@ -119,10 +133,9 @@ public class ExpenseController : BaseControllery
         }
     }
 
-
     [HttpPut("{id:guid}")]
     [Consumes("multipart/form-data")]
-    [ProducesResponseType(typeof(APIResponse<ExpenseUpdateDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIResponse<ExpenseDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] ExpenseUpdateDTO expenseUpdateDto)
     {
@@ -139,7 +152,37 @@ public class ExpenseController : BaseControllery
                 return NotFound(new APIErrorResponse(404, $"Expense with ID {id} not found"));
             }
 
+            // Map updated fields to the existing expense
             _mapper.Map(expenseUpdateDto, existingExpense);
+
+            // Handle file deletions
+            if (expenseUpdateDto.FilesToDelete?.Any() == true)
+            {
+                // Update the line causing the error
+                var filesToDelete = await _unitOfWork.ExpenseFileRepository.FindAsync(f => expenseUpdateDto.FilesToDelete.Contains(f.Id.ToString()) && f.ExpenseId == id);
+
+                if (filesToDelete.Any())
+                {
+                    foreach (var file in filesToDelete)
+                    {
+                          _fileManagementService.DeleteFile(file.FileName); // Delete the file from storage
+                    }
+
+                    _unitOfWork.ExpenseFileRepository.RemoveRange(filesToDelete); // Remove file records from the database
+                }
+            }
+
+            // Handle new file uploads
+            if (expenseUpdateDto.Files?.Any() == true)
+            {
+                var (IsSuccess, ErrorMessage) = await UploadFiles(id, expenseUpdateDto.Files);
+                if (!IsSuccess)
+                {
+                    return BadRequest(new APIErrorResponse(400, ErrorMessage));
+                }
+            }
+
+            // Update the expense in the database
             await _unitOfWork.ExpenseRepository.UpdateAsync(existingExpense);
             await _unitOfWork.SaveChangesAsync();
 

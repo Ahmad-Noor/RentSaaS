@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
-import { PropertySelectorComponent } from './property-selector/property-selector.component'; 
-import { ReceiptUploadComponent } from './receipt-upload/receipt-upload.component';
+import { PropertySelectorComponent } from './property-selector/property-selector.component';  
 import { CreatePaymentDTO } from '../../../../models/payment.types';
+import { FileItemComponent } from '../../expenses/add-expense/file-item.component';
 
 @Component({
   selector: 'app-payment-form',
@@ -16,7 +16,7 @@ import { CreatePaymentDTO } from '../../../../models/payment.types';
     RouterLink,
     FormFieldComponent,
     PropertySelectorComponent,  
-    ReceiptUploadComponent
+    FileItemComponent
   ],
   template: `
 <form [formGroup]="paymentForm" (ngSubmit)="handleSubmit()" class="space-y-6">
@@ -89,7 +89,7 @@ import { CreatePaymentDTO } from '../../../../models/payment.types';
         ></textarea>
       </app-form-field>
 
-      <app-receipt-upload [formGroup]="paymentForm" />
+      <app-file-item [formGroup]="paymentForm" />
 
       <div class="flex justify-end gap-4">
         <a

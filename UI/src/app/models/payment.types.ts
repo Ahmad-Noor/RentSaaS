@@ -1,4 +1,4 @@
-import { Receipt } from './receipt.types';
+import { FileWithMetadata } from './fileWithMetadata.types';
 
 export type PaymentStatus = 'completed' | 'pending' | 'failed';
 export type PaymentType = 'rent' | 'deposit' | 'fee' | 'other';
@@ -13,7 +13,7 @@ export interface Payment {
   type: PaymentType;
   tenant?: string;
   reference?: string;
-  receipts?: Receipt[];
+    receipts?: FileWithMetadata[];
 }
 
 export interface CreatePaymentDTO {
@@ -22,5 +22,5 @@ export interface CreatePaymentDTO {
   amount: number;
   description: string;
   tenant?: string;
-  receipts?: Receipt[];
+    receipts?: FileWithMetadata[];
 }

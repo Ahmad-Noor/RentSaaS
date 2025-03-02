@@ -8,7 +8,7 @@ public class Expense : BaseEntity
     public string? ExpenseType { get; set; }
 
     [ForeignKey("Property")]
-    public Guid PropertyId { get; set; }
+    public Guid? PropertyId { get; set; }
     public Property Property { get; set; }
 
     [Precision(18, 2)]

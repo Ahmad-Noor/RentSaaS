@@ -1,14 +1,14 @@
-import { FileValidationResult, FileValidationOptions } from '../models/file.types';
+import { FileWithMetadataValidation, FileWithMetadataValidation } from '../models/fileWithMetadata.types';
 
-const DEFAULT_OPTIONS: FileValidationOptions = {
+const DEFAULT_OPTIONS: FileWithMetadataValidationOptions = {
   maxSize: 5 * 1024 * 1024, // 5MB
   allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
 };
 
 export function validateFile(
   file: File, 
-  options: FileValidationOptions = {}
-): FileValidationResult {
+  options: FileWithMetadataValidationOptions = {}
+): FileWithMetadataValidationResult {
   const { maxSize, allowedTypes } = { ...DEFAULT_OPTIONS, ...options };
 
   if (maxSize && file.size > maxSize) {

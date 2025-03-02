@@ -1,4 +1,4 @@
-import { Receipt } from "./receipt.types";
+import { FileWithMetadata } from "./fileWithMetadata.types";
 
 export type ExpenseCategory = 'maintenance' | 'utilities' | 'insurance' | 'taxes' | 'mortgage' | 'acquisition';
 export type ExpenseStatus = 'paid' | 'pending' | 'overdue';
@@ -18,7 +18,7 @@ export interface Expense {
   type?: ExpenseType;
   reference?: string;
   isPaid?: boolean;
-  receipts?: Receipt[];
+  files?: FileWithMetadata[];
   details?: string;
  
   paymentSchedule: string;

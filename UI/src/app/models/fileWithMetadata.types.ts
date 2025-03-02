@@ -1,12 +1,12 @@
-export interface Receipt {
+export interface FileWithMetadata {
   id: string;
-  file: File;
   name: string;
   size: number;
   type: string;
+  file: File;
 }
 
-export interface ReceiptValidation {
+export interface FileWithMetadataValidation {
   isValid: boolean;
   error?: string;
 }

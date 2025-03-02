@@ -6,9 +6,8 @@ namespace RentSaaS.Application.DTOs.Expense
     public class ExpenseCreateDTO
     {
         public string? ExpenseType { get; set; }
-        public Guid? CompanyId { get; set; }
-        [Required]
-        public Guid PropertyId { get; set; }
+        public Guid? CompanyId { get; set; } 
+        public Guid? PropertyId { get; set; }
 
         [Required]
         public string PaymentSchedule { get; set; }
@@ -26,8 +25,7 @@ namespace RentSaaS.Application.DTOs.Expense
         public string? Details { get; set; }
 
         public bool IsPaid { get; set; }
-
-        public List<IFormFile>? Receipts { get; set; }
-        public IFormFileCollection? ReceiptsFiles { get; set; }
+         
+        public IFormFileCollection? Files { get; set; }
     }
 }

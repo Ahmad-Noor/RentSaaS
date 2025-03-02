@@ -39,7 +39,7 @@ public class FileManagmentService : IFileManagmentService
         return filledFiles;
     }
 
-    public void DeleteFileAsync(string source)
+    public void DeleteFile(string source)
     {
       var file= fileProvider.GetFileInfo(source);
         var root = file.PhysicalPath;

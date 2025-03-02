@@ -12,5 +12,7 @@ public class GetExpenseDto
     public DateTime? DueDate { get; set; }
     public string? Details { get; set; }
     public bool? IsPaid { get; set; }
-     public string? PropertyName { get; set; }
+    public string? PropertyName { get; set; }
+
+
 }

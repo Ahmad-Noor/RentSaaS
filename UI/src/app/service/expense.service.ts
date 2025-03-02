@@ -29,7 +29,7 @@ export class ExpenseService {
         map(response => response.data)
       );
   }
-    getExpenseById(id: number): Observable<Expense> {
+    getExpenseById(id: string): Observable<Expense> {
 
     return this.http.get<Expense>(`${this.apiUrl}/${id}`, {headers: this.headers});
   }
@@ -41,7 +41,7 @@ export class ExpenseService {
     for (const key in expenseData) {
       if (expenseData.hasOwnProperty(key) && (expenseData as any)[key] !== null) {
         // Handle different data types appropriately
-        if (key === 'receipts' && Array.isArray((expenseData as any)[key])) {
+        if (key === 'files' && Array.isArray((expenseData as any)[key])) {
           continue; // Skip the receipts array as we'll handle files separately
         } else if (typeof (expenseData as any)[key] === 'object') {
           formData.append(key, JSON.stringify((expenseData as any)[key]));
@@ -54,7 +54,7 @@ export class ExpenseService {
     // Add receipt files
     if (files && files.length > 0) {
       files.forEach(file => {
-        formData.append('ReceiptsFiles', file, file.name);
+        formData.append('Files', file, file.name);
       });
     }
     
@@ -70,9 +70,24 @@ export class ExpenseService {
     const formData = new FormData();
     
     // Add expense data fields
+    // for (const key in expenseData) {
+    //   if (expenseData.hasOwnProperty(key) && (expenseData as any)[key] !== null) {
+    //     if (typeof (expenseData as any)[key] === 'object' && !((expenseData as any)[key] instanceof File)) {
+    //       formData.append(key, JSON.stringify((expenseData as any)[key]));
+    //     } else {
+    //       formData.append(key, (expenseData as any)[key]);
+    //     }
+    //   }
+    // }
+    
     for (const key in expenseData) {
       if (expenseData.hasOwnProperty(key) && (expenseData as any)[key] !== null) {
-        if (typeof (expenseData as any)[key] === 'object' && !((expenseData as any)[key] instanceof File)) {
+        if (key === 'filesToDelete' && Array.isArray((expenseData as any)[key])) {
+          // Append each GUID in the FilesToDelete array individually
+          (expenseData as any)[key].forEach((fileId: string) => {
+            formData.append('FilesToDelete', fileId);
+          });
+        } else if (typeof (expenseData as any)[key] === 'object' && !((expenseData as any)[key] instanceof File)) {
           formData.append(key, JSON.stringify((expenseData as any)[key]));
         } else {
           formData.append(key, (expenseData as any)[key]);
@@ -83,7 +98,7 @@ export class ExpenseService {
     // Add receipt files
     if (files && files.length > 0) {
       files.forEach(file => {
-        formData.append('ReceiptsFiles', file, file.name);
+        formData.append('files', file, file.name);
       });
     }
     
@@ -94,6 +109,7 @@ export class ExpenseService {
     
     return this.http.put<Expense>(`${this.apiUrl}/${expenseId}`, formData, {headers});
   }
+  
   deleteExpense(expenseId: string): Observable<Expense> {
     return this.http.delete<Expense>(`${this.apiUrl}/${expenseId}`, {headers: this.headers});
   }
