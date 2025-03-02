@@ -166,6 +166,7 @@ export class FileItemComponent implements OnInit {
       reader.readAsDataURL(this.fileWithMetadata.file);
     } else if (this.fileWithMetadata.url) {
       // For files from server that have URLs
+      console.log('Opening PDF preview:', this.fileWithMetadata.url);
       this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.fileWithMetadata.url);
       this.showFilePreview = true;
     } else {
@@ -190,6 +191,8 @@ export class FileItemComponent implements OnInit {
       reader.readAsDataURL(this.fileWithMetadata.file);
     } else if (this.fileWithMetadata.url) {
       // For files from server that have URLs
+      console.log('Opening PDF preview:', this.fileWithMetadata.url);
+
       this.imageModalUrl = this.fileWithMetadata.url;
       this.showFilePreview = true;
     } else {

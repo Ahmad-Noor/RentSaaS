@@ -43,7 +43,6 @@ export class CompanyService {
 
   getCompanies(): Observable<any> {
     this.ensureHeadersInitialized();
-    console.log("Header :", this.headers);
     return this._httpClient.get(`${this.baseUrl}api/Company`, {
       headers: this.headers,
     });

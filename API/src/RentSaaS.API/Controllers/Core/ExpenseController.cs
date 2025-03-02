@@ -76,15 +76,20 @@ public class ExpenseController : BaseControllery
             // Retrieve the associated files
             var expenseFiles = await _unitOfWork.ExpenseFileRepository.FindAsync(f => f.ExpenseId == id);
 
+            // Get the base URL for files
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+            var organization = _organizationService.GetCurrentOrganization();
+
             // Map the expense and files to the DTO
             var mappedExpense = _mapper.Map<GetExpenseByIdDto>(expense);
             mappedExpense.Files = expenseFiles.Select(f => new ExpenseFileDto
-                                                {
-                                                    Id = f.Id,
-                                                    FileName = f.FileName,
-                                                    FileSize = f.FileSize,
-                                                    UploadedAt = f.UploadedAt
-                                                }).ToList();
+            {
+                Id = f.Id,
+                FileName = Path.GetFileName(f.FileName),
+                FileSize = f.FileSize,
+                UploadedAt = f.UploadedAt,
+                Url = $"{Request.Scheme}://{Request.Host.Value}/{f.FileName}"
+            }).ToList();
 
             return Ok(mappedExpense);
         }

@@ -93,7 +93,7 @@ export class ExpensesPage implements OnInit {
   }
 
   handleEditAction(expense: Expense) {
-    this.router.navigate(['add'], {
+    this.router.navigate(['expense'], {
       relativeTo: this.route,
       state: { expense }
     });

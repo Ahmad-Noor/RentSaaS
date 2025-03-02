@@ -6,4 +6,5 @@ public class ExpenseFileDto
     public string FileName { get; set; }
     public long FileSize { get; set; }
     public DateTime UploadedAt { get; set; }
+    public string Url { get; set; }
 }

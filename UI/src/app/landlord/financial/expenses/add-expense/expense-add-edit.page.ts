@@ -11,24 +11,19 @@ import {
 } from "@angular/forms";
 import { Expense } from "../../../../models/expense.types";
 import { Company } from "../../../../models/company.types";
-import { FileItemComponent } from "./file-item.component"; 
+import { FileItemComponent } from "./file-item.component";
 import { CompanyService } from "../../../../service/company.service";
-import { PropertyService } from "../../../../service/property.service"; 
+import { PropertyService } from "../../../../service/property.service";
 import { FileWithMetadata } from "../../../../models/fileWithMetadata.types";
 import { EventEmitter, Input, Output, OnInit, Component } from "@angular/core";
 
 @Component({
-  selector: "app-add-expense-page",
+  selector: "app-expense-add-edit-page",
   standalone: true,
-  imports: [
-    RouterLink,
-    CommonModule,
-    ReactiveFormsModule,
-    FileItemComponent,
-  ],
-  templateUrl: "./add-expense.page.html",
+  imports: [RouterLink, CommonModule, ReactiveFormsModule, FileItemComponent],
+  templateUrl: "./expense-add-edit.page.html",
 })
-export class AddExpensePage implements OnInit {
+export class ExpenseAddEditPage implements OnInit {
   expenseForm: FormGroup;
   @Input() expense?: Expense;
   @Output() save = new EventEmitter<ExpenseFormData>();
@@ -47,8 +42,7 @@ export class AddExpensePage implements OnInit {
     private _propertyService: PropertyService,
     private _expenseService: ExpenseService,
     private _companyService: CompanyService
-  ) { 
-
+  ) {
     this.expenseForm = this._fb.group({
       id: "",
       propertyId: new FormControl(null),
@@ -56,7 +50,9 @@ export class AddExpensePage implements OnInit {
       category: new FormControl(null, [Validators.required]),
       expenseType: new FormControl("property"),
       amount: new FormControl(0, [Validators.required]),
-      dueDate: new FormControl(new Date().toISOString().substring(0, 10), [Validators.required]),
+      dueDate: new FormControl(new Date().toISOString().substring(0, 10), [
+        Validators.required,
+      ]),
       details: new FormControl(null),
       isPaid: new FormControl(true, Validators.required),
       type: new FormControl("property"),
@@ -68,63 +64,67 @@ export class AddExpensePage implements OnInit {
   ngOnInit(): void {
     this.getCompany();
     this.getAllProperties();
-  
+
     // Check if we're editing an existing expense
-    const expenseData = history.state.expense; 
+    const expenseData = history.state.expense;
     if (expenseData) {
       this.loadExpenseDetails(expenseData.id);
     }
   }
-  
+
   loadExpenseDetails(expenseId: string): void {
     this._expenseService.getExpenseById(expenseId).subscribe({
-      next: (expense) => { 
-        console.log('Expense details loaded:', expense);
-        
+      next: (expense) => {
         if (expense.dueDate) {
-          expense.dueDate = new Date(expense.dueDate).toISOString().substring(0, 10);
+          expense.dueDate = new Date(expense.dueDate)
+            .toISOString()
+            .substring(0, 10);
         }
         this.expenseForm.patchValue(expense);
-  
-        // Map the files from the API to the files array
+
         if (expense.files) {
           this.files = expense.files.map((file: any) => ({
             id: file.id,
             name: file.fileName,
             size: file.fileSize,
-            type: file.fileName.endsWith('.pdf') ? 'application/pdf' : 'image/*',
-             file: new File([], file.fileName) // file-item from the API won't have a `file` object
+            type: file.fileName.endsWith(".pdf")
+              ? "application/pdf"
+              : "image/*",
+            file: new File([], file.fileName),
+            url: file.url,
           }));
+          console.log("Files", this.files);
         }
       },
       error: (err) => {
-        console.error('Error loading expense details:', err);
-      }
+        console.error("Error loading expense details:", err);
+      },
     });
   }
   onFormSubmit(): void {
     if (this.expenseForm.valid) {
       const expenseData = this.expenseForm.value;
-    
-    // Format date for API
-    if (expenseData.dueDate) {
-      const date = new Date(expenseData.dueDate);
-      if (!isNaN(date.getTime())) {
-        expenseData.dueDate = date.toISOString().split('T')[0];
-      }
-    }
-    
-    // Prepare file files  
-    const files = this.files.map(file => file.file);
-    expenseData.filesToDelete = this.filesToDelete;
 
-    // Update or create expense
-    if (expenseData.id) {
-        this._expenseService.updateExpense(expenseData.id, expenseData, files).subscribe({
+      // Format date for API
+      if (expenseData.dueDate) {
+        const date = new Date(expenseData.dueDate);
+        if (!isNaN(date.getTime())) {
+          expenseData.dueDate = date.toISOString().split("T")[0];
+        }
+      }
+
+      // Prepare file files
+      const files = this.files.map((file) => file.file);
+      expenseData.filesToDelete = this.filesToDelete;
+
+      // Update or create expense
+      if (expenseData.id) {
+        this._expenseService
+          .updateExpense(expenseData.id, expenseData, files)
+          .subscribe({
             next: (val: any) => {
-              console.log("Expense updated successfully");
               this.router.navigate([".."], { relativeTo: this.route });
-        },
+            },
             error: (err: any) => {
               console.error("Error updating expense", err);
               // Add error handling here to display to user
@@ -136,7 +136,7 @@ export class AddExpensePage implements OnInit {
           next: (val: any) => {
             console.log("Expense added successfully", val);
             this.router.navigate([".."], { relativeTo: this.route });
-        },
+          },
           error: (err: any) => {
             console.error("Error adding expense", err);
             if (err.error && err.error.message) {
@@ -149,17 +149,17 @@ export class AddExpensePage implements OnInit {
       }
     } else {
       // Mark all form controls as touched to show validation errors
-      Object.keys(this.expenseForm.controls).forEach(key => {
+      Object.keys(this.expenseForm.controls).forEach((key) => {
         const control = this.expenseForm.get(key);
         control?.markAsTouched();
       });
-  }
+    }
   }
   getCompany() {
     this._companyService.getCompanies().subscribe({
       next: (result) => {
         this.company = result.data;
-        },
+      },
       error: (result) => {},
     });
   }
@@ -176,21 +176,20 @@ export class AddExpensePage implements OnInit {
 
   onFilesSelected(event: any): void {
     const files = Array.from((event.target as HTMLInputElement).files || []);
-    
+
     if (this.files.length + files.length > 5) {
       this.error = "You can upload a maximum of 5 files";
       return;
     }
 
     this.error = ""; // Clear any previous errors
-    
+
     files.forEach((fileInfo: any) => {
       const validation = validateFileWithMetadata(fileInfo);
       if (!validation.isValid) {
         this.error = validation.error || "Invalid file";
         return;
       }
-
 
       const file: FileWithMetadata = {
         id: crypto.randomUUID(),
@@ -207,23 +206,32 @@ export class AddExpensePage implements OnInit {
     (event.target as HTMLInputElement).value = "";
   }
 
-  removeFile(file: any): void { 
+  removeFile(file: any): void {
     this.files = this.files.filter((r) => r.id !== file.id);
     this.filesToDelete.push(file.id);
     this.error = "";
   }
 }
 
-function validateFileWithMetadata(file: FileWithMetadata): { isValid: boolean; error?: string } {
+function validateFileWithMetadata(file: FileWithMetadata): {
+  isValid: boolean;
+  error?: string;
+} {
   const validTypes = ["image/jpeg", "image/png", "application/pdf"];
   const maxSize = 5 * 1024 * 1024; // 5MB
 
   if (!validTypes.includes(file.type)) {
-    return { isValid: false, error: "Invalid file type. Please upload JPG, PNG or PDF only." };
+    return {
+      isValid: false,
+      error: "Invalid file type. Please upload JPG, PNG or PDF only.",
+    };
   }
 
   if (file.size > maxSize) {
-    return { isValid: false, error: "FileWithMetadata size exceeds 5MB limit." };
+    return {
+      isValid: false,
+      error: "FileWithMetadata size exceeds 5MB limit.",
+    };
   }
 
   return { isValid: true };
