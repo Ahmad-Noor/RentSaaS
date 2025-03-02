@@ -4,6 +4,7 @@ export interface FileWithMetadata {
   size: number;
   type: string;
   file: File;
+  url?: string;
 }
 
 export interface FileWithMetadataValidation {
