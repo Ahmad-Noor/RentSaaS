@@ -12,6 +12,7 @@ export interface Expense {
   category: ExpenseCategory;
   status: ExpenseStatus;
   propertyId?: number;
+  companyId?: string; 
   recurring?: boolean;
   dueDate?: string;
   vendor?: string;
@@ -25,7 +26,6 @@ export interface Expense {
    
   expenseType: string;
   
-  CompanyId?: string; 
  
   //expenseType: 'recurring' | 'onetime' | 'scheduled'; 
 

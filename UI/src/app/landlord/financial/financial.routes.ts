@@ -20,7 +20,7 @@ export default [
  
   {
     path: 'expenses/expense',
-    loadComponent: () => import('./expenses/add-expense/expense-add-edit.page').then(m => m.ExpenseAddEditPage)
+    loadComponent: () => import('./expenses/expense-add-edit/expense-add-edit.page').then(m => m.ExpenseAddEditPage)
   },
 
   // {

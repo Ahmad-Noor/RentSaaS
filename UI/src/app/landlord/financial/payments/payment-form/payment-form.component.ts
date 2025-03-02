@@ -5,7 +5,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 import { PropertySelectorComponent } from './property-selector/property-selector.component';  
 import { CreatePaymentDTO } from '../../../../models/payment.types';
-import { FileItemComponent } from '../../expenses/add-expense/file-item.component';
+import { FileItemComponent } from '../../expenses/expense-add-edit/file-item.component';
 
 @Component({
   selector: 'app-payment-form',

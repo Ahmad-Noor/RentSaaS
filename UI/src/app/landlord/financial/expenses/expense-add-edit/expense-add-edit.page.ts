@@ -33,7 +33,7 @@ export class ExpenseAddEditPage implements OnInit {
   error = "";
   loading = false;
   properties: any[] = [];
-  company!: Company[];
+  companies!: Company[];
 
   constructor(
     private _fb: FormBuilder,
@@ -46,6 +46,7 @@ export class ExpenseAddEditPage implements OnInit {
     this.expenseForm = this._fb.group({
       id: "",
       propertyId: new FormControl(null),
+      companyId: new FormControl(null),
       paymentSchedule: new FormControl("onetime", [Validators.required]),
       category: new FormControl(null, [Validators.required]),
       expenseType: new FormControl("property"),
@@ -56,7 +57,6 @@ export class ExpenseAddEditPage implements OnInit {
       details: new FormControl(null),
       isPaid: new FormControl(true, Validators.required),
       type: new FormControl("property"),
-      CompanyId: new FormControl(null),
       files: new FormControl([]),
     });
   }
@@ -81,7 +81,7 @@ export class ExpenseAddEditPage implements OnInit {
             .substring(0, 10);
         }
         this.expenseForm.patchValue(expense);
-
+ 
         if (expense.files) {
           this.files = expense.files.map((file: any) => ({
             id: file.id,
@@ -156,7 +156,7 @@ export class ExpenseAddEditPage implements OnInit {
   getCompany() {
     this._companyService.getCompanies().subscribe({
       next: (result) => {
-        this.company = result.data;
+        this.companies = result.data;
       },
       error: (result) => {},
     });
