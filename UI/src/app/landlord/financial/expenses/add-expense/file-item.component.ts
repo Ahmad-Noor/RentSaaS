@@ -8,49 +8,49 @@ import { FileWithMetadata } from '../../../../models/fileWithMetadata.types';
   imports: [CommonModule],
   template: `
     <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
-      <!-- Preview section -->
-      <div class="h-32 flex items-center justify-center bg-gray-100">
-        <!-- PDF Preview -->
-        <div *ngIf="isPdf" class="flex flex-col items-center justify-center">
-          <span class="material-icons text-red-500 text-4xl">picture_as_pdf</span>
-          <span class="text-xs text-gray-500 mt-1">PDF Document</span>
-        </div>
-        
-        <!-- Image Preview -->
-        <div *ngIf="isImage" class="w-full h-full">
-          <img 
-            *ngIf="imagePreviewUrl" 
-            [src]="imagePreviewUrl" 
-            alt="Preview" 
-            class="w-full h-full object-cover"
-          >
-          <div *ngIf="!imagePreviewUrl" class="flex flex-col items-center justify-center h-full">
-            <span class="material-icons text-blue-500 text-4xl">image</span>
-            <span class="text-xs text-gray-500 mt-1">Image</span>
+      <div class="flex items-center p-3">
+        <!-- Left side preview - small thumbnail -->
+        <div class="w-16 h-16 flex-shrink-0 mr-3 flex items-center justify-center bg-gray-100 rounded overflow-hidden">
+          <!-- PDF Preview -->
+          <div *ngIf="isPdf" class="flex flex-col items-center justify-center h-full w-full">
+            <span class="material-icons text-red-500">picture_as_pdf</span>
+          </div>
+          
+          <!-- Image Preview -->
+          <div *ngIf="isImage" class="h-full w-full">
+            <img 
+              *ngIf="imagePreviewUrl" 
+              [src]="imagePreviewUrl" 
+              alt="Preview" 
+              class="h-full w-full object-cover"
+            >
+            <div *ngIf="!imagePreviewUrl" class="flex items-center justify-center h-full">
+              <span class="material-icons text-blue-500">image</span>
+            </div>
+          </div>
+          
+          <!-- Other file types -->
+          <div *ngIf="!isPdf && !isImage" class="flex items-center justify-center h-full w-full">
+            <span class="material-icons text-gray-500">insert_drive_file</span>
           </div>
         </div>
         
-        <!-- Other file types -->
-        <div *ngIf="!isPdf && !isImage" class="flex items-center justify-center">
-          <span class="material-icons text-gray-500 text-4xl">insert_drive_file</span>
-        </div>
-      </div>
-      
-      <!-- File details section -->
-      <div class="p-3">
-        <div class="flex items-center justify-between">
-          <div class="truncate flex-1">
-            <p class="text-sm font-medium truncate" [title]="fileWithMetadata.name">{{ fileWithMetadata.name }}</p>
-            <p class="text-xs text-gray-500">{{ formatSize(fileWithMetadata.size) }}</p>
+        <!-- Right side file details -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <div class="truncate">
+              <p class="text-sm font-medium truncate" [title]="fileWithMetadata.name">{{ fileWithMetadata.name }}</p>
+              <p class="text-xs text-gray-500">{{ formatSize(fileWithMetadata.size) }}</p>
+            </div>
+            <button 
+              type="button" 
+              (click)="onRemove()" 
+              class="ml-2 p-1 text-gray-400 hover:text-red-500 rounded-full hover:bg-gray-100"
+              title="Remove file"
+            >
+              <span class="material-icons">close</span>
+            </button>
           </div>
-          <button 
-            type="button" 
-            (click)="onRemove()" 
-            class="ml-2 p-1 text-gray-400 hover:text-red-500 rounded-full hover:bg-gray-100"
-            title="Remove file"
-          >
-            <span class="material-icons">close</span>
-          </button>
         </div>
       </div>
     </div>
