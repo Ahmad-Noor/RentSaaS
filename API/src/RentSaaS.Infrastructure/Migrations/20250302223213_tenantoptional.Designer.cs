@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250302223213_tenantoptional")]
+    partial class tenantoptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -494,12 +497,17 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("RecordPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseId");
+
+                    b.HasIndex("RecordPaymentId");
 
                     b.ToTable("expenseFiles");
                 });
@@ -793,12 +801,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1063,10 +1065,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c0de660e-9722-48fd-b6be-2a02682f6c11"),
+                            Id = new Guid("ea9feaac-8cb5-4fcb-b390-ef92d5c5bcb2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b55d0ffb-776d-4b85-ac38-c95cadc6dc12",
-                            CreatedAt = new DateTime(2025, 3, 2, 22, 49, 5, 577, DateTimeKind.Utc).AddTicks(4164),
+                            ConcurrencyStamp = "d46b51d8-1ef7-4a76-a186-6dbc8fecc8a8",
+                            CreatedAt = new DateTime(2025, 3, 2, 22, 32, 11, 467, DateTimeKind.Utc).AddTicks(929),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -1076,7 +1078,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "ABe+N30JAD2dpCBQ8Q54SymdCg9Qm+QdgDZn6FVTe4MezKMG+74tcxIWje4DD6nPvA==",
+                            PasswordHash = "AK9crL5niEjGcptGtUzPra319vSOhoONf5UEXZAaUe5LJ8fVAWdDreByzuuuhTdmbg==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,
@@ -1129,6 +1131,10 @@ namespace RentSaaS.Infrastructure.Migrations
                         .HasForeignKey("ExpenseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RentSaaS.Domain.Entities.RecordPayment", null)
+                        .WithMany("ExpenseFiles")
+                        .HasForeignKey("RecordPaymentId");
 
                     b.Navigation("Expense");
                 });
@@ -1192,7 +1198,7 @@ namespace RentSaaS.Infrastructure.Migrations
             modelBuilder.Entity("RentSaaS.Domain.Entities.RecordPaymentFile", b =>
                 {
                     b.HasOne("RentSaaS.Domain.Entities.RecordPayment", "RecordPayment")
-                        .WithMany("PaymentFiles")
+                        .WithMany()
                         .HasForeignKey("RecordPaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1221,7 +1227,7 @@ namespace RentSaaS.Infrastructure.Migrations
 
             modelBuilder.Entity("RentSaaS.Domain.Entities.RecordPayment", b =>
                 {
-                    b.Navigation("PaymentFiles");
+                    b.Navigation("ExpenseFiles");
                 });
 #pragma warning restore 612, 618
         }

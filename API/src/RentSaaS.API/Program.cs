@@ -167,6 +167,7 @@ app.UseSwagger();
 //}
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 // app.UseRateLimiter();
 // app.UseRequestLocalization();

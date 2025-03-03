@@ -28,12 +28,12 @@ export default [
   //   loadComponent: () => import('./edit-expense/edit-expense.page').then(m => m.EditExpensePage)
   // },
   {
-    path: 'payments',
-    loadComponent: () => import('./payments/payment-list/payment-list.page').then(m => m.PaymentListPage)
+    path: 'payments/payment',
+    loadComponent: () => import('./payments/payment-add-edit/payment-add-edit.component').then(m => m.PaymentAddEditComponent)
   },
   {
-    path: 'payments/record',
-    loadComponent: () => import('./payments/record-payment/record-payment.page').then(m => m.RecordPaymentPage)
+    path: 'payments',
+    loadComponent: () => import('./payments/List/payment.page').then(m => m.PaymentsPage)
   },
   {
     path: 'reports',

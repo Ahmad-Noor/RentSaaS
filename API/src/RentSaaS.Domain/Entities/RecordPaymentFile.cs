@@ -13,5 +13,8 @@ namespace RentSaaS.Domain.Entities
         public RecordPayment? RecordPayment { get; set; }
         public DateTime UploadedAt { get; set; }
         public long FileSize { get; set; }
+
+    
+
     }
 }
