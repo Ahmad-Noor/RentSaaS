@@ -1,0 +1,182 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold">Add New Payment</h1>
+      <a routerLink="../" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+        <span class="material-icons">arrow_back</span>
+        Back to Payments
+      </a>
+    </div>
+  
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-6">
+        <form [formGroup]="paymentForm" (ngSubmit)="onFormSubmit()" class="space-y-6">
+                    <!-- Conditionally show property selection -->
+                    <div>
+                      <div>
+                        <label for="propertyId" class="block text-sm font-medium text-gray-700">Property</label>
+                        <select
+                          id="propertyId"
+                          formControlName="propertyId"
+                          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="" selected>Select property</option>
+                          <option *ngFor="let property of properties" [value]="property.id">
+                            {{ property.address }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+          
+          <div class="space-y-4">
+            <div>
+              <label for="paymentSchedule" class="block text-sm font-medium text-gray-700">
+                Payment Type
+              </label>
+              <select
+              id="paymentSchedule"
+              formControlName="paymentSchedule"
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Payment Type</option>
+              <option value="rent">Rent</option>
+              <option value="sec_deposit">Security Deposit</option>
+              <option value="free">Free</option>
+              <option value="other">Other</option>
+
+            </select>
+            </div>
+          </div>
+  
+
+           <!-- Conditionally show property selection -->
+           <div>
+            <div>
+              <label for="tenantId" class="block text-sm font-medium text-gray-700">Tenant </label>
+              <select
+                id="tenantId"
+                formControlName="tenantId"
+                class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" selected>Select Tenant</option>
+                <option *ngFor="let tenant of tenanties" [value]="tenant.id">
+                  {{ tenant.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+
+          <div *ngIf="paymentForm.get('expenseType')?.value === 'general'">
+            <div>
+              <label for="companyId" class="block text-sm font-medium text-gray-700">Company</label>
+              <select
+                id="companyId"
+                formControlName="companyId"
+                class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" selected>Select company</option>
+                <option *ngFor="let company of companies" [value]="company.id">
+                  {{ company.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="space-y-4">
+          
+  
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
+                <input
+                  type="number"
+                  id="amount"
+                  formControlName="amount"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  min="1"
+                  step="1"
+                >
+              </div>
+  
+              <div>
+                <label for="dueDate" class="block text-sm font-medium text-gray-700">
+                  Due Date
+                </label>
+                <input
+                  type="date"
+                  id="dueDate"
+                  formControlName="dueDate"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+  
+              <div>
+                <label for="details" class="block text-sm font-medium text-gray-700">
+                  Details
+                </label>
+                <textarea
+                  id="details"
+                  formControlName="details"
+                  rows="3"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="Add any additional details..."
+                  data-gramm="false"
+                ></textarea>
+              </div>
+  
+       
+            </div>
+  
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  (click)="fileInput.click()"
+                  class="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100" >
+                  <span class="material-icons">upload_file</span>
+                  Upload Files
+                </button>
+                <span class="text-sm text-gray-500">
+                  Upload up to 5 files (PDF or images)
+                </span>
+              </div>
+  
+              <input
+                #fileInput
+                type="file"
+                (change)="onFilesSelected($event)"
+                accept="image/*,.pdf"
+                class="hidden"
+                multiple
+              >
+  
+              <div *ngIf="error" class="text-sm text-red-600">
+                {{ error }}
+              </div>
+  
+              <!-- Render files only once -->
+              <div *ngIf="files.length > 0" class="space-y-2">
+                <div *ngIf="files.length > 0" class="space-y-2">
+                  <app-file-item
+                    *ngFor="let file of files; let i = index"
+                    [fileWithMetadata]="file"
+                    (remove)="removeFile(file)"
+                  ></app-file-item>
+                </div>
+              </div>
+            </div>
+  
+            <div class="flex justify-end gap-4">
+              <a routerLink=".." class="px-4 py-2 text-gray-700 hover:text-gray-900">Cancel</a>
+              <button
+                type="submit"
+                [disabled]="!paymentForm.valid || loading"
+                class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {{ loading ? 'Saving...' : 'Save ' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

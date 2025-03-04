@@ -84,6 +84,7 @@ public class MapperProfile :Profile
         CreateMap<RecordPaymentCreateDto, RecordPayment>()/*.ReverseMap()*/;
         CreateMap<RecordPaymentUpdateDto, RecordPayment>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<RecordPayment, GetRecordPaymentDto>();
+    
         CreateMap<RecordPayment, RecordPaymentByIdDto>();
 
         #endregion

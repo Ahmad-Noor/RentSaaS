@@ -1,7 +1,7 @@
- import { CommonModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { RouterLink, Router, ActivatedRoute } from "@angular/router";
-import { ExpenseService } from "../../../../service/expense.service";
-import { ExpenseFormData } from "../../../../models/expense-form.types";
+import { PaymentService } from "../../../../service/payment.service";
+import { PaymentFormData } from "../../../../models/payment-form.types";
 import {
   FormBuilder,
   FormControl,
@@ -9,30 +9,33 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { Expense } from "../../../../models/expense.types";
+import { Payment } from "../../../../models/payment.types";
 import { Company } from "../../../../models/company.types";
 import { FileItemComponent } from "./file-item.component";
 import { CompanyService } from "../../../../service/company.service";
 import { PropertyService } from "../../../../service/property.service";
+import { TenantService } from "../../../../service/tenant.service";
+
 import { FileWithMetadata } from "../../../../models/fileWithMetadata.types";
 import { EventEmitter, Input, Output, OnInit, Component } from "@angular/core";
 
 @Component({
-  selector: "app-expense-add-edit-page",
-  standalone: true,
+  selector: 'app-payment-add-edit',
   imports: [RouterLink, CommonModule, ReactiveFormsModule, FileItemComponent],
-  templateUrl: "./expense-add-edit.page.html",
+  templateUrl: './payment-add-edit.component.html',
+  styleUrl: './payment-add-edit.component.css'
 })
-export class ExpenseAddEditPage implements OnInit {
-  expenseForm: FormGroup;
-  @Input() expense?: Expense;
-  @Output() save = new EventEmitter<ExpenseFormData>();
+export class PaymentAddEditComponent {
+paymentForm: FormGroup;
+  @Input() payment?: Payment;
+  @Output() save = new EventEmitter<PaymentFormData>();
 
   files: FileWithMetadata[] = [];
   filesToDelete: string[] = [];
   error = "";
   loading = false;
   properties: any[] = [];
+  tenanties:any[] = [];
   companies!: Company[];
 
   constructor(
@@ -40,22 +43,22 @@ export class ExpenseAddEditPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private _propertyService: PropertyService,
-    private _expenseService: ExpenseService,
-    private _companyService: CompanyService
+    private _paymentService: PaymentService,
+    private _companyService: CompanyService,
+    private _tenantService:TenantService
+    
   ) {
-    this.expenseForm = this._fb.group({
+    this.paymentForm = this._fb.group({
       id: "",
       propertyId: new FormControl(null),
-      companyId: new FormControl(null),
-      paymentSchedule: new FormControl("onetime", [Validators.required]),
-      category: new FormControl(null, [Validators.required]),
-      expenseType: new FormControl("property"),
+      tenantId:new FormControl(null),
+      paymentType: new FormControl("property"),
+      tenant : new FormControl("tenant"),
       amount: new FormControl(0, [Validators.required]),
       dueDate: new FormControl(new Date().toISOString().substring(0, 10), [
         Validators.required,
       ]),
       details: new FormControl(null),
-      isPaid: new FormControl(true, Validators.required),
       type: new FormControl("property"),
       files: new FormControl([]),
     });
@@ -66,24 +69,24 @@ export class ExpenseAddEditPage implements OnInit {
     this.getAllProperties();
 
     // Check if we're editing an existing expense
-    const expenseData = history.state.expense;
-    if (expenseData) {
-      this.loadExpenseDetails(expenseData.id);
+    const paymentData = history.state.payment;
+    if (paymentData) {
+      this.loadPaymentDetails(paymentData.id);
     }
   }
 
-  loadExpenseDetails(expenseId: string): void {
-    this._expenseService.getExpenseById(expenseId).subscribe({
-      next: (expense) => {
-        if (expense.dueDate) {
-          expense.dueDate = new Date(expense.dueDate)
+  loadPaymentDetails(paymentId: string): void {
+    this._paymentService.getPaymentById(paymentId).subscribe({
+      next: (payment) => {
+        if (payment.dueDate) {
+          payment.dueDate = new Date(payment.dueDate)
             .toISOString()
             .substring(0, 10);
         }
-        this.expenseForm.patchValue(expense);
+        this.paymentForm.patchValue(payment);
  
-        if (expense.files) {
-          this.files = expense.files.map((file: any) => ({
+        if (payment.files) {
+          this.files = payment.files.map((file: any) => ({
             id: file.id,
             name: file.fileName,
             size: file.fileSize,
@@ -96,30 +99,30 @@ export class ExpenseAddEditPage implements OnInit {
         }
       },
       error: (err) => {
-        console.error("Error loading expense details:", err);
+        console.error("Error loading payment details:", err);
       },
     });
   }
   onFormSubmit(): void {
-    if (this.expenseForm.valid) {
-      const expenseData = this.expenseForm.value;
+    if (this.paymentForm.valid) {
+      const paymentData = this.paymentForm.value;
 
       // Format date for API
-      if (expenseData.dueDate) {
-        const date = new Date(expenseData.dueDate);
+      if (paymentData.dueDate) {
+        const date = new Date(paymentData.dueDate);
         if (!isNaN(date.getTime())) {
-          expenseData.dueDate = date.toISOString().split("T")[0];
+          paymentData.dueDate = date.toISOString().split("T")[0];
         }
       }
 
       // Prepare file files
       const files = this.files.map((file) => file.file);
-      expenseData.filesToDelete = this.filesToDelete;
+      paymentData.filesToDelete = this.filesToDelete;
 
       // Update or create expense
-      if (expenseData.id) {
-        this._expenseService
-          .updateExpense(expenseData.id, expenseData, files)
+      if (paymentData.id) {
+        this._paymentService
+          .updatePayment(paymentData.id, paymentData, files)
           .subscribe({
             next: (val: any) => {
               this.router.navigate([".."], { relativeTo: this.route });
@@ -131,24 +134,24 @@ export class ExpenseAddEditPage implements OnInit {
           });
       } else {
         // For adding new expense
-        this._expenseService.addExpense(expenseData, files).subscribe({
+        this._paymentService.addPayment(paymentData, files).subscribe({
           next: (val: any) => {
             this.router.navigate([".."], { relativeTo: this.route });
           },
           error: (err: any) => {
-            console.error("Error adding expense", err);
+            console.error("Error adding payment", err);
             if (err.error && err.error.message) {
               this.error = err.error.message;
             } else {
-              this.error = "Failed to add expense. Please try again.";
+              this.error = "Failed to add payment. Please try again.";
             }
           },
         });
       }
     } else {
       // Mark all form controls as touched to show validation errors
-      Object.keys(this.expenseForm.controls).forEach((key) => {
-        const control = this.expenseForm.get(key);
+      Object.keys(this.paymentForm.controls).forEach((key) => {
+        const control = this.paymentForm.get(key);
         control?.markAsTouched();
       });
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RentSaaS.Application.DTOs.Expense;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,20 @@ namespace RentSaaS.Application.DTOs.RecordPayment
 {
     public class RecordPaymentByIdDto
     {
-        public Guid? PropertyId { get; set; }
 
-        public decimal? Amount { get; set; }
-
-        public Guid? TenantId { get; set; }
-
-
-        public int? ReferenceNumber { get; set; }
-
-        public string? Description { get; set; }
+        public Guid Id { get; set; }
+        public Guid PropertyId { get; set; }
         public string? PaymentType { get; set; }
+  
+   
+  
+        public decimal? Amount { get; set; }
+        public DateTime? DueDate { get; set; }
+        public string? Details { get; set; }
+  
+        public List<PaymentfileDto> Files { get; set; }
+    
+
+
     }
 }

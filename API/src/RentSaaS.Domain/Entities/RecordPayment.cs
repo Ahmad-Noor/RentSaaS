@@ -20,9 +20,9 @@ namespace RentSaaS.Domain.Entities
         public decimal Amount { get; set; }
 
         [ForeignKey("Tenant")]
-        public Guid TenantId { get; set; }
+        public Guid? TenantId { get; set; }
 
-        public Tenant Tenant { get; set; }
+        public Tenant? Tenant { get; set; }
 
         public int? ReferenceNumber { get; set; }
 
@@ -30,7 +30,10 @@ namespace RentSaaS.Domain.Entities
         public string? PaymentType { get; set; }
 
         public string[]? ReceiptsFiles { get; set; }
+        public DateTime DueDate { get; set; }
+        public string? Details { get; set; }
 
-        public ICollection<ExpenseFile>? ExpenseFiles { get; set; }
+
+        public ICollection<RecordPaymentFile>? PaymentFiles { get; set; }
     }
 }
