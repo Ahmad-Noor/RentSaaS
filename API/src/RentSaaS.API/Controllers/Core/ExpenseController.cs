@@ -8,7 +8,6 @@ using RentSaaS.Domain.Entities;
 using Microsoft.Extensions.Options;
 using RentSaaS.Application.Services;
 using RentSaaS.Application.DTOs.Expense;
-using System.Linq;
 
 namespace RentSaaS.API.Controllers.Core;
 
