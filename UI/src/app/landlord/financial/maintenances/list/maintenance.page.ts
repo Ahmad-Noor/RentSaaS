@@ -8,7 +8,7 @@ import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog
 @Component({
   selector: "app-maintenances-page",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: "./maintenances.page.html",
 })
 export class MaintenancesPage implements OnInit {
