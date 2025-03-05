@@ -31,10 +31,8 @@ export default [
         path: 'financial',
         loadChildren: () => import('./financial/financial.routes')
       },
-      {
-        path: 'maintenance',
-        loadChildren: () => import('./maintenance/maintenance.routes')
-      },
+
+
       {
         path: 'messages',
         loadChildren: () => import('./messages/messages.routes')

@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
 using RentSaaS.Domain;
 using RentSaaS.API.Models;
-using RentSaaS.API.Controllers;
-using Microsoft.Extensions.Options;
-using RentSaaS.Application.Services;
+using RentSaaS.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RentSaaS.API.APIResponse;
-using RentSaaS.API.Extensions;
-using RentSaaS.Application.DTOs.Expense;
-using RentSaaS.Application.DTOs.Maintenace;
 using RentSaaS.Domain.Entities;
+using Microsoft.Extensions.Options;
+using RentSaaS.Application.Services;
+using RentSaaS.Application.DTOs.Maintenace;
+
+namespace RentSaaS.API.Controllers.Core;
 
 public class MaintenanceRequestController : BaseControllery
 {
     private readonly ILogger<MaintenanceRequestController> _logger;
     private readonly IFileManagmentService _fileManagementService;
+    private readonly IOrganizationService _organizationService;
     private readonly FileUploadSettings _fileUploadSettings;
 
     public MaintenanceRequestController(
@@ -22,13 +23,14 @@ public class MaintenanceRequestController : BaseControllery
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IFileManagmentService fileManagementService,
-        IOptions<FileUploadSettings> fileUploadSettings) : base(unitOfWork, mapper)
+        IOptions<FileUploadSettings> fileUploadSettings,
+        IOrganizationService organizationService) : base(unitOfWork, mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fileManagementService = fileManagementService ?? throw new ArgumentNullException(nameof(fileManagementService));
         _fileUploadSettings = fileUploadSettings.Value ?? throw new ArgumentNullException(nameof(fileUploadSettings));
+        _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
     }
-
 
     [HttpGet]
     [ProducesResponseType(typeof(APIResponse<List<GetMaintenanceDto>>), StatusCodes.Status200OK)]
@@ -63,26 +65,45 @@ public class MaintenanceRequestController : BaseControllery
     {
         try
         {
+            // Retrieve the expense
             var maintenance = await _unitOfWork.MaintenanceRepository.GetByIdAsync(id);
             if (maintenance == null)
             {
                 return NotFound(new APIErrorResponse(404, $"Maintenance with ID {id} not found"));
             }
 
+            // Retrieve the associated files
+            var maintenacePhotos = await _unitOfWork.MaintenancePhotoRepository.FindAsync(f => f.MaintenanceId == id);
+
+            // Get the base URL for files
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+            var organization = _organizationService.GetCurrentOrganization();
+
+            // Map the expense and files to the DTO
             var mappedMaintenance = _mapper.Map<GetMaintenaceByIdDto>(maintenance);
-            return Ok(new APIResponse<GetMaintenaceByIdDto>(mappedMaintenance, "Maintenance retrieved successfully"));
+            mappedMaintenance.Files = maintenacePhotos.Select(f => new MaintenancePhotoDto
+            {
+                Id = f.Id,
+                FileName = Path.GetFileName(f.FileName),
+                FileSize = f.FileSize,
+                UploadedAt = f.UploadedAt,
+                Url = $"{Request.Scheme}://{Request.Host.Value}/{f.FileName}"
+            }).ToList();
+
+            return Ok(mappedMaintenance);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving maintenance with ID: {MaintenanceId}", id);
+            _logger.LogError(ex, "Error retrieving expense with ID: {MaintenanceId}", id);
             return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<MaintenanceCreateDTO>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add([FromBody] MaintenanceCreateDTO maintenanceCreateDTO)
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(APIResponse<GetMaintenaceByIdDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Add([FromForm] MaintenanceCreateDTO maintenanceCreateDTO)
     {
         try
         {
@@ -94,9 +115,9 @@ public class MaintenanceRequestController : BaseControllery
             var maintenance = _mapper.Map<Maintenance>(maintenanceCreateDTO);
             await _unitOfWork.MaintenanceRepository.AddAsync(maintenance);
 
-            if (maintenanceCreateDTO.Photo?.Any() == true)
+            if (maintenanceCreateDTO.Files?.Any() == true)
             {
-                var (IsSuccess, ErrorMessage) = await UploadFiles(maintenance.Id, maintenance.OrganizationId, maintenanceCreateDTO.Photo);
+                var (IsSuccess, ErrorMessage) = await UploadFiles(maintenance.Id, maintenanceCreateDTO.Files);
                 if (!IsSuccess)
                 {
                     return BadRequest(new APIErrorResponse(400, ErrorMessage));
@@ -117,9 +138,10 @@ public class MaintenanceRequestController : BaseControllery
     }
 
     [HttpPut("{id:guid}")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(APIResponse<MaintenanceUpdateDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] MaintenanceUpdateDTO maintenanceUpdateDTO)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] MaintenanceUpdateDTO maintenanceUpdateDTO)
     {
         try
         {
@@ -134,7 +156,37 @@ public class MaintenanceRequestController : BaseControllery
                 return NotFound(new APIErrorResponse(404, $"Maintenance with ID {id} not found"));
             }
 
+            // Map updated fields to the existing expense
             _mapper.Map(maintenanceUpdateDTO, existingMaintenance);
+
+            // Handle file deletions
+            if (maintenanceUpdateDTO.FilesToDelete?.Any() == true)
+            {
+                // Update the line causing the error
+                var photosToDelete = await _unitOfWork.MaintenancePhotoRepository.FindAsync(f => maintenanceUpdateDTO.FilesToDelete.Contains(f.Id.ToString()) && f.MaintenanceId == id);
+
+                if (photosToDelete.Any())
+                {
+                    foreach (var photo in photosToDelete)
+                    {
+                        _fileManagementService.DeleteFile(photo.FileName); // Delete the file from storage
+                    }
+
+                    _unitOfWork.MaintenancePhotoRepository.RemoveRange(photosToDelete); // Remove file records from the database
+                }
+            }
+
+            // Handle new file uploads
+            if (maintenanceUpdateDTO.Files?.Any() == true)
+            {
+                var (IsSuccess, ErrorMessage) = await UploadFiles(id, maintenanceUpdateDTO.Files);
+                if (!IsSuccess)
+                {
+                    return BadRequest(new APIErrorResponse(400, ErrorMessage));
+                }
+            }
+
+            // Update the expense in the database
             await _unitOfWork.MaintenanceRepository.UpdateAsync(existingMaintenance);
             await _unitOfWork.SaveChangesAsync();
 
@@ -155,27 +207,25 @@ public class MaintenanceRequestController : BaseControllery
     {
         try
         {
-            var maintenance = await _unitOfWork.MaintenanceRepository.GetByIdAsync(id);
-            if (maintenance == null)
+            var expense = await _unitOfWork.MaintenanceRepository.GetByIdAsync(id);
+            if (expense == null)
             {
                 return NotFound(new APIErrorResponse(404, $"Maintenance with ID {id} not found"));
             }
 
-            maintenance.IsDeleted = true;
-            maintenance.DeletedAt = DateTime.UtcNow;
+            expense.IsDeleted = true;
+            expense.DeletedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
 
             return Ok(new APIResponse<string>(null, $"Maintenance successfully deleted"));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting expense with ID: {MaintenanceId}", id);
+            _logger.LogError(ex, "Error deleting maintenance with ID: {MaintenanceId}", id);
             return StatusCode(500, new APIErrorResponse(500, DefaultErrorMessage));
         }
     }
-
-
-    private async Task<(bool IsSuccess, string ErrorMessage)> UploadFiles(Guid maintenanceId, Guid organizationId, IFormFileCollection files)
+    private async Task<(bool IsSuccess, string ErrorMessage)> UploadFiles(Guid maintenanceId, IFormFileCollection files )
     {
         try
         {
@@ -188,34 +238,35 @@ public class MaintenanceRequestController : BaseControllery
             {
                 if (file.Length > _fileUploadSettings.MaxFileSize)
                 {
-                    return (false, $"File {file.FileName} exceeds maximum size of {_fileUploadSettings.MaxFileSize / 1024 / 1024}MB");
+                    return (false, $"file {file.FileName} exceeds maximum size of {_fileUploadSettings.MaxFileSize / 1024 / 1024}MB");
                 }
 
                 var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
                 if (!_fileUploadSettings.AllowedFileTypes.Contains(extension))
                 {
-                    return (false, $"File type {extension} is not allowed");
+                    return (false, $"file type {extension} is not allowed");
                 }
             }
 
-            var source = Path.Combine(organizationId.ToString(), "Maintenance", maintenanceId.ToString());
-            var filePaths = await _fileManagementService.AddFileAsync(files, source);
+            var source = Path.Combine("Organizations", _organizationService.GetCurrentOrganization().OrganizationId.ToString(), "Maintenance", maintenanceId.ToString());
+            var photoPaths = await _fileManagementService.AddFileAsync(files, source);
 
-            var maintenancephoto = filePaths.Select(filePath => new MaintenancePhoto
+            var maintenancePhotos = photoPaths.Select(photoPath => new MaintenancePhoto
             {
                 MaintenanceId = maintenanceId,
-                PhotoName = filePath,
+                FileName = photoPath,
                 UploadedAt = DateTime.UtcNow,
-                PhotoSize = files.FirstOrDefault(f => Path.GetFileName(filePath) == f.FileName)?.Length ?? 0
+                FileSize = files.FirstOrDefault(f => Path.GetFileName(photoPath) == f.FileName)?.Length ?? 0
             }).ToList();
 
-            await _unitOfWork.MaintenancePhotoRepository.AddRangeAsync(maintenancephoto.ToArray());
+
+            await _unitOfWork.MaintenancePhotoRepository.AddRangeAsync(maintenancePhotos.ToArray());
             return (true, string.Empty);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error uploading files for expense: {MaintenanceId}", maintenanceId);
-            return (false, "Failed to upload files");
+            _logger.LogError(ex, "Error uploading files for maintenance: {MaintenanceId}", maintenanceId);
+            return (false, "Failed to upload photos");
         }
     }
 }

@@ -7,7 +7,8 @@ namespace RentSaaS.Application.DTOs.Maintenace
         public Guid? PropertyId { get; set; }
         public string? IssueType { get; set; }
         public string? Priority { get; set; }
-        public string? Description { get; set; }
-        public IFormFileCollection? Photo { get; set; }
+        public string? Details { get; set; }
+        public DateTime DueDate { get; set; }
+        public IFormFileCollection? Files { get; set; }
     }
 }

@@ -14,14 +14,14 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
   {
     label: 'Property Management',
     items: [
-      { 
-        icon: 'business', 
-        label: 'Companies', 
+      {
+        icon: 'business',
+        label: 'Companies',
         route: '/landlord/companies'
       },
-      { 
-        icon: 'apartment', 
-        label: 'Properties', 
+      {
+        icon: 'apartment',
+        label: 'Properties',
         route: '/landlord/properties',
         children: [
           { icon: 'campaign', label: 'Advertising', route: '/landlord/properties/advertising' },
@@ -51,12 +51,12 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
   {
     label: 'Services',
     items: [
-      { 
-        icon: 'build', 
-        label: 'Maintenance', 
-        route: '/landlord/maintenance',
+      {
+        icon: 'Maintenances',
+        label: 'Maintenances',
+        route: '/landlord/financial/maintenances',
         children: [
-          { icon: 'list_alt', label: 'Requests List', route: '/landlord/maintenance/requests' }
+          { icon: 'list_alt', label: 'Requests List', route: '/landlord/financial/maintenances/requests' }
         ]
       },
       { icon: 'mail', label: 'Mailbox', route: '/landlord/messages' },
@@ -69,8 +69,8 @@ export const LANDLORD_NAVIGATION: NavGroup[] = [
       { icon: 'groups', label: 'Team Management', route: '/landlord/team' },
       { icon: 'manage_accounts', label: 'Users', route: '/landlord/users' },
       { icon: 'build', label: 'Website Studio', route: '/landlord/websitestudio' },
-      { icon: 'build', label: 'AI Agent for real estate opportunity ', route: '/landlord/websitestudio'  },
-      { icon: 'build', label: 'AI Real Estate Voice Agent(https://www.youtube.com/watch?v=Miaob3BQpdk)', route: '/landlord/websitestudio'  },
+      { icon: 'build', label: 'AI Agent for real estate opportunity ', route: '/landlord/websitestudio' },
+      { icon: 'build', label: 'AI Real Estate Voice Agent(https://www.youtube.com/watch?v=Miaob3BQpdk)', route: '/landlord/websitestudio' },
       { icon: 'build', label: 'Project Management', route: '/landlord/projectmanagement' }
     ]
   }

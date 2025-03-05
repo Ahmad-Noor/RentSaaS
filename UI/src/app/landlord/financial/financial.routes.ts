@@ -8,16 +8,16 @@ export default [
   {
     path: 'expenses',
     loadComponent: () => import('./expenses/list/expenses.page').then(m => m.ExpensesPage)
-  }, 
+  },
   {
     path: 'address',
     loadComponent: () => import('./address/address.component').then(m => m.AddressComponent)
-  }, 
+  },
   {
     path: 'countries',
     loadComponent: () => import('./countries/countries.component').then(m => m.CountriesComponent)
   },
- 
+
   {
     path: 'expenses/expense',
     loadComponent: () => import('./expenses/expense-add-edit/expense-add-edit.page').then(m => m.ExpenseAddEditPage)
@@ -35,6 +35,16 @@ export default [
     path: 'payments',
     loadComponent: () => import('./payments/List/payment.page').then(m => m.PaymentsPage)
   },
+
+  {
+    path: 'maintenances/maintenance',
+    loadComponent: () => import('./maintenances/maintenance-add-edit/maintenance-add-edit.component').then(m => m.MaintenanceAddEditComponent)
+  },
+  {
+    path: 'maintenances',
+    loadComponent: () => import('./maintenances/list/maintenance.page').then(m => m.MaintenancesPage)
+  },
+
   {
     path: 'reports',
     loadComponent: () => import('./reports/reports.page').then(m => m.ReportsPage)

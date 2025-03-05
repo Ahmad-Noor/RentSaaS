@@ -5,13 +5,13 @@ namespace RentSaaS.Domain.Entities
 {
     public class MaintenancePhoto : BaseEntity
     {
-        [ForeignKey(nameof(Expense))]
+        [ForeignKey(nameof(Maintenance))]
         public Guid MaintenanceId { get; set; }
-        public string ?PhotoName { get; set; }
+        public string ?FileName { get; set; }
 
         public Maintenance ?Maintenance { get; set; }
         public DateTime UploadedAt { get; set; }
-        public long PhotoSize { get; set; }
+        public long FileSize { get; set; }
     }
 
 }
