@@ -1,0 +1,33 @@
+<table class="w-full mt-6">
+  <thead>
+    <tr class="border-b bg-gray-100">
+      <th class="text-left py-3 px-4">Date</th>
+      <th class="text-left py-3 px-4">Details</th>
+      <th class="text-left py-3 px-4">Status</th>
+      <th class="text-left py-3 px-4">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let maintenance of filteredmaintenances" class="border-b hover:bg-gray-50">
+      <td class="py-3 px-4">{{ maintenance.dueDate }}</td>
+      <td class="py-3 px-4">
+        {{ maintenance.details }}
+        <span *ngIf="maintenance.propertyId"
+          class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Recurring</span>
+      </td>
+      <td class="py-3 px-4">
+        <span [class]="getStatusClass(maintenance.status)">{{ maintenance.status }}</span>
+      </td>
+      <td class="py-3 px-4">
+        <div class="flex gap-2">
+          <button class="text-gray-600 hover:text-blue-600" (click)="handleEditAction(maintenance)">
+            <span class="material-icons text-sm">edit</span>
+          </button>
+          <button class="text-gray-600 hover:text-red-600" (click)="handleDeleteAction(maintenance)">
+            <span class="material-icons text-sm">delete</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

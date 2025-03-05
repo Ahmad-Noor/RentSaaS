@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250304193853_addDueDate")]
+    partial class addDueDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -588,9 +591,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("File")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -608,6 +608,9 @@ namespace RentSaaS.Infrastructure.Migrations
 
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Priority")
                         .HasColumnType("nvarchar(max)");
@@ -640,12 +643,6 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -663,6 +660,12 @@ namespace RentSaaS.Infrastructure.Migrations
 
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhotoName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("PhotoSize")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
@@ -1066,10 +1069,10 @@ namespace RentSaaS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2dbfe16e-a130-4c3f-83d2-8718e62b800d"),
+                            Id = new Guid("cfe4b5e1-f922-4a74-8d29-e9b739810d17"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1bad715a-7994-4dc5-a874-5c4c72e8d340",
-                            CreatedAt = new DateTime(2025, 3, 4, 21, 2, 18, 519, DateTimeKind.Utc).AddTicks(5398),
+                            ConcurrencyStamp = "6c60a6e1-098b-4ea7-8776-da63ba6620cd",
+                            CreatedAt = new DateTime(2025, 3, 4, 19, 38, 52, 719, DateTimeKind.Utc).AddTicks(7377),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@rentsaas.com",
                             EmailConfirmed = false,
@@ -1079,7 +1082,7 @@ namespace RentSaaS.Infrastructure.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             OrganizationId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            PasswordHash = "AMJCNQGDhJE2ZZMjqBDUkAQlVQjWW27X1XTwQteKxoGvco2atKbcnXWF2LQnuSVV3Q==",
+                            PasswordHash = "AG0RPE46G0yV3Tz+xAV8TG7L8Myx7kyLngHvHLgVQV3ynlh92zHL0eN/ilGwrBdCMQ==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,

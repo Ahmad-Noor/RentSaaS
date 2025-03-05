@@ -11,8 +11,9 @@ namespace RentSaaS.Domain.Entities
 
         public string? IssueType {  get; set; }
         public string? Priority { get; set; }
-        public string? Description {  get; set; }
-        public string[]? Photo { get; set; }
+        public string? Details {  get; set; }
+        public DateTime DueDate { get; set; }
+        public string[]? File { get; set; }
         public ICollection<MaintenancePhoto>? MaintenancePhoto { get; set; }
     }
 }

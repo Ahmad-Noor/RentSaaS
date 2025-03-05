@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentSaaS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RentSaaS.Infrastructure.Data;
 namespace RentSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(RentSaaSDBContext))]
-    partial class RentSaaSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250304210219_AddFile")]
+    partial class AddFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

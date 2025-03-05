@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using RentSaaS.Application.DTOs.MaintenancePhotoDto;
 
 namespace RentSaaS.Application.DTOs.Maintenace
 {
@@ -8,10 +9,9 @@ namespace RentSaaS.Application.DTOs.Maintenace
         public Guid PropertyId { get; set; }
         public string? IssueType { get; set; }
         public string? Priority { get; set; }
-        public string? Description { get; set; }
-        public string[]? Photo { get; set; }
-        public IFormFile[]? NewPhoto { get; set; }
-        public string[]? ExistingPhoto { get; set; }
-
+        public string? Details { get; set; }
+        public DateTime DueDate { get; set; }
+        public IFormFileCollection? Files { get; set; }
+        public List<string>? FilesToDelete { get; set; }
     }
 }
