@@ -64,7 +64,7 @@ public class ApplicationAndLeadsController : BaseControllery
             }
 
             var mappedApplication = _mapper.Map<ApplicationGetDto>(application);
-            return Ok(new APIResponse<ApplicationGetDto>(mappedApplication, "Application retrieved successfully"));
+            return Ok(mappedApplication);
         }
         catch (Exception ex)
         {

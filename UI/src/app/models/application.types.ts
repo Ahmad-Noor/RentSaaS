@@ -1,13 +1,13 @@
 export type ApplicationStatus = 'new' | 'reviewing' | 'approved' | 'rejected';
 
 export interface Application {
-    id: string;
-    propertyId: string;
-    applicantEmail: string;
-    phoneNumber: number;
-    message?: string;
-    requestBackground?: boolean;
-    requestCredit?: boolean;
+  id: string;
+  propertyId: string;
+  applicantEmail: string;
+  phoneNumber: number;
+  message?: string;
+  requestbackgroundcheck?: boolean;
+  requestcreditreport?: boolean;
 }
 
 export interface ApplicationFormData {
@@ -15,6 +15,6 @@ export interface ApplicationFormData {
   applicantEmail: string;
   phoneNumber: number;
   message?: string;
-  requestBackground?: boolean;
-  requestCredit?: boolean;
+  requestbackgroundcheck?: boolean;
+  requestcreditreport?: boolean;
 }

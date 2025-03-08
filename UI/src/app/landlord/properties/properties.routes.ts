@@ -20,7 +20,7 @@ export default [
       import("./add-property/add-property.page").then((m) => m.AddPropertyPage),
   },
 
-  
+
   {
     path: "advertising",
     loadComponent: () =>
@@ -33,19 +33,34 @@ export default [
         (m) => m.CreateListingPage
       ),
   },
+  // {
+  //   path: "applications",
+  //   loadComponent: () =>
+  //     import("./applications/list/applications.page").then(
+  //       (m) => m.ApplicationsPage
+  //     ),
+  // },
+  // {
+  //   path: "applications/send",
+  //   loadComponent: () =>
+  //     import("./applications/application-add-edit/application-add-edit.component").then(
+  //       (m) => m.ApplicationAddEditComponent
+  //     ),
+  // },
+
+  // {
+  //   path: "applications/send/:id", // إضافة :id لاستقبال المعامل
+  //   loadComponent: () =>
+  //     import("./applications/application-add-edit/application-add-edit.component").then((m) => m.ApplicationAddEditComponent),
+  // },
+
   {
-    path: "applications",
-    loadComponent: () =>
-      import("./applications/applications.page").then(
-        (m) => m.ApplicationsPage
-      ),
+    path: 'applications/application',
+    loadComponent: () => import('./applications/application-add-edit/application-add-edit.component').then(m => m.ApplicationAddEditComponent)
   },
   {
-    path: "applications/send",
-    loadComponent: () =>
-      import("./send-application/application-add-edit/application-add-edit.component").then(
-        (m) => m.ApplicationAddEditComponent
-      ),
+    path: 'applications',
+    loadComponent: () => import('./applications/list/applications.page').then(m => m.ApplicationsPage)
   },
   {
     path: "lease",
@@ -57,6 +72,8 @@ export default [
       import("./lease/lease-add-edit/lease-add-edit.component").then((m) => m.LeaseAddEditComponent),
   },
   {
+
+
     path: "lease/lease-add-edit/:id", // إضافة :id لاستقبال المعامل
     loadComponent: () =>
       import("./lease/lease-add-edit/lease-add-edit.component").then((m) => m.LeaseAddEditComponent),

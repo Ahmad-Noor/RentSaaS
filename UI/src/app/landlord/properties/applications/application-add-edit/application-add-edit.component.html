@@ -1,0 +1,68 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Add New Application</h1>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <form [formGroup]="applicationForm" (ngSubmit)="onFormSubmit()" class="space-y-6">
+
+      <!-- Property Selection -->
+      <div>
+        <label for="propertyId" class="block text-sm font-medium text-gray-700">Property</label>
+        <select id="propertyId" formControlName="propertyId"
+          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+          <option value="" selected>Select property</option>
+          <option *ngFor="let property of properties" [value]="property.id">
+            {{ property.address }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Applicant Email & Phone Number -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Applicant Email</label>
+          <input type="email" id="email" formControlName="applicantEmail"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="tenant@example.com"
+            required>
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input type="tel" id="phone" formControlName="phoneNumber"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="+1 555-123-4567"
+            pattern="^\+?[0-9]{10,15}$" required>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+        <textarea id="message" formControlName="message" rows="3"
+          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+          placeholder="Add any additional details..."></textarea>
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="requestbackgroundcheck" formControlName="requestbackgroundcheck"
+            class="h-4 w-4 rounded border-gray-300 text-blue-600">
+          <label for="requestbackgroundcheck" class="text-sm text-gray-700">Request background check</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="requestcreditreport" formControlName="requestcreditreport"
+            class="h-4 w-4 rounded border-gray-300 text-blue-600">
+          <label for="requestcreditreport" class="text-sm text-gray-700">Request credit report</label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-end">
+        <button type="submit" [disabled]="!applicationForm.valid || loading"
+          class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
+          {{ loading ? 'Saving...' : 'Send Application' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
