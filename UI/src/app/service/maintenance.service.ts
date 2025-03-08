@@ -76,16 +76,7 @@ export class MaintenanceService {
   updateMaintenance(maintenanceId: string, maintenanceData: MaintenanceRequest, files?: File[]): Observable<MaintenanceRequest> {
     const formData = new FormData();
 
-    // Add expense data fields
-    // for (const key in expenseData) {
-    //   if (expenseData.hasOwnProperty(key) && (expenseData as any)[key] !== null) {
-    //     if (typeof (expenseData as any)[key] === 'object' && !((expenseData as any)[key] instanceof File)) {
-    //       formData.append(key, JSON.stringify((expenseData as any)[key]));
-    //     } else {
-    //       formData.append(key, (expenseData as any)[key]);
-    //     }
-    //   }
-    // }
+   
 
     for (const key in maintenanceData) {
       if (maintenanceData.hasOwnProperty(key) && (maintenanceData as any)[key] !== null) {

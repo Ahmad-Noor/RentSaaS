@@ -43,8 +43,8 @@ export default [
   {
     path: "applications/send",
     loadComponent: () =>
-      import("./send-application/send-application.page").then(
-        (m) => m.SendApplicationPage
+      import("./send-application/application-add-edit/application-add-edit.component").then(
+        (m) => m.ApplicationAddEditComponent
       ),
   },
   {
@@ -52,8 +52,13 @@ export default [
     loadComponent: () => import("./lease/list/lease.page").then((m) => m.LeasePage),
   },
   {
-    path: "lease/create",
+    path: "lease/lease-add-edit",
     loadComponent: () =>
-      import("./lease/create-lease/create-lease.page").then((m) => m.CreateLeasePage),
+      import("./lease/lease-add-edit/lease-add-edit.component").then((m) => m.LeaseAddEditComponent),
   },
+  {
+    path: "lease/lease-add-edit/:id", // إضافة :id لاستقبال المعامل
+    loadComponent: () =>
+      import("./lease/lease-add-edit/lease-add-edit.component").then((m) => m.LeaseAddEditComponent),
+  }
 ] as Routes;
