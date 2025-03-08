@@ -27,10 +27,7 @@ public class Lease : BaseEntity
     public string? TenantName  { get; set; }
     public string? LeaseType  { get; set; }
 
-    public Guid? OrganizationId { get; set; }
-
-    // Navigation properties
-    public Organization? Organization { get; set; }
+   
     public Property? Property { get; set; }
 
 

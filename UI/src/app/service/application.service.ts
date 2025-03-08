@@ -11,7 +11,7 @@ import { APIResponse } from '../models/api-response.types';
   providedIn: 'root',
 })
 export class ApplicationService {
-  apiUrl: string = environment.apiUrl + "api/ApplicationAndLeads";
+  apiUrl: string = `${environment.apiUrl.replace(/\/$/, '')}/api/ApplicationAndLeads`;
   headers: HttpHeaders = new HttpHeaders();
 
   constructor(private http: HttpClient, private userService: UserService) {

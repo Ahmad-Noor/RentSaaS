@@ -75,7 +75,7 @@ public class ApplicationAndLeadsController : BaseControllery
 
 
     [HttpPost]
-    [ProducesResponseType(typeof(APIResponse<ApplicationCreateDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(APIResponse<ApplicationGetDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] ApplicationCreateDto applicationDto)
     {
@@ -91,7 +91,7 @@ public class ApplicationAndLeadsController : BaseControllery
             await _unitOfWork.SaveChangesAsync();
 
 
-            var createdApplication = _mapper.Map<ApplicationGetDto>(applicationDto);
+            var createdApplication = _mapper.Map<ApplicationGetDto>(application);
             return CreatedAtAction(nameof(GetById), new { id = application.Id },
                 new APIResponse<ApplicationGetDto>(createdApplication, "application created successfully"));
 

@@ -10,7 +10,7 @@ export interface Application {
     requestCredit?: boolean;
 }
 
-export interface ApplicationCreate {
+export interface ApplicationFormData {
   propertyId: string;
   applicantEmail: string;
   phoneNumber: number;

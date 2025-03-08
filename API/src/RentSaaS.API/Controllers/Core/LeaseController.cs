@@ -6,20 +6,33 @@ using RentSaaS.Domain.Entities;
 using RentSaaS.API.APIResponse;
 using RentSaaS.Application.DTOs.Lease;
 using Microsoft.AspNetCore.Authorization;
+using RentSaaS.API.Models;
+using RentSaaS.Application.Services;
+using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace RentSaaS.API.Controllers.Core;
 
 public class LeaseController : BaseControllery
 {
- 
-    private readonly ILogger<LeaseController> _logger;
 
-    public LeaseController(ILogger<LeaseController> logger, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    private readonly ILogger<LeaseController> _logger;
+    private readonly IFileManagmentService _fileManagementService;
+    private readonly IOrganizationService _organizationService;
+ 
+
+
+    public LeaseController(ILogger<LeaseController> logger,
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IFileManagmentService fileManagementService,
+        IOptions<FileUploadSettings> fileUploadSettings,
+        IOrganizationService organizationService) : base(unitOfWork, mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _fileManagementService = fileManagementService ?? throw new ArgumentNullException(nameof(fileManagementService));
+        _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
     }
-
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(APIResponse<List<LeaseGetDto>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIErrorResponse), StatusCodes.Status404NotFound)]
@@ -28,7 +41,7 @@ public class LeaseController : BaseControllery
     {
         try
         {
-            var query = _unitOfWork.LeaseRepository.AsQueryable().Where(e => !e.IsDeleted).OrderByDescending(e => e.CreatedAt);
+            var query = _unitOfWork.LeaseRepository.AsQueryable().Where(e => e.IsDeleted != true).OrderByDescending(e => e.CreatedAt);
 
             var (items, pagination) = await query.ToPaginatedListAsync(page, pageSize);
 
@@ -41,10 +54,11 @@ public class LeaseController : BaseControllery
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while getting all lease");
+            _logger.LogError(ex, "Error occurred while getting all leases");
             return StatusCode(500, new APIErrorResponse(500, "An unexpected error occurred"));
         }
     }
+
 
     [Authorize]
     [HttpGet("{id:Guid}")]

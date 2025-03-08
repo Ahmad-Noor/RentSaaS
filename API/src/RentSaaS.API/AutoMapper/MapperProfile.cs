@@ -57,6 +57,7 @@ public class MapperProfile :Profile
         CreateMap<LeaseCreateDto, Lease>()/*.ReverseMap()*/;
         CreateMap<LeaseUpdateDto, Lease>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
         CreateMap<Lease, LeaseGetDto>();
+       
         #endregion
 
 
