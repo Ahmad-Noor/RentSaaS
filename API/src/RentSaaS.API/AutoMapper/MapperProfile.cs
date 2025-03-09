@@ -69,9 +69,10 @@ public class MapperProfile :Profile
         #endregion
 
         #region Advertizing
-        CreateMap<AdvertisingCreateDto,Advertising>()/*.ReverseMap()*/;
-        CreateMap<AdvertisingUpdateDto, Advertising>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+        CreateMap<AdvertisingCreateDto, Advertising>()/*.ReverseMap()*/;
+        CreateMap<AdvertisingUpdateDto, Advertising>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Advertising, AdvertisingGetDto>();
+        CreateMap<Advertising, GetAdvertizingById>();
         #endregion
 
         #region Application&Leads

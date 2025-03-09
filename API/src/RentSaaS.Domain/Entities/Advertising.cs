@@ -11,14 +11,21 @@ namespace RentSaaS.Domain.Entities
 {
     public class Advertising : BaseEntity
     {
-        [Required]
         [ForeignKey("Property")]
         public Guid PropertyId { get; set; }
 
-        public string Platform { get; set; } = null!;
+        public decimal? MontholyRent { get; set; }
+        public decimal? SecurityDeposit { get; set; }
+        public string? Details { get; set; }
+        public string? AvailableForm { get; set; }
+        public  string[]? ReceiptsFiles { get; set; }
 
-        public int Leads {  get; set; }
-        public int Views { get; set; }
+        public bool? Zillow { get; set; }
+        public bool? Trulia { get; set; }
+        public bool? Realtor { get; set; }
+        public bool? Apartments { get; set; }
+
+        public ICollection<AdvertisingFile>? AdvertisingFiles { get; set; }
 
         public Property? Property { get; set; }
     }
