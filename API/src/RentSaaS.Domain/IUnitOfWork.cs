@@ -9,6 +9,7 @@ public interface IUnitOfWork : IAsyncDisposable
     ILeaseRepository LeaseRepository { get; set; }
     IExpenseFileRepository ExpenseFileRepository { get; set; } 
     IAdvertisingRepository AdvertisingRepository { get; set; }
+    IAdvertisingFileRepository AdvertisingFileRepository { get; set; }
     IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
     ITenantRepository TenantRepository { get; set; }
     IMaintenanceRepository MaintenanceRepository { get; set; }

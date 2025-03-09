@@ -125,6 +125,7 @@ public class RentSaaSDBContext : DbContext
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Advertising> Advertising { get; set; }
+    public DbSet<AdvertisingFile> AdvertisingFiles { get; set; }
 
     public DbSet<ApplicationAndLeads> ApplicationAndLeads { get; set; }
 

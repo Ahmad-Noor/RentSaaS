@@ -30,22 +30,18 @@ export class ApplicationAddEditComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.applicationForm = this.fb.group({
-      id: "",
-      propertyId: new FormControl(null),
-      // applicantEmail: [null, [Validators.required, Validators.email]],
+      propertyId: new FormControl(null, Validators.required),
       applicantEmail: new FormControl(null, [Validators.required, Validators.email]),
-
       phoneNumber: new FormControl(null, Validators.required),
-      message: new FormControl(true),
-      requestbackgroundcheck: new FormControl(true, Validators.required),
-      requestcreditreport: new FormControl(true, Validators.required),
+      message: new FormControl(""),
+      requestbackgroundcheck: new FormControl(false),
+      requestcreditreport: new FormControl(false),
     });
   }
 
   ngOnInit(): void {
     this.getAllProperties();
     const applicationData = history.state.application;
-    console.log(applicationData);
     if (applicationData) {
       this.loadApplicationDetails(applicationData.id);
     }
@@ -54,7 +50,7 @@ export class ApplicationAddEditComponent implements OnInit {
   loadApplicationDetails(applicationId: string): void {
     this.applicationService.getApplicationById(applicationId).subscribe({
       next: (application) => {
-        console.log(application);
+        this.application = application;
         this.applicationForm.patchValue(application);
       },
       error: (err) => {

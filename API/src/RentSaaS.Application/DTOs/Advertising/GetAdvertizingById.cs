@@ -1,10 +1,11 @@
-﻿using RentSaaS.Domain.Entities;
+﻿
 
 namespace RentSaaS.Application.DTOs.Advertising
 {
-    public class AdvertisingGetDto
+   public class GetAdvertizingById
     {
         public Guid Id { get; set; }
+
         public Guid PropertyId { get; set; }
 
         public decimal? MontholyRent { get; set; }
@@ -17,5 +18,7 @@ namespace RentSaaS.Application.DTOs.Advertising
         public bool? Realtor { get; set; }
         public bool? Apartments { get; set; }
 
+        public List<AdvertizingFileDTO>? Files { get; set; }
+        public string? PropertyName { get; set; }
     }
 }

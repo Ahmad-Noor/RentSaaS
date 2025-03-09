@@ -18,6 +18,9 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IExpenseFileRepository ExpenseFileRepository { get; set; } 
 
     public IAdvertisingRepository AdvertisingRepository { get; set; }
+
+    public IAdvertisingFileRepository AdvertisingFileRepository { get; set; }
+
     public IApplicationAndLeadsRepository ApplicationAndLeadsRepository { get; set; }
 
     public IRecordPaymentRepository RecordPaymentRepository { get; set; }
@@ -43,6 +46,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         LeaseRepository = new LeaseRepository(dbContext, loggerFactory.CreateLogger<LeaseRepository>());
         ExpenseFileRepository = new ExpenseFileRepository(dbContext, loggerFactory.CreateLogger<ExpenseFileRepository>());
         AdvertisingRepository =new AdvertisingRepository(dbContext, loggerFactory.CreateLogger<AdvertisingRepository>());
+        AdvertisingFileRepository = new AdvertisingFileRepository(dbContext, loggerFactory.CreateLogger<AdvertisingFileRepository>());
         ApplicationAndLeadsRepository = new ApplicationAndLeadsRepository(dbContext, loggerFactory.CreateLogger<ApplicationAndLeadsRepository>());
         RecordPaymentRepository = new RecordPaymentRepository(dbContext,loggerFactory.CreateLogger<RecordPaymentRepository>());
         RecordPaymentFileRepository = new RecordPaymentFileRepository(dbContext, loggerFactory.CreateLogger<RecordPaymentFileRepository>());
