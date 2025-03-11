@@ -14,10 +14,10 @@ namespace RentSaaS.Domain.Entities
         [ForeignKey("Property")]
         public Guid PropertyId { get; set; }
 
-        public decimal? MontholyRent { get; set; }
+        public decimal? MonthlyRent { get; set; }
         public decimal? SecurityDeposit { get; set; }
         public string? Details { get; set; }
-        public string? AvailableForm { get; set; }
+        public DateTime? AvailableFrom { get; set; }
         public  string[]? ReceiptsFiles { get; set; }
 
         public bool? Zillow { get; set; }
