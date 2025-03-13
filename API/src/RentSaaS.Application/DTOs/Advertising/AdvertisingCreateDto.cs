@@ -8,11 +8,10 @@ namespace RentSaaS.Application.DTOs.Advertising
     {
         public Guid PropertyId { get; set; }
 
-        public decimal? MontholyRent { get; set; }
+        public decimal? MonthlyRent { get; set; }
         public decimal? SecurityDeposit { get; set; }
         public string? Details { get; set; }
-        public string? AvailableForm { get; set; }
-
+        public DateTime? AvailableFrom { get; set; }
         public bool? Zillow { get; set; }
         public bool? Trulia { get; set; }
         public bool? Realtor { get; set; }

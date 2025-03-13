@@ -11,7 +11,7 @@ import { APIResponse } from "../models/api-response.types";
   providedIn: "root",
 })
 export class AdvertisingService {
-  apiUrl: string = `${environment.apiUrl}api/advertising`;
+  apiUrl: string = `${environment.apiUrl}api/Advertising`;
   private headers!: HttpHeaders;
 
   constructor(private http: HttpClient, private _userService: UserService) {

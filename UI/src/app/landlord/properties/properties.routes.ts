@@ -24,13 +24,13 @@ export default [
   {
     path: "advertising",
     loadComponent: () =>
-      import("./advertising/advertising.page").then((m) => m.AdvertisingPage),
+      import("./advertising/List/advertising.page").then((m) => m.AdvertisingPage),
   },
   {
-    path: "advertising/create",
+    path: "advertising/advertising-add-edit",
     loadComponent: () =>
-      import("./create-listing/create-listing.page").then(
-        (m) => m.CreateListingPage
+      import("./advertising/advertising-add-edit/advertising-add-edit.component").then(
+        (m) => m.AdvertisingAddEditComponent
       ),
   },
   // {

@@ -1,22 +1,17 @@
 import { FileWithMetadata } from "./fileWithMetadata.types";
 export type LeaseTerm = 'month-to-month' | '6 months' | '1 year' | '2 years';
-export type PublishingPlatform = 'zillow' | 'trulia' | 'apartments.com' | 'realtor.com';
 
 export interface  AdvertisingFormData{
-  id?: string;
-  property: string;
-  monthlyRent: number;
-  securityDeposit: number;
-  description: string;
-  availableFrom: Date;
-  leaseTerm: LeaseTerm;
-  propertyPhotos?: FileWithMetadata[];
-  publishingPlatforms: {
-    zillow: boolean;
-    trulia: boolean;
-    apartmentsCom: boolean;
-    realtorCom: boolean;
-  };
-  createdAt?: string;
-  updatedAt?: string;
+ id?: string;
+   propertyId?: number;
+   monthlyRent: number;
+   securityDeposit: number;
+   details?: string;
+   availablefrom?: Date;
+   leaseTerm: LeaseTerm;
+   files?: FileWithMetadata[];
+     zillow: boolean;
+     trulia: boolean;
+     apartments: boolean;
+     realtor: boolean;
 }

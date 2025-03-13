@@ -1,0 +1,168 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold">Create Property Listing</h1>
+      <a routerLink="../" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+        <span class="material-icons">arrow_back</span>
+        Back to advertising
+      </a>
+    </div>
+  
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-6">
+        <form [formGroup]="advertisingForm" (ngSubmit)="onFormSubmit()" class="space-y-6">
+          <div class="space-y-4">
+            <div>
+              <label for="propertyId" class="block text-sm font-medium text-gray-700">Property</label>
+              <select
+                id="propertyId"
+                formControlName="propertyId"
+                class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" selected>Select property</option>
+                <option *ngFor="let property of properties" [value]="property.id">
+                  {{ property.address }}
+                </option>
+              </select>
+            </div>
+  
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="monthlyRent" class="block text-sm font-medium text-gray-700">Monthly Rent</label>
+                <input
+                  type="number"
+                  id="monthlyRent"
+                  formControlName="monthlyRent"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="0.01"
+                >
+              </div>
+  
+              <div>
+                <label for="securityDeposit" class="block text-sm font-medium text-gray-700">Security Deposit</label>
+                <input
+                  type="number"
+                  id="securityDeposit"
+                  formControlName="securityDeposit"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="0.01"
+                >
+              </div>
+            </div>
+  
+            <div>
+              <label for="details" class="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                id="details"
+                formControlName="details"
+                rows="3"
+                class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                placeholder="Describe your property..."
+              ></textarea>
+            </div>
+  
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="availablefrom" class="block text-sm font-medium text-gray-700">Available From</label>
+                <input
+                  type="date"
+                  id="availablefrom"
+                  formControlName="availablefrom"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                />
+                
+              </div>
+  
+              <div>
+                <label for="leaseTerm" class="block text-sm font-medium text-gray-700">Lease Term</label>
+                <select
+                  id="leaseTerm"
+                  formControlName="leaseTerm"
+                  class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select lease term</option>
+                  <option value="month-to-month">Month-to-Month</option>
+                  <option value="6 months">6 Months</option>
+                  <option value="1 year">1 Year</option>
+                  <option value="2 years">2 Years</option>
+                </select>
+              </div>
+            </div>
+  
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  (click)="fileInput.click()"
+                  class="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100"
+                >
+                  <span class="material-icons">upload_file</span>
+                  Upload Photos
+                </button>
+                <span class="text-sm text-gray-500">Upload up to 20 photos</span>
+              </div>
+  
+              <input
+                #fileInput
+                type="file"
+                (change)="onFilesSelected($event)"
+                accept="image/*"
+                class="hidden"
+                multiple
+              >
+  
+              <div *ngIf="error" class="text-sm text-red-600">
+                {{ error }}
+              </div>
+  
+              <div *ngIf="files.length > 0" class="space-y-2">
+                <app-file-item
+                  *ngFor="let file of files; let i = index"
+                  [fileWithMetadata]="file"
+                  (remove)="removeFile(file)"
+                ></app-file-item>
+              </div>
+            </div>
+  
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Publishing Platforms</label>
+              <div class="grid grid-cols-4 gap-4">
+                <label class="flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" formControlName="zillow" class="h-4 w-4 rounded border-gray-300 text-blue-600">
+                  <span class="material-icons text-gray-600 ml-2">home</span>
+                  <span class="ml-2">Zillow</span>
+                </label>
+                <label class="flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" formControlName="trulia" class="h-4 w-4 rounded border-gray-300 text-blue-600">
+                  <span class="material-icons text-gray-600 ml-2">location_city</span>
+                  <span class="ml-2">Trulia</span>
+                </label>
+                <label class="flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" formControlName="apartments" class="h-4 w-4 rounded border-gray-300 text-blue-600">
+                  <span class="material-icons text-gray-600 ml-2">apartment</span>
+                  <span class="ml-2">Apartments.com</span>
+                </label>
+                <label class="flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" formControlName="realtor" class="h-4 w-4 rounded border-gray-300 text-blue-600">
+                  <span class="material-icons text-gray-600 ml-2">business</span>
+                  <span class="ml-2">Realtor.com</span>
+                </label>
+              </div>
+            </div>
+  
+            <div class="flex justify-end gap-4">
+              <a routerLink=".." class="px-4 py-2 text-gray-700 hover:text-gray-900">Cancel</a>
+              <button
+                type="submit"
+                [disabled]="!advertisingForm.valid || loading"
+                class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {{ loading ? 'Saving...' : 'Create Listing' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
